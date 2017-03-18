@@ -1,0 +1,49 @@
+---
+title: "Republican Voteshare in the US Presidential Election"
+author: "Raju Adhikari"
+date: "March 16, 2017"
+output: pdf_document
+bibliography: sources.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Literature Review:
+Three main inferences made by Bartels[@Bartels2005] are:
+
+
+
+Bartels [@Bartels2005] uses family income levels to categorize voters in terms of their economic status. He places families with incomes in the bottom third of the income distribution under "low income" or "working class" thus differentiating them from the middle and upper class families. 
+_how do we operationalize this is terms of county-level economic data._
+
+Bartels [@Bartels2005] illustrates the Democratic share of the two-party presidential vote among white voters in the bottom third of the income distribution and in the top third of the income distribution. He attributes the loss of support from white voters to Democratic candidates to the middle and upper income groups, while claiming that support for Democratic candidates has increased among low-income white voters. 
+_see what happens when we see the actual county-level economic data on family income alongside Democratic or Republican voteshare_ 
+_see what happens when we see the actual county-level economic data on family income, in areas with majority whites vs majority non-white, and see what happens_
+_see what happens when we see the actual county-level economic data on family income, in areas with majority whites, in rural vs urban counties, and see what happens_
+
+While survey data is useful in forecasting, the actual data we use can give a better picture of voter behavior since it captures the reality of after the election has taken place. However, based on the actual data, we are not able to measure party identification, since there is no way to know the individual preferences of voters. Nevertheless, based on how the result in a certain county turned out, we can get an idea about the actual preference of the majority of voters of that county.
+
+Bartels [@Bartels2005] argues that "Democratic identification declined by 18% among low-income whites (from 22% in 1952 to 4% in 2004) and by 29% among high-income whites (from 11% to ???18%)." But he mentions that "However, it seems odd to attribute the Democrats' problems to the white working class when the corresponding decline among more affluent whites is so much larger." 
+
+Although one individual has one vote, the value of that vote may be different. 
+_can we see if the 18 percent decline among low-income whites (and seeing where they are concentrated) has more impact on the electoral outcome than the 29 percent decline among high-income whites who may be concentrated in bigger cities and urban areas and democratic states._
+
+
+#Methodology:
+##Dependent Variable:
+Vote share (Republican Party) or Vote share (Democratic/Incumbent Party) or Difference in Voteshare between the two parties. In old literature, the second one is used often. However, in the modern literature the third one is used. In the case of this paper, the main question circles around Trump and hence the first variable may work best. Ask for advice?
+
+##Independent Variable:
+-Education (replace this with the data from census API)
+-Demographic Data from Census (male, female, ethnicity, religion, education)
+-Unemployment
+-Per capita income
+-Employment in industry
+-Current Transfer Receipts
+-Adjustment for Residence
+-Dummy for incumbent party
+-Rural or urban county
+
+#Bibliograhy:

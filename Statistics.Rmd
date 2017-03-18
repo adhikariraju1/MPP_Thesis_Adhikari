@@ -1,0 +1,152 @@
+---
+title: "Statistics"
+author: "Raju Adhikari"
+date: "February 25, 2017"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r packages, echo=FALSE}
+library(bea.R)
+library(acs)
+library(magrittr)
+library(httr)
+library(tidyr)
+library(blsAPI)
+library(rjson)
+library(readxl)
+library(rJava)
+library(xlsx)
+
+setwd("C:/RajuPC/MPP Final Thesis/Statistics")
+
+blskey <- "a9e62413e38741b5aeb814efc5a3d066"
+beaKey <- 'C3812F4D-F498-40F8-9F36-9FF5AF65DBD7'
+censusKey <- "c7ed765d1b03f4217ccc4b37d31b0dc3580db44e"
+datagovkey <- "ubFrNGonfwMQm3lK04C6djaMcqFuIe5mvev4RooI"
+
+```
+
+```{r voteshare, echo=FALSE, include=FALSE}
+
+voteshare_new <- read.table(file = 'full-us-presidential-counties-1960-2016.tsv', sep = '\t', header = TRUE)
+voteshare_recent <- voteshare_new[voteshare_new$year >= "1992",] #Choosing years after 1992
+
+voteshare_recent_rep <- voteshare_recent [voteshare_recent$party == "R", ]
+names(voteshare_recent_rep)[names(voteshare_recent_rep)=="vote.percent"] <- "rep.percent"
+names(voteshare_recent_rep)[names(voteshare_recent_rep)=="vote.count"] <- "rep.count"
+names(voteshare_recent_rep)[names(voteshare_recent_rep)=="is.national.winner"] <- "is.rep.nat.winner"
+names(voteshare_recent_rep)[names(voteshare_recent_rep)=="national.party.count"] <- "nat.rep.count"
+names(voteshare_recent_rep)[names(voteshare_recent_rep)=="national.party.percent"] <- "nat.rep.percent"
+
+voteshare_recent_rep$party <- NULL
+
+voteshare_recent_dem <- voteshare_recent [voteshare_recent$party == "D", ]
+names(voteshare_recent_dem)[names(voteshare_recent_dem)=="vote.percent"] <- "dem.percent"
+names(voteshare_recent_dem)[names(voteshare_recent_dem)=="vote.count"] <- "dem.count"
+names(voteshare_recent_dem)[names(voteshare_recent_dem)=="is.national.winner"] <- "is.dem.nat.winner"
+names(voteshare_recent_dem)[names(voteshare_recent_dem)=="national.party.count"] <- "nat.dem.count"
+names(voteshare_recent_dem)[names(voteshare_recent_dem)=="national.party.percent"] <- "nat.dem.percent"
+
+voteshare_recent_dem$party <- NULL
+
+election_data <- merge(voteshare_recent_rep, voteshare_recent_dem, all.x = T)
+
+rm(voteshare_new, voteshare_recent, voteshare_recent_rep, voteshare_recent_dem)
+
+```
+
+
+```{r beadata, echo=FALSE, include=FALSE}
+
+#BEA Regional Income Data: Population by county 
+##2016 Data is not available
+beaPop <- list(
+    'UserID' = beaKey ,
+    'Method' = 'GetData',
+    'datasetname' = 'RegionalIncome',
+    'TableName' = 'CA1' ,
+    'LineCode' = '2',
+    'Year' = '1992, 1996, 2000, 2004, 2008, 2012' ,
+    'GeoFips' = 'COUNTY' ,
+    'ResultFormat' = 'json'
+);
+beaPop <- beaGet(beaPop)
+
+#BEA Regional Income Data: Per Capita Income by county
+beaPCI <- list(
+    'UserID' = beaKey ,
+    'Method' = 'GetData',
+    'datasetname' = 'RegionalIncome',
+    'TableName' = 'CA1' ,
+    'LineCode' = '3',
+    'Year' = '1992, 1996, 2000, 2004, 2008, 2012' ,
+    'GeoFips' = 'COUNTY' ,
+    'ResultFormat' = 'json'
+);
+beaPCI <- beaGet(beaPCI)
+
+#Make sure NAs don't turn into 0.
+#The data is available until 2015 only. Let's see what can be done to match the election data. 
+
+
+#BEA Regional Income Data: Current Transfer receipts of individuals from Governments
+##API error, this data is not loading.
+beaPercapita_Current_Transfer <- list(
+    'UserID' = beaKey ,
+    'Method' = 'GetData',
+    'datasetname' = 'RegionalIncome',
+    'TableName' = 'CA30' ,
+    'LineCode' = '130',
+    'Year' = '1992, 1996, 2000, 2004, 2008, 2012' ,
+    'GeoFips' = 'COUNTY' ,
+    'ResultFormat' = 'json'
+);
+beaPercapita_Current_Transfer <- beaGet(beaPercapita_Current_Transfer)
+
+#BEA Regional Income Data: Adjustment for Residence equals the inflows to that county minus the outflows from that county
+beaAdjustment_Residence <- list(
+    'UserID' = beaKey ,
+    'Method' = 'GetData',
+    'datasetname' = 'RegionalIncome',
+    'TableName' = 'CA91' ,
+    'LineCode' = '30',
+    'Year' = '1992, 1996, 2000, 2004, 2008, 2012' ,
+    'GeoFips' = 'COUNTY' ,
+    'ResultFormat' = 'json'
+);
+beaAdjustment_Residence <- beaGet(beaAdjustment_Residence)
+
+```
+
+
+```{r blsdata, echo=FALSE,}
+unemp92 <- read.table('https://www.bls.gov/lau/laucnty92.txt', header =TRUE)
+
+
+```
+
+```{r census, echo=FALSE, include=FALSE}
+
+geo <- geo.make(state = '*', county = '*', combine = F, combine.term = "aggregate", check = FALSE, key = "auto")
+male <- acs.fetch(endyear =2015, span =5, geo, dataset = 'acs', variable = 'B01001_002', col.names = 'auto')
+
+estimate(male)
+estimate(male) -> male.estimate
+
+cbind(male.estimate, standard.error(male)) -> male1
+rownames(male1)
+
+rownames(male1) %>% cbind(male1) -> male1
+```
+
+```{r data.gov, echo=FALSE, include=FALSE}
+
+```
+
+
