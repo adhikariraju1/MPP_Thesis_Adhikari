@@ -10,6 +10,12 @@ bibliography: sources.bib
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+```{r packages, echo=FALSE}
+
+setwd("C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari")
+
+```
 #Literature Review:
 Three main inferences made by Bartels[@Bartels2005] are:
 

@@ -23,7 +23,7 @@ library(readxl)
 library(rJava)
 library(xlsx)
 
-setwd("C:/RajuPC/MPP Final Thesis/Statistics")
+setwd("C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari")
 
 blskey <- "a9e62413e38741b5aeb814efc5a3d066"
 beaKey <- 'C3812F4D-F498-40F8-9F36-9FF5AF65DBD7'
