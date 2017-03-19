@@ -17,9 +17,25 @@ setwd("C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari")
 
 ```
 #Literature Review:
+The voteshare of an incumbment presidential candidate in a state is regressed against the general economic conditions of the state, which can be measured by the change in a state's unemployment rate and the percentage changes in real per capita personal income [@Abrams1980]. Previous vote share for the incumbent party is also introduced as an independent variable [@Abrams1980]. He claims that voters hold presidents accountable for changes in state-level economic conditions therefore cutting certain programs in strongly dominated states and moving them to closely contested states may improve the chances of relection for the incumbent [@Abrams1980]. He also claims that abolishing the electoral college and permitting popular votes to determine presidential outcomes can outweigh the efforts of such state-level redistributive policy [@Abrams1980]. The fact that Donald Trump's victory was highly dependent on the electoral college, since he lost the popular vote by almost XXXXXXXXX votes, and driven by a few contested states in the Rust Belt, show with even more significance the effect of regional economic conditions on vote share. 
+_can this model be applied at a county level, since it is simply a smaller geographical setting and more representative since it is closer to the individual level_
+_a dummy for Southern States was taken_ [@Abrams1980].
+
+Lau and Redlawsk place "correct" voting as a middle ground between individual choice and social choice and therefore define it as the individual choice made under conditions of full information [@Lau1997].
+
+Curry [@Curry2012] suggests that a lagged dependent variable would not be appropriate in this case since the relationship between the economy and the vote for president is not theorized as dynamic. He writes, "the data points are four years apart so it is unlikely that the performance of the economy at time t would be strong enough to significantly influence the vote for president four years in the future at time t + 1 or eight years in the future at time t + 2" [@Curry2012].
+
+
+
+In economic voting, incumbents are given utmost importance because people often relate economic performance with the incumbent party or candidate. Hence, if the economy is doing well, it helps the incumbent party or candidate and if it is doing bad it hurts them.
+_it would be interesting to see how people assign blame for their economic conditions on the President even if their regional governor or majority representation in the house may be from the non-incumbent's party._ 
+Moreover, Curry [@Curry2012] writes that economic influence on the vote for president has been continuous and is not necessarily dependent on federal government control over the economy.
+
+
 Three main inferences made by Bartels[@Bartels2005] are:
-
-
+- The white working class has not abandoned the Democratic Party.
+- The white working class has not become more conservative.
+- Working class moral values do not trump economics.
 
 Bartels [@Bartels2005] uses family income levels to categorize voters in terms of their economic status. He places families with incomes in the bottom third of the income distribution under "low income" or "working class" thus differentiating them from the middle and upper class families. 
 _how do we operationalize this is terms of county-level economic data._
@@ -35,6 +51,9 @@ Bartels [@Bartels2005] argues that "Democratic identification declined by 18% am
 
 Although one individual has one vote, the value of that vote may be different. 
 _can we see if the 18 percent decline among low-income whites (and seeing where they are concentrated) has more impact on the electoral outcome than the 29 percent decline among high-income whites who may be concentrated in bigger cities and urban areas and democratic states._
+
+
+
 
 
 #Methodology:

@@ -20,8 +20,7 @@ library(tidyr)
 library(blsAPI)
 library(rjson)
 library(readxl)
-library(rJava)
-library(xlsx)
+
 
 setwd("C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari")
 
@@ -57,6 +56,7 @@ voteshare_recent_dem$party <- NULL
 
 election_data <- merge(voteshare_recent_rep, voteshare_recent_dem, all.x = T)
 
+
 rm(voteshare_new, voteshare_recent, voteshare_recent_rep, voteshare_recent_dem)
 
 ```
@@ -77,6 +77,11 @@ beaPop <- list(
     'ResultFormat' = 'json'
 );
 beaPop <- beaGet(beaPop)
+names(beaPop)[6:11]<-c("1992", "1996", "2000", "2004", "2008", "2012")
+Population <- gather(beaPop, 6:11, key="Year", value="Pop")
+names(Population)[4]<-"Pop_Label"
+rm(beaPop)
+
 
 #BEA Regional Income Data: Per Capita Income by county
 beaPCI <- list(
@@ -90,6 +95,10 @@ beaPCI <- list(
     'ResultFormat' = 'json'
 );
 beaPCI <- beaGet(beaPCI)
+names(beaPCI)[6:11]<-c("1992", "1996", "2000", "2004", "2008", "2012")
+PerCapitaIncome <- gather(beaPCI, 6:11, key="Year", value="PCI")
+names(PerCapitaIncome)[4]<-"PCI_Label"
+rm(beaPCI)
 
 #Make sure NAs don't turn into 0.
 #The data is available until 2015 only. Let's see what can be done to match the election data. 
@@ -108,6 +117,10 @@ beaPercapita_Current_Transfer <- list(
     'ResultFormat' = 'json'
 );
 beaPercapita_Current_Transfer <- beaGet(beaPercapita_Current_Transfer)
+names(beaPercapita_Current_Transfer)[6:11]<-c("1992", "1996", "2000", "2004", "2008", "2012")
+PerCapitaCurrentTransfer <- gather(beaPercapita_Current_Transfer, 6:11, key="Year", value="PCCT")
+names(PerCapitaCurrentTransfer)[4]<-"PCCT_Label"
+rm(beaPercapita_Current_Transfer)
 
 #BEA Regional Income Data: Adjustment for Residence equals the inflows to that county minus the outflows from that county
 beaAdjustment_Residence <- list(
@@ -121,13 +134,15 @@ beaAdjustment_Residence <- list(
     'ResultFormat' = 'json'
 );
 beaAdjustment_Residence <- beaGet(beaAdjustment_Residence)
-
+names(beaAdjustment_Residence)[6:11]<-c("1992", "1996", "2000", "2004", "2008", "2012")
+AdjustmentResidence <- gather(beaAdjustment_Residence, 6:11, key="Year", value="Adj_res")
+names(AdjustmentResidence)[4]<-"Adj_res_Label"
+rm(beaAdjustment_Residence)
 ```
 
 
 ```{r blsdata, echo=FALSE,}
-unemp92 <- read.table('https://www.bls.gov/lau/laucnty92.txt', header =TRUE)
-
+unemp92 <- read.table('laucnty92.txt', header =TRUE)
 
 ```
 
