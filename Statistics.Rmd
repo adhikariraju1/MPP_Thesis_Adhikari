@@ -190,8 +190,37 @@ bea_df$county.fips <- as.numeric(bea_df$county.fips)
 rm(beaPop, beaPCI, beaPercapita_Current_Transfer, beaAdjustment_Residence)
 rm(Population, PerCapitaIncome, PerCapitaCurrentTransfer, AdjustmentResidence)
 
-#TOTO: Separating the column GeoName into "county" and "state". Then removing all the rows that are not counties such as "United States" or "Alabama", Mississippi", etc.
+## Custom function
+geo_seperate <- function(text, digit = 1) {
+  # This function is to use the text in the column
+  # GeoName and sepeate them into two parts; the one
+  # with the state and the one with counties. Then use
+  # dplyr to mutate the columns respectivly
+  
+  temp.text <- str_split(text, ", ") %>% unlist() %>%
+  # Split at the comma. and force the text to take between 1:3 parts
+    str_replace_all("[*]", "")
+  
+  if (length(temp.text) == 3) {
+    # Correcting the state and county names if more than one comma 
+    # in their names
+    temp.text <- c(paste(temp.text[1:2], collapse = ", "), temp.text[3])
+  }
+  
+  if (length(temp.text) == 1) {
+    return(NA) # For those with only US or state names
+  } else {
+    return(temp.text[digit])
+  }
+}
 
+bea_df %<>%
+  rowwise() %>%
+  mutate(county = geo_seperate(GeoName, 1),
+         state = geo_seperate(GeoName, 2)) %>%
+  select(county.fips, Year, GeoName, state, county, everything())
+
+# Only need to filter out the NAs from state and county now
 ```
 
 
