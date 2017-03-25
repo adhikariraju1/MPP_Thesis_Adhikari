@@ -22,7 +22,10 @@ library(blsAPI)
 library(rjson)
 library(readxl)
 library(dplyr)
+
 library(jsonlite)
+library(stringr)
+
 
 #Setting the working directory
 setwd("C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari")
@@ -35,11 +38,13 @@ datagovkey <- "ubFrNGonfwMQm3lK04C6djaMcqFuIe5mvev4RooI"
 
 ```
 
-```{r voteshare, echo=FALSE, include=FALSE}
+```{r electiondata, echo=FALSE, include=FALSE}
 #Voteshare Data (1992-2016)
 voteshare_new <- read.table(file = 'full-us-presidential-counties-1960-2016.tsv', sep = '\t', header = TRUE)
 voteshare_recent <- voteshare_new[voteshare_new$year >= "1992",] #Choosing years after 1992
+voteshare_recent <- voteshare_recent[voteshare_recent$year < "2016",] #Removing year 2016
 
+#Separating the democrats data and republicans data into separate dataframes
 voteshare_recent_rep <- voteshare_recent [voteshare_recent$party == "R", ]
 names(voteshare_recent_rep)[names(voteshare_recent_rep)=="vote.percent"] <- "rep.percent"
 names(voteshare_recent_rep)[names(voteshare_recent_rep)=="vote.count"] <- "rep.count"
@@ -58,9 +63,18 @@ names(voteshare_recent_dem)[names(voteshare_recent_dem)=="national.party.percent
 
 voteshare_recent_dem$party <- NULL
 
+#Merging the two dataframes
 election_data <- merge(voteshare_recent_rep, voteshare_recent_dem, all.x = T)
 
+#Renaming column names to merge them with other data later
+names(election_data)[names(election_data)=="state.abb"] <- "state"
+names(election_data)[names(election_data)=="county.name"] <- "county"
 
+#Converting the county and state columns from factors into strings so that they can be merged with other dataframes later
+election_data$county <- as.character(election_data$county)
+election_data$state <- as.character(election_data$state)
+
+#Removing untidy dataframes from the environment
 rm(voteshare_new, voteshare_recent, voteshare_recent_rep, voteshare_recent_dem)
 
 ```
@@ -106,7 +120,7 @@ beaPCI <- beaGet(beaPCI)
 names(beaPCI)[6:11]<-c("1992", "1996", "2000", "2004", "2008", "2012")
 PerCapitaIncome <- gather(beaPCI, 6:11, key="Year", value="PCI")
 names(PerCapitaIncome)[4]<-"PCI_Label"
-rm(beaPCI)
+
 
 #Make sure NAs don't turn into 0.
 #The data is available until 2015 only. Let's see what can be done to match the election data. 
@@ -128,7 +142,7 @@ beaPercapita_Current_Transfer <- beaGet(beaPercapita_Current_Transfer)
 names(beaPercapita_Current_Transfer)[6:11]<-c("1992", "1996", "2000", "2004", "2008", "2012")
 PerCapitaCurrentTransfer <- gather(beaPercapita_Current_Transfer, 6:11, key="Year", value="PCCT")
 names(PerCapitaCurrentTransfer)[4]<-"PCCT_Label"
-rm(beaPercapita_Current_Transfer)
+
 
 #BEA Regional Income Data: Adjustment for Residence equals the inflows to that county minus the outflows from that county
 beaAdjustment_Residence <- list(
@@ -145,12 +159,15 @@ beaAdjustment_Residence <- beaGet(beaAdjustment_Residence)
 names(beaAdjustment_Residence)[6:11]<-c("1992", "1996", "2000", "2004", "2008", "2012")
 AdjustmentResidence <- gather(beaAdjustment_Residence, 6:11, key="Year", value="Adj_res")
 names(AdjustmentResidence)[4]<-"Adj_res_Label"
-rm(beaAdjustment_Residence)
+
+#Removing all previous untidy dataframes
+rm(beaPop, beaPCI, beaPercapita_Current_Transfer, beaAdjustment_Residence)
+
 ```
 
 
 ```{r blsdata, echo=FALSE,}
-#BLS Data on Unemployment by county
+#BLS Data on Unemployment by county, clean data, remove unnecessary rows
 unemp92 <- read_excel('laucnty92.xlsx')
 unemp92 <- separate(unemp92, County, into = c("County.name", "State"), sep=",")
 unemp92 <- unemp92[-c(3217:3219), ]
@@ -170,11 +187,41 @@ unemp12 <- read_excel('laucnty12.xlsx')
 unemp12 <- separate(unemp12, County, into = c("County.name", "State"), sep=",")
 unemp12 <- unemp12[-c(3220:3222), ]
 
-
+#Combine all the dataframes from different years into one dataframe
 Unemployment <- bind_rows(unemp92, unemp96, unemp00, unemp04, unemp08, unemp12, .id = NULL)
+names(Unemployment)[names(Unemployment)=="County.name"] <- "county"
+names(Unemployment)[names(Unemployment)=="State"] <- "state"
+names(Unemployment)[names(Unemployment)=="County Code"] <- "county.fips"
+names(Unemployment)[names(Unemployment)=="State FIPS Code"] <- "state.fips"
+names(Unemployment)[names(Unemployment)=="Year"] <- "year"
+
+Unemployment$county <- strsplit(Unemployment$county, " County") #Remove the word County from the county names
+Unemployment$county <- tolower(Unemployment$county) #Changed the county names to lowercase
+View(Unemployment)
+Unemployment <- unite(Unemployment, state.fips, county.fips, col ="county.fips", sep="") #Combine two columns to make them into one.
+
+#The states that appeared as NA in this dataframe represented DC, hence the NAs will be changed to DC
+Unemployment <- replace_na(Unemployment, list(state="DC", Unemployment$state))
+
+#Converting from character to numeric for merging purposes
+Unemployment$county.fips <- as.numeric(Unemployment$county.fips)
+Unemployment$year <- as.numeric(Unemployment$year)
+
+#Removing Alaska and Puerto Rico
+
+
+#Remove untidy dataframes from the environment
+rm(unemp92, unemp96, unemp00, unemp04, unemp08, unemp12) 
 
 
 ```
+
+
+
+
+
+
+
 
 ```{r census, echo=FALSE, include=FALSE}
 #Census Data
@@ -190,8 +237,8 @@ rownames(male1)
 rownames(male1) %>% cbind(male1) -> male1
 ```
 
-```{r data.gov, echo=FALSE, include=FALSE}
-
+```{r Merging, echo=FALSE, include=FALSE}
+Dataset1 <- merge(Unemployment, election_data, by= c('county.fips', 'year', 'county'), all.x = TRUE)
 ```
 
 
