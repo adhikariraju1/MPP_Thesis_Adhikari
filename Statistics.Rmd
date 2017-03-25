@@ -22,7 +22,6 @@ library(blsAPI)
 library(rjson)
 library(readxl)
 library(dplyr)
-
 library(jsonlite)
 library(stringr)
 
@@ -64,15 +63,17 @@ names(voteshare_recent_dem)[names(voteshare_recent_dem)=="national.party.percent
 voteshare_recent_dem$party <- NULL
 
 #Merging the two dataframes
-election_data <- merge(voteshare_recent_rep, voteshare_recent_dem, all.x = T)
+election_df <- merge(voteshare_recent_rep, voteshare_recent_dem, all = T)
 
 #Renaming column names to merge them with other data later
-names(election_data)[names(election_data)=="state.abb"] <- "state"
-names(election_data)[names(election_data)=="county.name"] <- "county"
+names(election_df)[names(election_df)=="state.abb"] <- "state"
+names(election_df)[names(election_df)=="county.name"] <- "county"
 
 #Converting the county and state columns from factors into strings so that they can be merged with other dataframes later
-election_data$county <- as.character(election_data$county)
-election_data$state <- as.character(election_data$state)
+election_df$county <- as.character(election_df$county)
+election_df$state <- as.character(election_df$state)
+
+election_df <- election_df[, -c(3,4,6,8)]
 
 #Removing untidy dataframes from the environment
 rm(voteshare_new, voteshare_recent, voteshare_recent_rep, voteshare_recent_dem)
@@ -99,11 +100,9 @@ Population <- jsonlite::fromJSON(beaPop)$BEAAPI$Results$Data %>%
          DataValue = as.numeric(DataValue)) %>%
   rename(Year = TimePeriod, Pop = DataValue) %>%
   mutate(Year = as.numeric(Year))
-# names(beaPop)[6:11]<-c("1992", "1996", "2000", "2004", "2008", "2012")
-# Population <- gather(beaPop, 6:11, key="Year", value="Pop")
-# names(Population)[4]<-"Pop_Label"
-rm(beaPop)
 
+names(Population)[5]<-"Pop_Label"
+Population <- Population[, -c(1,5,6,8)]
 
 #BEA Regional Income Data: Per Capita Income by county
 beaPCI <- list(
@@ -116,13 +115,17 @@ beaPCI <- list(
     'GeoFips' = 'COUNTY' ,
     'ResultFormat' = 'json'
 );
-beaPCI <- beaGet(beaPCI)
-names(beaPCI)[6:11]<-c("1992", "1996", "2000", "2004", "2008", "2012")
-PerCapitaIncome <- gather(beaPCI, 6:11, key="Year", value="PCI")
-names(PerCapitaIncome)[4]<-"PCI_Label"
 
+beaPCI <- beaGet(beaPCI, asString = T, asTable = F)
+PerCapitaIncome <- jsonlite::fromJSON(beaPCI)$BEAAPI$Results$Data %>%
+  mutate(DataValue = ifelse(DataValue == '(NA)', NA, DataValue),
+         DataValue = as.numeric(DataValue)) %>%
+  rename(Year = TimePeriod, PCI = DataValue) %>%
+  mutate(Year = as.numeric(Year))
 
-#Make sure NAs don't turn into 0.
+names(PerCapitaIncome)[5]<-"PCI_Label"
+PerCapitaIncome <- PerCapitaIncome[, -c(1,5,6,8)]
+
 #The data is available until 2015 only. Let's see what can be done to match the election data. 
 
 
@@ -138,11 +141,16 @@ beaPercapita_Current_Transfer <- list(
     'GeoFips' = 'COUNTY' ,
     'ResultFormat' = 'json'
 );
-beaPercapita_Current_Transfer <- beaGet(beaPercapita_Current_Transfer)
-names(beaPercapita_Current_Transfer)[6:11]<-c("1992", "1996", "2000", "2004", "2008", "2012")
-PerCapitaCurrentTransfer <- gather(beaPercapita_Current_Transfer, 6:11, key="Year", value="PCCT")
-names(PerCapitaCurrentTransfer)[4]<-"PCCT_Label"
 
+beaPercapita_Current_Transfer <- beaGet(beaPercapita_Current_Transfer, asString = T, asTable = F)
+PerCapitaCurrentTransfer <- jsonlite::fromJSON(beaPercapita_Current_Transfer)$BEAAPI$Results$Data %>%
+  mutate(DataValue = ifelse(DataValue == '(NA)', NA, DataValue),
+         DataValue = as.numeric(DataValue)) %>%
+  rename(Year = TimePeriod, PCCT = DataValue) %>%
+  mutate(Year = as.numeric(Year))
+
+names(PerCapitaCurrentTransfer)[5]<-"PCCT_Label"
+PerCapitaCurrentTransfer <- PerCapitaCurrentTransfer[, -c(1,5,6,8)]
 
 #BEA Regional Income Data: Adjustment for Residence equals the inflows to that county minus the outflows from that county
 beaAdjustment_Residence <- list(
@@ -155,13 +163,34 @@ beaAdjustment_Residence <- list(
     'GeoFips' = 'COUNTY' ,
     'ResultFormat' = 'json'
 );
-beaAdjustment_Residence <- beaGet(beaAdjustment_Residence)
-names(beaAdjustment_Residence)[6:11]<-c("1992", "1996", "2000", "2004", "2008", "2012")
-AdjustmentResidence <- gather(beaAdjustment_Residence, 6:11, key="Year", value="Adj_res")
-names(AdjustmentResidence)[4]<-"Adj_res_Label"
+
+beaAdjustment_Residence <- beaGet(beaAdjustment_Residence, asString = T, asTable = F)
+AdjustmentResidence <- jsonlite::fromJSON(beaAdjustment_Residence)$BEAAPI$Results$Data %>%
+  mutate(DataValue = ifelse(DataValue == '(NA)', NA, DataValue),
+         DataValue = as.numeric(DataValue)) %>%
+  rename(Year = TimePeriod, Adj_res = DataValue) %>%
+  mutate(Year = as.numeric(Year))
+
+
+names(AdjustmentResidence)[5]<-"Adj_res_Label"
+AdjustmentResidence <- AdjustmentResidence[, -c(1,5,6,8)]
+
+
+
+#Merging all BEA dataframes
+bea_df <- merge(Population, PerCapitaIncome, by = c('GeoFips', 'Year', 'GeoName'), all=T)
+bea_df <- merge(bea_df, PerCapitaCurrentTransfer, by = c('GeoFips', 'Year', 'GeoName'), all=T)
+bea_df <- merge(bea_df, AdjustmentResidence, by = c('GeoFips', 'Year', 'GeoName'), all=T)
+
+names(bea_df)[names(bea_df)=="GeoFips"] <- "county.fips"
+bea_df$county.fips <- as.numeric(bea_df$county.fips)
+
 
 #Removing all previous untidy dataframes
 rm(beaPop, beaPCI, beaPercapita_Current_Transfer, beaAdjustment_Residence)
+rm(Population, PerCapitaIncome, PerCapitaCurrentTransfer, AdjustmentResidence)
+
+#TOTO: Separating the column GeoName into "county" and "state". Then removing all the rows that are not counties such as "United States" or "Alabama", Mississippi", etc.
 
 ```
 
@@ -188,40 +217,44 @@ unemp12 <- separate(unemp12, County, into = c("County.name", "State"), sep=",")
 unemp12 <- unemp12[-c(3220:3222), ]
 
 #Combine all the dataframes from different years into one dataframe
-Unemployment <- bind_rows(unemp92, unemp96, unemp00, unemp04, unemp08, unemp12, .id = NULL)
-names(Unemployment)[names(Unemployment)=="County.name"] <- "county"
-names(Unemployment)[names(Unemployment)=="State"] <- "state"
-names(Unemployment)[names(Unemployment)=="County Code"] <- "county.fips"
-names(Unemployment)[names(Unemployment)=="State FIPS Code"] <- "state.fips"
-names(Unemployment)[names(Unemployment)=="Year"] <- "year"
+unemployment_df <- bind_rows(unemp92, unemp96, unemp00, unemp04, unemp08, unemp12, .id = NULL)
+names(unemployment_df)[names(unemployment_df)=="County.name"] <- "county"
+names(unemployment_df)[names(unemployment_df)=="State"] <- "state"
+names(unemployment_df)[names(unemployment_df)=="County Code"] <- "county.fips"
+names(unemployment_df)[names(unemployment_df)=="State FIPS Code"] <- "state.fips"
+names(unemployment_df)[names(unemployment_df)=="Year"] <- "year"
 
-Unemployment$county <- strsplit(Unemployment$county, " County") #Remove the word County from the county names
-Unemployment$county <- tolower(Unemployment$county) #Changed the county names to lowercase
-View(Unemployment)
-Unemployment <- unite(Unemployment, state.fips, county.fips, col ="county.fips", sep="") #Combine two columns to make them into one.
+unemployment_df$county <- strsplit(unemployment_df$county, " County") #Remove the word County from the county names
+unemployment_df$county <- tolower(unemployment_df$county) #Changed the county names to lowercase
+View(unemployment_df)
+unemployment_df <- unite(unemployment_df, state.fips, county.fips, col ="county.fips", sep="") #Combine two columns to make them into one.
 
 #The states that appeared as NA in this dataframe represented DC, hence the NAs will be changed to DC
-Unemployment <- replace_na(Unemployment, list(state="DC", Unemployment$state))
+unemployment_df <- replace_na(unemployment_df, list(state="DC", unemployment_df$state))
 
 #Converting from character to numeric for merging purposes
-Unemployment$county.fips <- as.numeric(Unemployment$county.fips)
-Unemployment$year <- as.numeric(Unemployment$year)
-
-#Removing Alaska and Puerto Rico
+unemployment_df$county.fips <- as.numeric(unemployment_df$county.fips)
+unemployment_df$year <- as.numeric(unemployment_df$year)
 
 
 #Remove untidy dataframes from the environment
 rm(unemp92, unemp96, unemp00, unemp04, unemp08, unemp12) 
 
+#TOTO: Removing observations if the state's name is Alaska (AK) or Puerto Rico (PR). There is no election data for these states hence removing them
 
 ```
 
 
 
+```{r Merging, echo=FALSE, include=FALSE}
+#TOTO: Finally merging all the 3 dataframes: bea_df, election_df, and unemployment_df
+
+df <- merge(unemployment_df, election_df, bea_df, by= c('county.fips', 'year'), all = TRUE)
+```
 
 
 
-
+###THE END###
 
 ```{r census, echo=FALSE, include=FALSE}
 #Census Data
@@ -237,8 +270,5 @@ rownames(male1)
 rownames(male1) %>% cbind(male1) -> male1
 ```
 
-```{r Merging, echo=FALSE, include=FALSE}
-Dataset1 <- merge(Unemployment, election_data, by= c('county.fips', 'year', 'county'), all.x = TRUE)
-```
 
 
