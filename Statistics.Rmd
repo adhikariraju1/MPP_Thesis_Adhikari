@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r packages, echo=FALSE}
+#Loading all the necessary packages
 library(bea.R)
 library(acs)
 library(magrittr)
@@ -20,10 +21,12 @@ library(tidyr)
 library(blsAPI)
 library(rjson)
 library(readxl)
+library(dplyr)
 
-
+#Setting the working directory
 setwd("C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari")
 
+#All the keys for different APIs obtained from the respective websites
 blskey <- "a9e62413e38741b5aeb814efc5a3d066"
 beaKey <- 'C3812F4D-F498-40F8-9F36-9FF5AF65DBD7'
 censusKey <- "c7ed765d1b03f4217ccc4b37d31b0dc3580db44e"
@@ -32,7 +35,7 @@ datagovkey <- "ubFrNGonfwMQm3lK04C6djaMcqFuIe5mvev4RooI"
 ```
 
 ```{r voteshare, echo=FALSE, include=FALSE}
-
+#Voteshare Data (1992-2016)
 voteshare_new <- read.table(file = 'full-us-presidential-counties-1960-2016.tsv', sep = '\t', header = TRUE)
 voteshare_recent <- voteshare_new[voteshare_new$year >= "1992",] #Choosing years after 1992
 
@@ -63,7 +66,6 @@ rm(voteshare_new, voteshare_recent, voteshare_recent_rep, voteshare_recent_dem)
 
 
 ```{r beadata, echo=FALSE, include=FALSE}
-
 #BEA Regional Income Data: Population by county 
 ##2016 Data is not available
 beaPop <- list(
@@ -142,12 +144,34 @@ rm(beaAdjustment_Residence)
 
 
 ```{r blsdata, echo=FALSE,}
-unemp92 <- read.table('laucnty92.txt', header =TRUE)
+#BLS Data on Unemployment by county
+unemp92 <- read_excel('laucnty92.xlsx')
+unemp92 <- separate(unemp92, County, into = c("County.name", "State"), sep=",")
+unemp92 <- unemp92[-c(3217:3219), ]
+unemp96 <- read_excel('laucnty96.xlsx')
+unemp96 <- separate(unemp96, County, into = c("County.name", "State"), sep=",")
+unemp96 <- unemp96[-c(3218:3220), ]
+unemp00 <- read_excel('laucnty00.xlsx')
+unemp00 <- separate(unemp00, County, into = c("County.name", "State"), sep=",")
+unemp00 <- unemp00[-c(3218:3220), ]
+unemp04 <- read_excel('laucnty04.xlsx')
+unemp04 <- separate(unemp04, County, into = c("County.name", "State"), sep=",")
+unemp04 <- unemp04[-c(3218:3220), ]
+unemp08 <- read_excel('laucnty08.xlsx')
+unemp08 <- separate(unemp08, County, into = c("County.name", "State"), sep=",")
+unemp08 <- unemp08[-c(3218:3220), ]
+unemp12 <- read_excel('laucnty12.xlsx')
+unemp12 <- separate(unemp12, County, into = c("County.name", "State"), sep=",")
+unemp12 <- unemp12[-c(3220:3222), ]
+
+
+Unemployment <- bind_rows(unemp92, unemp96, unemp00, unemp04, unemp08, unemp12, .id = NULL)
+
 
 ```
 
 ```{r census, echo=FALSE, include=FALSE}
-
+#Census Data
 geo <- geo.make(state = '*', county = '*', combine = F, combine.term = "aggregate", check = FALSE, key = "auto")
 male <- acs.fetch(endyear =2015, span =5, geo, dataset = 'acs', variable = 'B01001_002', col.names = 'auto')
 
