@@ -22,6 +22,7 @@ library(blsAPI)
 library(rjson)
 library(readxl)
 library(dplyr)
+library(jsonlite)
 
 #Setting the working directory
 setwd("C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari")
@@ -77,11 +78,16 @@ beaPop <- list(
     'Year' = '1992, 1996, 2000, 2004, 2008, 2012' ,
     'GeoFips' = 'COUNTY' ,
     'ResultFormat' = 'json'
-);
-beaPop <- beaGet(beaPop)
-names(beaPop)[6:11]<-c("1992", "1996", "2000", "2004", "2008", "2012")
-Population <- gather(beaPop, 6:11, key="Year", value="Pop")
-names(Population)[4]<-"Pop_Label"
+)
+beaPop <- beaGet(beaPop, asString = T, asTable = F)
+Population <- jsonlite::fromJSON(beaPop)$BEAAPI$Results$Data %>%
+  mutate(DataValue = ifelse(DataValue == '(NA)', NA, DataValue),
+         DataValue = as.numeric(DataValue)) %>%
+  rename(Year = TimePeriod, Pop = DataValue) %>%
+  mutate(Year = as.numeric(Year))
+# names(beaPop)[6:11]<-c("1992", "1996", "2000", "2004", "2008", "2012")
+# Population <- gather(beaPop, 6:11, key="Year", value="Pop")
+# names(Population)[4]<-"Pop_Label"
 rm(beaPop)
 
 
