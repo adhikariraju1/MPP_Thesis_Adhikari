@@ -217,6 +217,7 @@ bea_df %<>%
   select(county.fips, Year, GeoName, state, county, everything())
 
 # Only need to filter out the NAs from state and county now
+bea_df <- bea_df %>% filter(county != "NA")
 
 ```
 
@@ -262,11 +263,11 @@ unemployment_df <- replace_na(unemployment_df, list(state="DC", unemployment_df$
 unemployment_df$county.fips <- as.numeric(unemployment_df$county.fips)
 unemployment_df$year <- as.numeric(unemployment_df$year)
 
-
 #Remove untidy dataframes from the environment
 rm(unemp92, unemp96, unemp00, unemp04, unemp08, unemp12) 
 
 #TOTO: Removing observations if the state's name is Alaska (AK) or Puerto Rico (PR). There is no election data for these states hence removing them
+unemployment_df <- unemployment_df %>% filter(state != "AK" & "PR")
 
 ```
 
