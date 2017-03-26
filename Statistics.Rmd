@@ -218,6 +218,7 @@ bea_df %<>%
 
 # Only need to filter out the NAs from state and county now
 bea_df <- bea_df %>% filter(county != "NA")
+bea_df$county <- tolower(bea_df$county) #Changed the county names to lowercase
 
 ```
 

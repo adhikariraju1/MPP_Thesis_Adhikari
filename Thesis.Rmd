@@ -1,5 +1,5 @@
 ---
-title: "Republican Voteshare in the US Presidential Election"
+title: "What happened on November 8, 2016 ?"
 author: "Raju Adhikari"
 date: "March 16, 2017"
 output: pdf_document
@@ -16,8 +16,94 @@ knitr::opts_chunk$set(echo = TRUE)
 setwd("C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari")
 
 ```
+
+_"The economy, as an issue, is one of consensus. All voters want a good economy, no voters want a bad economy. No distribution of opinion occurs. Everyone values prosperity. When they see prosperity, they vote for the ruling party, otherwise not."_  
+- Michael Steven Lewis-Beck and Richard Nadeau (2011)
+
+#Abstract
+
+#Introduction:
+Three main questions:
+We start by analyzing the question from a party-perspective and then move to a specific candidate, in this case being Donald Trump....  
+
+The first question of this paper is: 
+- Do county-level economic conditions influence presidential election results in the US? - effect on incumbent vote-share? effect on specific party vote share.  
+- Did county-level economic conditions play a role in the victory for the Republican party in 2016 elections (i.e. the victory of Donald Trump)?  
+- Can these economic conditions be found on individual-level survey data for 2016 to substantiate or repudiate the claims made above?  
+
+Outline section-by-section details:  
+
 #Literature Review:
-The voteshare of an incumbment presidential candidate in a state is regressed against the general economic conditions of the state, which can be measured by the change in a state's unemployment rate and the percentage changes in real per capita personal income [@Abrams1980]. Previous vote share for the incumbent party is also introduced as an independent variable [@Abrams1980]. He claims that voters hold presidents accountable for changes in state-level economic conditions therefore cutting certain programs in strongly dominated states and moving them to closely contested states may improve the chances of relection for the incumbent [@Abrams1980]. He also claims that abolishing the electoral college and permitting popular votes to determine presidential outcomes can outweigh the efforts of such state-level redistributive policy [@Abrams1980]. The fact that Donald Trump's victory was highly dependent on the electoral college, since he lost the popular vote by almost XXXXXXXXX votes, and driven by a few contested states in the Rust Belt, show with even more significance the effect of regional economic conditions on vote share. 
+
+##Economic Voting Theory (Authors, Key Variables, Main Idea)  :
+  The effect of economic factors on voteshare of a particular party in democratic countries has been widely accepted by scholars all around the world and makes the basis for economic voting theory. When it comes to the United States, this idea of economic voting has been proven time and again through various types of statistical analysis carried out over the period of multiple election years. Kramer(1971), Fair(1978), Tufte(1978), Rosenstone(1983), Hibbs(1987), Erikson(1989), and Holbrook(1991) all have showed the connection between national macroeconomic conditions and election results in the US [@Ebeid2006a].[^1] The macro-economic variables that are widely used to determine election outcomes are economic growth, disposable income, (un)employment, job growth, economic volatility, etc. [@Jensen2016]. Even in the area of election forecasting, which deals rather with the future outcome than the past, fundamental statistical model is widely used to determine which party will win the elections. The fundamental model takes a chapter from the economic voting theory in the sense that it uses various political and economic variables to determine the outcome of an election. The economic variables used in forecasting also differ and include a range of measures such as:"GDP growth (Abramowitz 2004; Campbell 2004b); GNP growth (Lewis-Beck and Tien 2004); perception of personal finances (Holbrook 2004); prospective personal finances (Lockerbie 2004); leading economic indicators (Wlezien and Erikson 2004); income growth (ibid.); job growth (Lewis-Beck and Tien 2004)" [@Lewis-beck2005]. Moreover, the realm of economic voting has expanded rapidly over the years with new variables, definitions and processes attached to it. While classical economic voting theories have viewed economy as a valence issue, Lewis-Beck and Nadeau (2011) examine positional and patrimonial economic voting [@Lewis-Beck2011]. In their examination, they analyze the different preferences voters have on different economic policy issues and also the economic status of the voters [@Lewis-Beck2011]. Similarly, seeing the rise of globalization all over the world and its impact on the economy, Jensen et. al (2016) claim that trade contains information that growth and employment do not explain and hence include macro-economic indicator such as U.S. trade balance as an explanatory variable for national-level voting [@Jensen2016]. Some scholars see economic voting along-side other non-economic determinants of election outcome and analyze if the effect of the economy still holds true. In one example, Kayser and Wlezien (2011) claim that in the event of strong partisan effects (i.e. voters are strongly tied to a particular party), the effect of the government's performance (which can be seen as its economic performance) has little effect on vote shares [@Kayser2011].
+  The proponents of economic voting agree and disagree with each other on a few aspects. The agreement lies in the idea of analyzing the economic vote through the perspective of an incumbent. The main idea behind economic voting is that voters assess the performance of the incumbent party or candidate and use their vote as a means to determine either to reelect them or to choose the opposition candidate or party. Key's (1970) retrospective model uses bounded rationality theory to claim that voters use their vote as either a reward or a punishment depending on how the incumbent government performed [@Kim2003]. One key question that arises here is: which time period do voters have in mind when they decide to reward or punish the incumbent. The answer to this question depends on several factors: theory, availability of data, actual economic performance vs perception of the economy, and media's effect, to name a few. Ebeid and Rodden (2006) claim that relevant academic literature operationalize real per capita income (RPCI) - one of the economic variables- as a one-year growth rate, and unemployment as an absolute level or first difference [@Ebeid2006a]. What this means is that voters compare the economic condition of the election year to that of the previous year. Eisenberg and Ketcham (2004) carry out a scientific examination of each of the four years in a presidential term against vote share and conclude that the most recent year explains a vast majority of the impact of economic performance [@Eisenberg2004]. A lot of this also depends on the availability of the data. While more recent academic papers have been able to utilize the plethora of data available via various government and private agencies to carry out in-depth analyses, past papers lack such privelege. _This is evident in the fact that XXXX in year XXXX uses the absolute unemployment level while YYYY in year YYYY uses something else, to do the exact same type of analysis_. Another factor that is worth noting is that due to the growing influence of partisan media on voters, there is a possibility that voters may not even base their preference based on actual economic performance but rather on their perception or forced perception of the economy. _fox news effect_.Campaign effects, post-convention polls, post-debate polls, and late swings indicate that economic effects can shape a voter's behavior much later than what Ebeid and Rodden claim when they mention a yearly percentage change. _Find sources to cite for campaign effects, post-convention polls, etc..._       
+  
+  
+  _one or two line on each factor based on academic source_
+
+_incumbent party or candidate_ _(see the election forecasting class model of long-term german thingy)_
+_main idea: incumbent rewarded, retrospective voting, democrats rewarded or republicans rewarded regardless of the incumbent, _
+ This shows that their knowledge about the fundamental variables may be limited.........relies on the assumption of  who vote based on how the economy is performing. Meaning, the serve as judges to determine, based on the performance of the economy, whether to reelect the incumbent party or the incumbent candidate to the presidency.
+
+##Macro-level analysis vs Regional Analysis (States and Counties):
+
+
+
+##Individual-level analysis (Survey Questions, variables used in the past):
+
+
+
+#Background:
+
+##US Election Peculiarities:
+_electoral college_
+_swing states_
+_term limits_
+_media_
+_debates_
+_difficult to incorporate all of them, but in this paper, we will take on a few of them such as swing and non-swing states and other demographic variables that we will discuss later._
+_After looking at the ANES survey data we can decide which of the other peculiarities we can incorporate into our model, for now no need to worry about it, since the main focus is on economic voting and hence economic variables._
+
+#Methodology:
+##Key variables: Data sources, Justification, any manipulation/omission/cutting/merging/ procedure
+
+##Dependent Variable:
+Vote share (Republican Party) or Vote share (Democratic/Incumbent Party) or Difference in vote share between the two parties. In old literature, the second one is used often. However, in the modern literature the third one is used. In the case of this paper, the main question circles around Trump and hence the first variable may work best. 
+_Ask for advice?_
+
+##Independent Variable:
+-Education (replace this with the data from census API)
+-Demographic Data from Census (male, female, ethnicity, religion, education)
+-Unemployment
+-Per capita income
+-Employment in industry
+-Current Transfer Receipts
+-Adjustment for Residence
+-Dummy for incumbent party
+-Rural or urban county
+
+##Key Processes: Descriptive summary, inferential statistics(using OLS, fixed effects, etc.)
+
+#Model Specification and Hypothesis:
+-Hypothesis
+-Regression Equation
+-Discussion of Different Biases and ways to resolve them
+-Robustness Discussion
+
+#Analysis:
+##First Question:
+
+##Second Question:
+
+##Third Question:
+
+#Conclusion:
+
+#Appendix:
+(Test results of all the tests, graphs, tables, plots, etc. that don't go in the main body of the paper.)
+
+The voteshare of an incumbent presidential candidate in a state is regressed against the general economic conditions of the state, which can be measured by the change in a state's unemployment rate and the percentage changes in real per capita personal income [@Abrams1980]. Previous vote share for the incumbent party is also introduced as an independent variable [@Abrams1980]. He claims that voters hold presidents accountable for changes in state-level economic conditions therefore cutting certain programs in strongly dominated states and moving them to closely contested states may improve the chances of reelection for the incumbent [@Abrams1980]. He also claims that abolishing the electoral college and permitting popular votes to determine presidential outcomes can outweigh the efforts of such state-level redistributive policy [@Abrams1980]. The fact that Donald Trump's victory was highly dependent on the electoral college, since he lost the popular vote by almost XXXXXXXXX votes, and driven by a few contested states in the Rust Belt, show with even more significance the effect of regional economic conditions on vote share. 
 _can this model be applied at a county level, since it is simply a smaller geographical setting and more representative since it is closer to the individual level_
 _a dummy for Southern States was taken_ [@Abrams1980].
 
@@ -52,23 +138,13 @@ Bartels [@Bartels2005] argues that "Democratic identification declined by 18% am
 Although one individual has one vote, the value of that vote may be different. 
 _can we see if the 18 percent decline among low-income whites (and seeing where they are concentrated) has more impact on the electoral outcome than the 29 percent decline among high-income whites who may be concentrated in bigger cities and urban areas and democratic states._
 
+[^1]:Gerald H. Kramer, 'Short-Term Fluctuations in U.S. Voting Behavior', American Political
+Science Review, 65 (1971), 131-43; Ray Fair, 'The Effect of Economic Events on Votes for President', Review
+of Economics and Statistics, 60 (1978), 159-72; Edward Tufte, Political Control of the Economy (Princeton, N.J.:
+Princeton University Press, 1978); Steve J. Rosenstone, Forecasting Presidential Elections (New Haven, Conn.:
+Yale University Press, 1983); Douglas A. Hibbs, The American Political Economy (Cambridge, Mass.: Harvard
+University Press, 1987); Robert S. Erikson, 'Economic Conditions and the Presidential Vote', American Political
+Science Review, 83 (1989), 567-73; Thomas M. Holbrook, 'Presidential Elections in Space and Time', American
+Journal of Political Science, 35 (1991), 91-109.  
 
-
-
-
-#Methodology:
-##Dependent Variable:
-Vote share (Republican Party) or Vote share (Democratic/Incumbent Party) or Difference in Voteshare between the two parties. In old literature, the second one is used often. However, in the modern literature the third one is used. In the case of this paper, the main question circles around Trump and hence the first variable may work best. Ask for advice?
-
-##Independent Variable:
--Education (replace this with the data from census API)
--Demographic Data from Census (male, female, ethnicity, religion, education)
--Unemployment
--Per capita income
--Employment in industry
--Current Transfer Receipts
--Adjustment for Residence
--Dummy for incumbent party
--Rural or urban county
-
-#Bibliograhy:
+#Bibliography:
