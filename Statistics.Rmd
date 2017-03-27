@@ -220,6 +220,13 @@ bea_df %<>%
 bea_df <- bea_df %>% filter(county != "NA")
 bea_df$county <- tolower(bea_df$county) #Changed the county names to lowercase
 
+bea_df <- bea_df %>%
+  arrange(county.fips, Year) %>%
+  group_by(county.fips) %>%
+  mutate(PCI_lag = lag(PCI)) %>%
+  filter(Year %% 2 == 0)
+
+
 ```
 
 
@@ -271,6 +278,7 @@ rm(unemp92, unemp96, unemp00, unemp04, unemp08, unemp12)
 unemployment_df <- unemployment_df %>% 
   mutate(state = str_replace_all(state, " ", "")) %>%
   filter(state != "AK" & state != "PR")
+
 
 ```
 
