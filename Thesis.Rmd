@@ -3,7 +3,7 @@ title: "What happened on November 8, 2016 ?"
 author: "Raju Adhikari"
 date: "March 16, 2017"
 output: pdf_document
-bibliography: sources.bib
+bibliography: roughsources.bib
 ---
 
 ```{r setup, include=FALSE}
