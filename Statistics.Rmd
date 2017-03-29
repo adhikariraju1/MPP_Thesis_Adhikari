@@ -78,6 +78,9 @@ election_df <- election_df[, -c(3,4,6,8)]
 #Removing untidy dataframes from the environment
 rm(voteshare_new, voteshare_recent, voteshare_recent_rep, voteshare_recent_dem)
 
+#subsetting only the necessary columns
+election_df <- election_df[c(1:4,7)]
+
 ```
 
 
@@ -220,14 +223,17 @@ bea_df %<>%
 bea_df <- bea_df %>% filter(county != "NA")
 bea_df$county <- tolower(bea_df$county) #Changed the county names to lowercase
 
+#Rename the Year variable to year.
+names(bea_df)[names(bea_df)=="Year"] <- "year"
+
 bea_df <- bea_df %>%
-  arrange(county.fips, Year) %>%
+  arrange(county.fips, year) %>%
   group_by(county.fips) %>%
   mutate(PCI_lag = lag(PCI)) %>%
   mutate(Pop_lag = lag(Pop)) %>%
   mutate(PCCT_lag = lag(PCCT)) %>%
   mutate(Adj_res_lag = lag(Adj_res)) %>%
-  filter(Year %% 2 == 0)
+  filter(year %% 2 == 0)
 
 #Calculate the one year percent change for all the economic variables from BEA
 bea_df$PCI_gro <- (bea_df$PCI - bea_df$PCI_lag)/bea_df$PCI_lag
@@ -338,26 +344,12 @@ unemployment_df$unemp_gro <- (unemployment_df$unemp - unemployment_df$unemp_lag)
 # Finally merging all the 3 dataframes: bea_df, election_df, and unemployment_df
 
 df <- merge(unemployment_df, election_df, by= c('county.fips', 'year'), all = TRUE) %>%
-  merge(bea_df, by.x=c('county.fips', 'year'), by.y=c('county.fips', 'Year'), all = TRUE)
+  merge(bea_df, by=c('county.fips', 'year'), all = TRUE)
 ```
 
 
 
 ###THE END###
-
-```{r census, echo=FALSE, include=FALSE}
-#Census Data
-geo <- geo.make(state = '*', county = '*', combine = F, combine.term = "aggregate", check = FALSE, key = "auto")
-male <- acs.fetch(endyear =2015, span =5, geo, dataset = 'acs', variable = 'B01001_002', col.names = 'auto')
-
-estimate(male)
-estimate(male) -> male.estimate
-
-cbind(male.estimate, standard.error(male)) -> male1
-rownames(male1)
-
-rownames(male1) %>% cbind(male1) -> male1
-```
 
 
 

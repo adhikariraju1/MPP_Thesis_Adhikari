@@ -163,3 +163,18 @@ beaAccom_Food <- beaGet(beaAccom_Food)
 employ <- GET("api.census.gov/data/timeseries/qwi/sa?get=Emp&for=county:*&in=state:02&year=2012&quarter=1&sex=1&sex=2&agegrp=A02&agegrp=A07&ownercode=A00&seasonadj=U&industry=11&key=c7ed765d1b03f4217ccc4b37d31b0dc3580db44e") 
 ```
 
+
+```{r census, echo=FALSE, include=FALSE}
+#Census Data
+geo <- geo.make(state = '*', county = '*', combine = F, combine.term = "aggregate", check = FALSE, key = "auto")
+male <- acs.fetch(endyear =2015, span =5, geo, dataset = 'acs', variable = 'B01001_002', col.names = 'auto')
+
+estimate(male)
+estimate(male) -> male.estimate
+
+cbind(male.estimate, standard.error(male)) -> male1
+rownames(male1)
+
+rownames(male1) %>% cbind(male1) -> male1
+```
+
