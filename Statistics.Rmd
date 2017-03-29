@@ -90,7 +90,7 @@ beaPop <- list(
     'datasetname' = 'RegionalIncome',
     'TableName' = 'CA1' ,
     'LineCode' = '2',
-    'Year' = '1992, 1996, 2000, 2004, 2008, 2012' ,
+    'Year' = '1991, 1992, 1995, 1996, 1999, 2000, 2003, 2004, 2007, 2008, 2011, 2012' ,
     'GeoFips' = 'COUNTY' ,
     'ResultFormat' = 'json'
 )
@@ -111,7 +111,7 @@ beaPCI <- list(
     'datasetname' = 'RegionalIncome',
     'TableName' = 'CA1' ,
     'LineCode' = '3',
-    'Year' = '1992, 1996, 2000, 2004, 2008, 2012' ,
+    'Year' = '1991, 1992, 1995, 1996, 1999, 2000, 2003, 2004, 2007, 2008, 2011, 2012' ,
     'GeoFips' = 'COUNTY' ,
     'ResultFormat' = 'json'
 );
@@ -137,7 +137,7 @@ beaPercapita_Current_Transfer <- list(
     'datasetname' = 'RegionalIncome',
     'TableName' = 'CA30' ,
     'LineCode' = '130',
-    'Year' = '1992, 1996, 2000, 2004, 2008, 2012' ,
+    'Year' = '1991, 1992, 1995, 1996, 1999, 2000, 2003, 2004, 2007, 2008, 2011, 2012' ,
     'GeoFips' = 'COUNTY' ,
     'ResultFormat' = 'json'
 );
@@ -159,7 +159,7 @@ beaAdjustment_Residence <- list(
     'datasetname' = 'RegionalIncome',
     'TableName' = 'CA91' ,
     'LineCode' = '30',
-    'Year' = '1992, 1996, 2000, 2004, 2008, 2012' ,
+    'Year' = '1991, 1992, 1995, 1996, 1999, 2000, 2003, 2004, 2007, 2008, 2011, 2012' ,
     'GeoFips' = 'COUNTY' ,
     'ResultFormat' = 'json'
 );
@@ -224,7 +224,16 @@ bea_df <- bea_df %>%
   arrange(county.fips, Year) %>%
   group_by(county.fips) %>%
   mutate(PCI_lag = lag(PCI)) %>%
+  mutate(Pop_lag = lag(Pop)) %>%
+  mutate(PCCT_lag = lag(PCCT)) %>%
+  mutate(Adj_res_lag = lag(Adj_res)) %>%
   filter(Year %% 2 == 0)
+
+#Calculate the one year percent change for all the economic variables from BEA
+bea_df$PCI_gro <- (bea_df$PCI - bea_df$PCI_lag)/bea_df$PCI_lag
+bea_df$PCCT_gro <- (bea_df$PCCT - bea_df$PCCT_lag)/bea_df$PCCT_lag
+bea_df$Adj_gro <- (bea_df$Adj_res - bea_df$Adj_res_lag)/bea_df$Adj_res_lag
+
 
 
 ```
@@ -232,27 +241,56 @@ bea_df <- bea_df %>%
 
 ```{r blsdata, echo=FALSE,}
 #BLS Data on Unemployment by county, clean data, remove unnecessary rows
+unemp91 <- read_excel('laucnty91.xlsx')
+unemp91 <- separate(unemp91, County, into = c("County.name", "State"), sep=",")
+unemp91 <- unemp91[-c(3218:3220), ]
+
 unemp92 <- read_excel('laucnty92.xlsx')
 unemp92 <- separate(unemp92, County, into = c("County.name", "State"), sep=",")
 unemp92 <- unemp92[-c(3217:3219), ]
+
+unemp95 <- read_excel('laucnty95.xlsx')
+unemp95 <- separate(unemp95, County, into = c("County.name", "State"), sep=",")
+unemp95 <- unemp95[-c(3219:3221), ]
+
 unemp96 <- read_excel('laucnty96.xlsx')
 unemp96 <- separate(unemp96, County, into = c("County.name", "State"), sep=",")
 unemp96 <- unemp96[-c(3218:3220), ]
+
+unemp99 <- read_excel('laucnty99.xlsx')
+unemp99 <- separate(unemp99, County, into = c("County.name", "State"), sep=",")
+unemp99 <- unemp99[-c(3219:3221), ]
+
 unemp00 <- read_excel('laucnty00.xlsx')
 unemp00 <- separate(unemp00, County, into = c("County.name", "State"), sep=",")
 unemp00 <- unemp00[-c(3218:3220), ]
+
+unemp03 <- read_excel('laucnty03.xlsx')
+unemp03 <- separate(unemp03, County, into = c("County.name", "State"), sep=",")
+unemp03 <- unemp03[-c(3219:3221), ]
+
 unemp04 <- read_excel('laucnty04.xlsx')
 unemp04 <- separate(unemp04, County, into = c("County.name", "State"), sep=",")
 unemp04 <- unemp04[-c(3218:3220), ]
+
+unemp07 <- read_excel('laucnty07.xlsx')
+unemp07 <- separate(unemp07, County, into = c("County.name", "State"), sep=",")
+unemp07 <- unemp07[-c(3219:3221), ]
+
 unemp08 <- read_excel('laucnty08.xlsx')
 unemp08 <- separate(unemp08, County, into = c("County.name", "State"), sep=",")
 unemp08 <- unemp08[-c(3218:3220), ]
+
+unemp11 <- read_excel('laucnty11.xlsx')
+unemp11 <- separate(unemp11, County, into = c("County.name", "State"), sep=",")
+unemp11 <- unemp11[-c(3221:3223), ]
+
 unemp12 <- read_excel('laucnty12.xlsx')
 unemp12 <- separate(unemp12, County, into = c("County.name", "State"), sep=",")
 unemp12 <- unemp12[-c(3220:3222), ]
 
 #Combine all the dataframes from different years into one dataframe
-unemployment_df <- bind_rows(unemp92, unemp96, unemp00, unemp04, unemp08, unemp12, .id = NULL)
+unemployment_df <- bind_rows(unemp91, unemp92, unemp95, unemp96, unemp99, unemp00, unemp03, unemp04, unemp07,  unemp08, unemp11, unemp12, .id = NULL)
 names(unemployment_df)[names(unemployment_df)=="County.name"] <- "county"
 names(unemployment_df)[names(unemployment_df)=="State"] <- "state"
 names(unemployment_df)[names(unemployment_df)=="County Code"] <- "county.fips"
@@ -272,13 +310,25 @@ unemployment_df$county.fips <- as.numeric(unemployment_df$county.fips)
 unemployment_df$year <- as.numeric(unemployment_df$year)
 
 #Remove untidy dataframes from the environment
-rm(unemp92, unemp96, unemp00, unemp04, unemp08, unemp12) 
+rm(unemp91, unemp92, unemp95, unemp96, unemp99, unemp00, unemp03, unemp04, unemp07,  unemp08, unemp11, unemp12) 
 
 # There is an extra space in front or back of the state names. Need to remove them
 unemployment_df <- unemployment_df %>% 
   mutate(state = str_replace_all(state, " ", "")) %>%
   filter(state != "AK" & state != "PR")
 
+#Rename the variable "Unemployment" to "unemp"
+names(unemployment_df)[names(unemployment_df)=="Unemployment Rate"] <- "unemp"
+
+#Do the lag of unemloyment
+unemployment_df <- unemployment_df %>%
+  arrange(county.fips, year) %>%
+  group_by(county.fips) %>%
+  mutate(unemp_lag = lag(unemp)) %>%
+  filter(year %% 2 == 0)
+
+#Calculate the one year percent change for unemployment
+unemployment_df$unemp_gro <- (unemployment_df$unemp - unemployment_df$unemp_lag)/unemployment_df$unemp_lag
 
 ```
 
