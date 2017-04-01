@@ -26,6 +26,7 @@ library(jsonlite)
 library(stringr)
 library(rJava)
 library(xlsx)
+library(qdap)
 
 #Setting the working directory
 setwd("C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari")
@@ -219,7 +220,10 @@ bea_df <- bea_df[c(1,2,4:6,14:16)]
 bea_df <- bea_df %>% 
   mutate(county = str_replace_all(county, " city", ""))
 
-#TOTO: There are some counties that appear like this: fremont (includes yellowstone park). Some others appear like this: baltimore (independent). I want to remove the part inside the parenthesis so that only the county name appears. There is also a county called doña ana. Can we change all the ñ into n.
+#To remove, things inside the parenthesis such as fremont (includes yellowstone park) and baltimore (independent).
+bea_df$county <-  genX(bea_df$county, " (", ")") #qdap package helped with this.
+
+#TOTO:There is also a county called doña ana. Can we change all the ñ into n.
 
 ```
 
@@ -345,6 +349,9 @@ write.xlsx(df, "C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari/df.xlsx")
 
 #But the county names might still be different and not aligned. 
 df1 <- df[df$county.x != df$county.y, ]
+
+
+
 write.xlsx(df1, "C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari/df1.xlsx")
 
 ```
