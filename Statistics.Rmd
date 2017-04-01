@@ -325,9 +325,8 @@ unemployment_df <- unemployment_df[c(2:5,11)]
 #Renaming certain objects in the county names
 unemployment_df <- unemployment_df %>% 
   mutate(county = str_replace_all(county, " parish", "")) %>%
-  mutate(county = str_replace_all(county, " city", ""))
-
-#TOTO: I have some counties that appear like this: c("san francisco", "/city"). I want to remove all the unncessary symbols so that it says only san francisco. There are also some that look like this: c("nantucket", "/town"). Here also we need to repeat the same procedure so it shows only nantucket.
+  mutate(county = str_replace_all(county, " city", "")) %>%
+  mutate(county = str_replace_all(county, " town", ""))
 
 
 ```
