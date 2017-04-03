@@ -339,20 +339,40 @@ unemployment_df <- unemployment_df %>%
 ```{r Merging, echo=FALSE, include=FALSE}
 # Finally merging all the 3 dataframes: bea_df, election_df, and unemployment_df
 
-df <- merge(unemployment_df, bea_df, by= c('county.fips', 'year'), all = TRUE) #Merging first two datasets
-
+df <- merge(unemployment_df, bea_df, by= c('county.fips', 'year'), all.x = TRUE) #Merging first two datasets
+df1 <- merge(df, election_df, by =c('county.fips', 'year'), all.x = TRUE)
 #filtering to remove AK from the dataset. After doing this, all the states matched between the two datasets. We check this using the unique function.
+df2 <- df1[c(1,2,12,13,8,14,5,9,10,11)] #Subsetting into the final dataframe with only variables and in proper order.
 
-unique(df$state.x) 
-unique(df$state.y)
+#Correlation matrix for all the variables: independent and dependent
+cor(df2[,c(6:10)], use="complete.obs", method="pearson")
+
+#Creating a dummy variable for incumbency
+incumbency <- read.csv("incumbency.csv") 
+names(incumbency)[names(incumbency)=="ï..year"] <- "year"
+
+df3 <- merge(df2, incumbency, by = 'year', all.x = TRUE)  #TOTO: Should dummy variable be left as numeric or changed to factor?
+
+
+
+#Creating a dummy for rural or urban
+rural <- read.csv("rural.csv")
+rural <- rural[c(1,4,5)]
+names(rural)[names(rural)=="ï..county.fips"] <- "county.fips"
+
+df4 <- merge(df3, rural, by = 'county.fips', all.x = TRUE)
+
+#Just some checks. No need to perform
+unique(df1$state.x) 
+unique(df1$state) 
 
 all(df$state.x == df$state.y, na.rm=TRUE) #To check if two columns are identical
 all(df$county.x == df$county.y, na.rm=TRUE) #To check if two columns are identical
 
 
-df1 <- df[df$state.x != df$state.y, ] #This shows that many states don't correspond to each other. We need to list them
+df3 <- df[df$state.x != df$state.y, ] #This shows that many states don't correspond to each other. We need to list them
 
-write.xlsx(df, "C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari/df.xlsx")
+write.xlsx(df1, "C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari/df1.xlsx")
 
 #TOTO: Two issues with merging bea_df and unemployment_df:
 #1. bea_df has a county called: maui + kalawao whereas unemployment_df has one called maui. Since kalawao is a very small island, we see that even in the election data, it is not included. Hence we need to rename the county to simply show maui only.
@@ -364,6 +384,7 @@ write.xlsx(df, "C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari/df.xlsx")
 
 ```{r other, echo=FALSE, include=FALSE}
 
+write.xlsx(election_df, "C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari/df3.xlsx")
 
 
 ```
