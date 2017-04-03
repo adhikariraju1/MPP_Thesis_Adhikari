@@ -45,7 +45,7 @@ election_df <- read.csv("full-us-presidential-counties-1992-2012-rep.csv")
 #Renaming column names to merge them with other data later
 names(election_df)[names(election_df)=="state.abb"] <- "state"
 names(election_df)[names(election_df)=="county.name"] <- "county"
-names(election_df)[names(election_df)=="ï..year"] <- "year"
+names(election_df)[names(election_df)=="?..year"] <- "year"
 
 
 #Converting the county and state columns from factors into strings so that they can be merged with other dataframes later
@@ -219,14 +219,15 @@ bea_df <- bea_df[c(1,2,4:6,14:16)]
 
 bea_df <- bea_df %>% 
   mutate(county = str_replace_all(county, " city", "")) %>%
-  mutate(county = str_replace_all(county, "doña", "dona"))
+  mutate(county = str_replace_all(county, "do?a", "dona"))
 
 
 #To remove, things inside the parenthesis such as fremont (includes yellowstone park) and baltimore (independent).
 bea_df$county <-  genX(bea_df$county, " (", ")") #qdap package helped with this.
 
 bea_df <- bea_df %>% 
-  filter(state != "AK")
+  filter(state != "AK") %>%
+  mutate(county = ifelse(county == "maui + kalawao", "maui", county))
 
 ```
 
@@ -349,16 +350,16 @@ cor(df2[,c(6:10)], use="complete.obs", method="pearson")
 
 #Creating a dummy variable for incumbency
 incumbency <- read.csv("incumbency.csv") 
-names(incumbency)[names(incumbency)=="ï..year"] <- "year"
+names(incumbency)[names(incumbency)=="?..year"] <- "year"
 
-df3 <- merge(df2, incumbency, by = 'year', all.x = TRUE)  #TOTO: Should dummy variable be left as numeric or changed to factor?
-
-
+df3 <- merge(df2, incumbency, by = 'year', all.x = TRUE)  
+#Should dummy variable be left as numeric or changed to factor?
+## Preferably numeric. so that is fine. (@devvart)
 
 #Creating a dummy for rural or urban
 rural <- read.csv("rural.csv")
 rural <- rural[c(1,4,5)]
-names(rural)[names(rural)=="ï..county.fips"] <- "county.fips"
+names(rural)[names(rural)=="?..county.fips"] <- "county.fips"
 
 df4 <- merge(df3, rural, by = 'county.fips', all.x = TRUE)
 
@@ -377,8 +378,6 @@ rm(df, df1, df2, df3)
 write.xlsx(df4, "C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari/df4.xlsx")
 
 #TOTO: Two issues with merging bea_df and unemployment_df:
-#1. bea_df has a county called: maui + kalawao whereas unemployment_df has one called maui. Since kalawao is a very small island, we see that even in the election data, it is not included. Hence we need to rename the county to simply show maui only.
-
 #2. bea_df has most counties in Virginia (VA) combined with another county with a plus (+) sign, whereas they are separated in the unemployment_df. Election_df also has them separate. Not sure how to go about this issue. 
 
 ```
