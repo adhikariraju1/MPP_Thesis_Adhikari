@@ -382,8 +382,6 @@ df3 <- df[df$state.x != df$state.y, ] #This shows that many states don't corresp
 
 rm(df, df1, df2, df3)
 
-
-
 ```
 
 
