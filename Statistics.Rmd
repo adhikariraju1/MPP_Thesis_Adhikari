@@ -372,7 +372,9 @@ all(df$county.x == df$county.y, na.rm=TRUE) #To check if two columns are identic
 
 df3 <- df[df$state.x != df$state.y, ] #This shows that many states don't correspond to each other. We need to list them
 
-write.xlsx(df1, "C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari/df1.xlsx")
+rm(df, df1, df2, df3)
+
+write.xlsx(df4, "C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari/df4.xlsx")
 
 #TOTO: Two issues with merging bea_df and unemployment_df:
 #1. bea_df has a county called: maui + kalawao whereas unemployment_df has one called maui. Since kalawao is a very small island, we see that even in the election data, it is not included. Hence we need to rename the county to simply show maui only.
