@@ -6,6 +6,7 @@ output:
   pdf_document: default
   word_document: default
 bibliography: sources.bib
+csl: apa.csl
 ---
 
 ```{r setup, include=FALSE}
