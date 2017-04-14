@@ -27,6 +27,7 @@ library(stringr)
 library(rJava)
 library(xlsx)
 library(qdap)
+library(data.table)
 
 #Setting the working directory
 setwd("C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari")
@@ -223,12 +224,13 @@ bea_df <- bea_df %>%
 
 
 #To remove, things inside the parenthesis such as fremont (includes yellowstone park) and baltimore (independent).
-bea_df$county <-  genX(bea_df$county, " (", ")") #qdap package helped with this.
+bea_df$county <-  genX(bea_df$county, " (", ")") #qdap package helped with lllthis.
 
 bea_df <- bea_df %>% 
+  ungroup() %>%
   filter(state != "AK") %>%
   mutate(county = ifelse(county == "maui + kalawao", "maui", county)) %>%
-  mutate(county.fips = ifelse(county.fips == "15901", "15009", county.fips))
+  mutate(county.fips = ifelse(county.fips == 15901, 15009, county.fips))
 
 #TOTO: Just saw that maui needs to have a fips code of 15009 instead of 15901 in order to merge with other datasets. I put the code above, but it didn"t work.
 
@@ -387,6 +389,15 @@ rm(df, df1, df2, df3)
 
 ```{r other, echo=FALSE, include=FALSE}
 write.xlsx(df4, "C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari/df4.xlsx")
+
+```
+
+```{r}
+race_al <- read.fwf("C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari/al.1990_2014.19ages.adjusted.txt", widths = c(4,2,2,3,2,1,1,1,2,8), colClasses = "character")
+
+colnames(race_al) <- c("year", "state", "state.fips", "county.fips", "registry", "race", "origin", "sex", "age.group", "population")
+
+race_al2 <- fread("C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari/al.1990_2014.19ages.adjusted.txt", stringsAsFactors = FALSE)
 
 ```
 
