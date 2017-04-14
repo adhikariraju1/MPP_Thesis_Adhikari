@@ -23,7 +23,7 @@ election_df <- read.csv("full-us-presidential-counties-1992-2012-rep.csv")
 #Renaming column names to merge them with other data later
 names(election_df)[names(election_df)=="state.abb"] <- "state"
 names(election_df)[names(election_df)=="county.name"] <- "county"
-names(election_df)[names(election_df)=="Ã¯..year"] <- "year"
+names(election_df)[names(election_df)=="ï..year"] <- "year"
 
 
 #Converting the county and state columns from factors into strings so that they can be merged with other dataframes later
@@ -195,7 +195,7 @@ bea_df <- bea_df[c(1,2,4:6,14:16)]
 
 bea_df <- bea_df %>% 
   mutate(county = str_replace_all(county, " city", "")) %>%
-  mutate(county = str_replace_all(county, "doÃ±a", "dona"))
+  mutate(county = str_replace_all(county, "doña", "dona"))
 
 
 #To remove, things inside the parenthesis such as fremont (includes yellowstone park) and baltimore (independent).
@@ -314,43 +314,59 @@ unemployment_df <- unemployment_df %>%
   mutate(county = str_replace_all(county, " city", "")) %>%
   mutate(county = str_replace_all(county, " town", ""))
 
-#********************************************BLS unemployment datasets************************************
+#********************************************Merging all datasets************************************
 
 # Finally merging all the 3 dataframes: bea_df, election_df, and unemployment_df
 
-df <- merge(unemployment_df, bea_df, by= c('county.fips', 'year'), all.x = TRUE) #Merging first two datasets
-df1 <- merge(df, election_df, by =c('county.fips', 'year'), all.x = TRUE)
+beabls_df <- merge(unemployment_df, bea_df, by= c('county.fips', 'year'), all.x = TRUE) #Merging first two datasets
+beablselec <- merge(beabls_df, election_df, by =c('county.fips', 'year'), all.x = TRUE)
 #filtering to remove AK from the dataset. After doing this, all the states matched between the two datasets. We check this using the unique function.
-df2 <- df1[c(1,2,12,13,8,14,5,9,10,11)] #Subsetting into the final dataframe with only variables and in proper order.
-
-#Correlation matrix for all the variables: independent and dependent
-cor(df2[,c(6:10)], use="complete.obs", method="pearson")
+merged_df1 <- beablselec[c(1,2,12,13,8,14,5,9,10,11)] #Subsetting into the final dataframe with only variables and in proper order.
 
 #Creating a dummy variable for incumbency
 incumbency <- read.csv("incumbency.csv") 
 names(incumbency)[names(incumbency)=="ï..year"] <- "year"
 
-df3 <- merge(df2, incumbency, by = 'year', all.x = TRUE)  
-#Should dummy variable be left as numeric or changed to factor?
-## Preferably numeric. so that is fine. (@devvart)
+merged_df2 <- merge(merged_df1, incumbency, by = 'year', all.x = TRUE)  
+
 
 #Creating a dummy for rural or urban
 rural <- read.csv("rural.csv")
 rural <- rural[c(1,4,5)]
 names(rural)[names(rural)=="ï..county.fips"] <- "county.fips"
 
-df4 <- merge(df3, rural, by = 'county.fips', all.x = TRUE)
+merged_df3 <- merge(merged_df2, rural, by = 'county.fips', all.x = TRUE)
 
+#Remove previous dataframes:
+rm(bea_df, beabls_df, beablselec, election_df, incumbency, merged_df1, merged_df2, rural, 
+   unemployment_df)
+
+
+#********************************************Merging race dataset************************************
+
+
+
+
+
+
+
+#Some other things:
 #Just some checks. No need to perform
-unique(df1$state.x) 
-unique(df1$state) 
+#unique(df1$state.x) 
+#unique(df1$state) 
 
-all(df$state.x == df$state.y, na.rm=TRUE) #To check if two columns are identical
-all(df$county.x == df$county.y, na.rm=TRUE) #To check if two columns are identical
-
-
-df3 <- df[df$state.x != df$state.y, ] #This shows that many states don't correspond to each other. We need to list them
-
-rm(df, df1, df2, df3)
+#all(df$state.x == df$state.y, na.rm=TRUE) #To check if two columns are identical
+#all(df$county.x == df$county.y, na.rm=TRUE) #To check if two columns are identical
 
 
+#df3 <- df[df$state.x != df$state.y, ] #This shows that many states don't correspond to each other. We need to list them
+
+
+
+
+
+
+
+
+#Correlation matrix for all the variables: independent and dependent
+#cor(merged_df1[,c(6:10)], use="complete.obs", method="pearson")
