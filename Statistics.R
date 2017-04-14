@@ -8,7 +8,7 @@ packages <- c("bea.R", "acs", "magrittr", "httr", "tidyr", "blsAPI", "rjson", "r
 load <- lapply(packages, require, character.only = T)
 
 #Setting the working directory
-setwd("C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari")
+setwd("C:/RajuPC/MPP Final Thesis/WorkingDirectory")
 
 #All the keys for different APIs obtained from the respective websites
 blskey <- "a9e62413e38741b5aeb814efc5a3d066"

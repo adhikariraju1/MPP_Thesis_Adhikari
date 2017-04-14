@@ -11,9 +11,9 @@ csl: apa.csl
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, cache = 2)
-knitr::opts_knit$set(root.dir = "C:/RajuPC/MPP Final Thesis/MPP_Thesis_Adhikari")
+knitr::opts_knit$set(root.dir = "C:/RajuPC/MPP Final Thesis/WorkingDirectory")
 
-source("Statistics.R")
+# source("Statistics.R")
 
 ```
 
