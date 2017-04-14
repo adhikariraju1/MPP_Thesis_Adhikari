@@ -10,10 +10,10 @@ csl: apa.csl
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, cache = 2)
+knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_knit$set(root.dir = "C:/RajuPC/MPP Final Thesis/WorkingDirectory")
 
-# source("Statistics.R")
+#source("source.R")
 
 ```
 
