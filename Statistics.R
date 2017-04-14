@@ -19,19 +19,51 @@ datagovkey <- "ubFrNGonfwMQm3lK04C6djaMcqFuIe5mvev4RooI"
 
 #********************************************Election dataset************************************
 
-election_df <- read.csv("full-us-presidential-counties-1992-2012-rep.csv")
+#Loading Republican voting data:
+election_df1 <- read.csv("full-us-presidential-counties-1992-2012-rep.csv")
 #Renaming column names to merge them with other data later
-names(election_df)[names(election_df)=="state.abb"] <- "state"
-names(election_df)[names(election_df)=="county.name"] <- "county"
-names(election_df)[names(election_df)=="ï..year"] <- "year"
+names(election_df1)[names(election_df1)=="state.abb"] <- "state"
+names(election_df1)[names(election_df1)=="county.name"] <- "county"
+names(election_df1)[names(election_df1)=="ï..year"] <- "year"
+names(election_df1)[names(election_df1)=="vote.percent"] <- "vote.percent.rep"
 
 
 #Converting the county and state columns from factors into strings so that they can be merged with other dataframes later
-election_df$county <- as.character(election_df$county)
-election_df$state <- as.character(election_df$state)
+election_df1$county <- as.character(election_df1$county)
+election_df1$state <- as.character(election_df1$state)
 
 #subsetting only the necessary columns for the final dataframe.
-election_df <- election_df[c(1,2,5,7,10)]
+election_df1 <- election_df1[c(1,2,5,7,10)]
+
+
+#Loading Democratic voting data:
+election_df2 <- read.csv("full-us-presidential-counties-1992-2012-demo.csv")
+#Renaming column names to merge them with other data later
+names(election_df2)[names(election_df2)=="state.abb"] <- "state"
+names(election_df2)[names(election_df2)=="county.name"] <- "county"
+names(election_df2)[names(election_df2)=="ï..year"] <- "year"
+names(election_df2)[names(election_df2)=="vote.percent"] <- "vote.percent.dem"
+
+
+#Converting the county and state columns from factors into strings so that they can be merged with other dataframes later
+election_df2$county <- as.character(election_df2$county)
+election_df2$state <- as.character(election_df2$state)
+
+#subsetting only the necessary columns for the final dataframe.
+election_df2 <- election_df2[c(1,2,5,7,10)]
+
+#Merging republican and democratic data to get the two-party voteshare:
+election_df <- merge(election_df1, election_df2, by = c('county.fips', 'year', 'county', 'year', 'state'), 
+                     all = TRUE)
+
+#Creating a variable for republican two-party vote share:
+election_df$rep.share <- election_df$vote.percent.rep / (election_df$vote.percent.rep + election_df$vote.percent.dem) 
+
+#Creating a variable to see whether a county is a democratic county or a republican county
+election_df$is.rep <- ifelse(election_df$rep.share > 0.50, "1", "0")
+election_df$is.rep <- as.numeric(election_df$is.rep)
+
+election_df <- election_df[c(1:4, 7:8)]
 
 #********************************************BEA economic datasets************************************
 
@@ -321,30 +353,44 @@ unemployment_df <- unemployment_df %>%
 beabls_df <- merge(unemployment_df, bea_df, by= c('county.fips', 'year'), all.x = TRUE) #Merging first two datasets
 beablselec <- merge(beabls_df, election_df, by =c('county.fips', 'year'), all.x = TRUE)
 #filtering to remove AK from the dataset. After doing this, all the states matched between the two datasets. We check this using the unique function.
-merged_df1 <- beablselec[c(1,2,12,13,8,14,5,9,10,11)] #Subsetting into the final dataframe with only variables and in proper order.
+merged_df1 <- beablselec[c(1,2,12,13,8,14,15,5,9,10,11)] #Subsetting into the final dataframe with only variables and in proper order.
 
-#Creating a dummy variable for incumbency
+#Incumbency dummy:
 incumbency <- read.csv("incumbency.csv") 
 names(incumbency)[names(incumbency)=="ï..year"] <- "year"
 
 merged_df2 <- merge(merged_df1, incumbency, by = 'year', all.x = TRUE)  
 
 
-#Creating a dummy for rural or urban
+#Rural dummy:
 rural <- read.csv("rural.csv")
 rural <- rural[c(1,4,5)]
 names(rural)[names(rural)=="ï..county.fips"] <- "county.fips"
 
 merged_df3 <- merge(merged_df2, rural, by = 'county.fips', all.x = TRUE)
 
+
+# White dummy
+race <- read.csv("race.csv")
+names(race)[names(race)=="ï..county.fips"] <- "county.fips"
+race <- race[c(1:5)]
+race$white <- race$whitemale + race$whitefemale
+race <- race[c(1:3,6)]
+
+merged_df4 <- merge(merged_df3, race, by = c('county.fips', 'year', 'state'), all.x = TRUE)
+
+merged_df4$white.percent <- merged_df4$white / merged_df4$Pop
+merged_df4 <- merged_df4[-c(15)] #Removing the column with white population total
+
+
+
+
 #Remove previous dataframes:
-rm(bea_df, beabls_df, beablselec, election_df, incumbency, merged_df1, merged_df2, rural, 
-   unemployment_df)
+#rm(bea_df, beabls_df, beablselec, election_df, incumbency, merged_df1, merged_df2, merged_df3, rural, 
+   #unemployment_df)
 
 
 #********************************************Merging race dataset************************************
-
-
 
 
 
