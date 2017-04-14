@@ -383,14 +383,11 @@ merged_df4$white.percent <- merged_df4$white / merged_df4$Pop
 merged_df4 <- merged_df4[-c(15)] #Removing the column with white population total
 
 
-
-
 #Remove previous dataframes:
 #rm(bea_df, beabls_df, beablselec, election_df, incumbency, merged_df1, merged_df2, merged_df3, rural, 
    #unemployment_df)
 
-
-#********************************************Merging race dataset************************************
+#********************************************Regressions************************************
 
 
 
