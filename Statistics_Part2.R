@@ -2,67 +2,69 @@
 #********************************************Election dataset************************************
 
 #Loading Republican voting data:
-p2election_df1 <- read.csv("full-us-presidential-counties-2012-2016-rep.csv")
+election_df1 <- read.csv("full-us-presidential-counties-2012-2016-rep.csv")
 #Renaming column names to merge them with other data later
-names(p2election_df1)[names(p2election_df1)=="state.abb"] <- "state"
-names(p2election_df1)[names(p2election_df1)=="county.name"] <- "county"
-names(p2election_df1)[names(p2election_df1)=="Ã¯..year"] <- "year"
-names(p2election_df1)[names(p2election_df1)=="vote.percent"] <- "vote.percent.rep"
+names(election_df1)[names(election_df1)=="state.abb"] <- "state"
+names(election_df1)[names(election_df1)=="county.name"] <- "county"
+names(election_df1)[names(election_df1)=="ï..year"] <- "year"
+names(election_df1)[names(election_df1)=="vote.percent"] <- "vote.percent.rep"
 
 
 #Converting the county and state columns from factors into strings so that they can be merged with other dataframes later
-p2election_df1$county <- as.character(p2election_df1$county)
-p2election_df1$state <- as.character(p2election_df1$state)
+election_df1$county <- as.character(election_df1$county)
+election_df1$state <- as.character(election_df1$state)
 
 #subsetting only the necessary columns for the final dataframe.
-p2election_df1 <- p2election_df1[c(1,2,5,7,10)]
+election_df1 <- election_df1[c(1,2,5,7,10)]
 
 
 #Loading Democratic voting data:
-p2election_df2 <- read.csv("full-us-presidential-counties-2012-2016-demo.csv")
+election_df2 <- read.csv("full-us-presidential-counties-2012-2016-demo.csv")
 #Renaming column names to merge them with other data later
-names(p2election_df2)[names(p2election_df2)=="state.abb"] <- "state"
-names(p2election_df2)[names(p2election_df2)=="county.name"] <- "county"
-names(p2election_df2)[names(p2election_df2)=="Ã¯..year"] <- "year"
-names(p2election_df2)[names(p2election_df2)=="vote.percent"] <- "vote.percent.dem"
+names(election_df2)[names(election_df2)=="state.abb"] <- "state"
+names(election_df2)[names(election_df2)=="county.name"] <- "county"
+names(election_df2)[names(election_df2)=="ï..year"] <- "year"
+names(election_df2)[names(election_df2)=="vote.percent"] <- "vote.percent.dem"
 
 
 #Converting the county and state columns from factors into strings so that they can be merged with other dataframes later
-p2election_df2$county <- as.character(p2election_df2$county)
-p2election_df2$state <- as.character(p2election_df2$state)
+election_df2$county <- as.character(election_df2$county)
+election_df2$state <- as.character(election_df2$state)
 
 #subsetting only the necessary columns for the final dataframe.
-p2election_df2 <- p2election_df2[c(1,2,5,7,10)]
+election_df2 <- election_df2[c(1,2,5,7,10)]
 
 #Merging republican and democratic data to get the two-party voteshare:
-p2election_df <- merge(p2election_df1, p2election_df2, by = c('county.fips', 'year', 'county', 'year', 'state'), 
+election_df <- merge(election_df1, election_df2, by = c('county.fips', 'year', 'county', 'state'), 
                      all = TRUE)
 
 #Creating a variable for republican two-party vote share:
-p2election_df$rep.share <- p2election_df$vote.percent.rep / (p2election_df$vote.percent.rep + p2election_df$vote.percent.dem) 
+election_df$rep.share <- election_df$vote.percent.rep / (election_df$vote.percent.rep + election_df$vote.percent.dem) 
 
 
 #Add a lag of rep.voteshare and then remove year 2012: 
-p2election_df <- p2election_df %>%
+election_df <- election_df %>%
   arrange(county.fips, year) %>%
   group_by(county.fips) %>%
   mutate(repshare.lag = lag(rep.share)) %>%
   filter(year > 2012)
 
 #Creating a variable to see whether a county is a democratic county or a republican county
-p2election_df$is.rep.2016 <- ifelse(p2election_df$rep.share > 0.50, "1", "0")
-p2election_df$is.rep.2012 <- ifelse(p2election_df$repshare.lag > 0.50, "1", "0")
+election_df$is.rep.2016 <- ifelse(election_df$rep.share > 0.50, "1", "0")
+election_df$is.rep.2012 <- ifelse(election_df$repshare.lag > 0.50, "1", "0")
 
-p2election_df$is.rep.2016 <- as.numeric(p2election_df$is.rep.2016)
-p2election_df$is.rep.2012 <- as.numeric(p2election_df$is.rep.2012)
+election_df$is.rep.2016 <- as.numeric(election_df$is.rep.2016)
+election_df$is.rep.2012 <- as.numeric(election_df$is.rep.2012)
 
-p2election_df <- p2election_df[c(1:4,7:10)]
+election_df <- election_df[c(1:4,7:10)]
 
+#Remove untidy dataframes:
+rm(election_df1, election_df2)
 
 #********************************************BEA economic datasets************************************
 
 #BEA Regional Income Data: Population by county 
-##2016 Data is not available
+##2016 Data is not available, so we will use 2015 data
 beaPop <- list(
   'UserID' = beaKey ,
   'Method' = 'GetData',
@@ -81,6 +83,7 @@ Population <- jsonlite::fromJSON(beaPop)$BEAAPI$Results$Data %>%
   mutate(Year = as.numeric(Year))
 
 names(Population)[5]<-"Pop_Label"
+names(Population)[7]<-"pop"
 Population <- Population[, -c(1,5,6,8)]
 
 #BEA Regional Income Data: Per Capita Income by county
@@ -103,10 +106,8 @@ PerCapitaIncome <- jsonlite::fromJSON(beaPCI)$BEAAPI$Results$Data %>%
   mutate(Year = as.numeric(Year))
 
 names(PerCapitaIncome)[5]<-"PCI_Label"
+names(PerCapitaIncome)[7]<-"pci"
 PerCapitaIncome <- PerCapitaIncome[, -c(1,5,6,8)]
-
-#The data is available until 2015 only. Let's see what can be done to match the election data. 
-
 
 #BEA Regional Income Data: Current Transfer receipts of individuals from Governments
 ##API error, this data is not loading.
@@ -129,6 +130,7 @@ PerCapitaCurrentTransfer <- jsonlite::fromJSON(beaPercapita_Current_Transfer)$BE
   mutate(Year = as.numeric(Year))
 
 names(PerCapitaCurrentTransfer)[5]<-"PCCT_Label"
+names(PerCapitaCurrentTransfer)[7]<-"pcct"
 PerCapitaCurrentTransfer <- PerCapitaCurrentTransfer[, -c(1,5,6,8)]
 
 #BEA Regional Income Data: Adjustment for Residence equals the inflows to that county minus the outflows from that county
@@ -152,6 +154,7 @@ AdjustmentResidence <- jsonlite::fromJSON(beaAdjustment_Residence)$BEAAPI$Result
 
 
 names(AdjustmentResidence)[5]<-"Adj_res_Label"
+names(AdjustmentResidence)[7]<-"adj_res"
 AdjustmentResidence <- AdjustmentResidence[, -c(1,5,6,8)]
 
 
@@ -163,11 +166,6 @@ bea_df <- merge(bea_df, AdjustmentResidence, by = c('GeoFips', 'Year', 'GeoName'
 
 names(bea_df)[names(bea_df)=="GeoFips"] <- "county.fips"
 bea_df$county.fips <- as.numeric(bea_df$county.fips)
-
-
-#Removing all previous untidy dataframes
-rm(beaPop, beaPCI, beaPercapita_Current_Transfer, beaAdjustment_Residence)
-rm(Population, PerCapitaIncome, PerCapitaCurrentTransfer, AdjustmentResidence)
 
 ## Custom function
 geo_seperate <- function(text, digit = 1) {
@@ -205,33 +203,39 @@ names(bea_df)[names(bea_df)=="Year"] <- "year"
 bea_df <- bea_df %>%
   arrange(county.fips, year) %>%
   group_by(county.fips) %>%
-  mutate(PCI_lag = lag(PCI)) %>%
-  mutate(Pop_lag = lag(Pop)) %>%
-  mutate(PCCT_lag = lag(PCCT)) %>%
-  mutate(Adj_res_lag = lag(Adj_res)) %>%
-  filter(year %% 2 == 0)
+  mutate(pci_lag = lag(pci)) %>%
+  mutate(pop_lag = lag(pop)) %>%
+  mutate(pcct_lag = lag(pcct)) %>%
+  mutate(adj_res_lag = lag(adj_res)) %>%
+  filter(year %% 2 == 1)
 
 #Calculate the one year percent change for all the economic variables from BEA
-bea_df$PCI_gro <- (bea_df$PCI - bea_df$PCI_lag)/bea_df$PCI_lag
-bea_df$PCCT_gro <- (bea_df$PCCT - bea_df$PCCT_lag)/bea_df$PCCT_lag
-bea_df$Adj_gro <- (bea_df$Adj_res - bea_df$Adj_res_lag)/bea_df$Adj_res_lag
+bea_df$pci_gro <- (bea_df$pci - bea_df$pci_lag)/bea_df$pci_lag
+bea_df$pcct_gro <- (bea_df$pcct - bea_df$pcct_lag)/bea_df$pcct_lag
+bea_df$adj_gro <- (bea_df$adj_res - bea_df$adj_res_lag)/bea_df$adj_res_lag
 
 #subsetting only the necessary columns for the final dataframe.
-bea_df <- bea_df[c(1,2,4:6,14:16)]
+bea_df2 <- bea_df[c(1:2,4:6,14:16)]
 
-bea_df <- bea_df %>% 
+bea_df2 <- bea_df2 %>% 
   mutate(county = str_replace_all(county, " city", "")) %>%
-  mutate(county = str_replace_all(county, "doÃ±a", "dona"))
+  mutate(county = str_replace_all(county, "doña", "dona"))
 
 
 #To remove, things inside the parenthesis such as fremont (includes yellowstone park) and baltimore (independent).
-bea_df$county <-  genX(bea_df$county, " (", ")") #qdap package helped with lllthis.
+bea_df2$county <-  genX(bea_df2$county, " (", ")") #qdap package helped with this.
 
-bea_df <- bea_df %>% 
+bea_df2 <- bea_df2 %>% 
   ungroup() %>%
   filter(state != "AK") %>%
   mutate(county = ifelse(county == "maui + kalawao", "maui", county)) %>%
   mutate(county.fips = ifelse(county.fips == 15901, 15009, county.fips))
+
+
+#Removing all previous untidy dataframes
+rm(beaPop, beaPCI, beaPercapita_Current_Transfer, beaAdjustment_Residence)
+rm(Population, PerCapitaIncome, PerCapitaCurrentTransfer, AdjustmentResidence, bea_df)
+
 
 #TOTO: Just saw that maui needs to have a fips code of 15009 instead of 15901 in order to merge with other datasets. I put the code above, but it didn"t work.
 
@@ -246,11 +250,11 @@ unemp12 <- separate(unemp12, County, into = c("County.name", "State"), sep=",")
 unemp12 <- unemp12[-c(3220:3222), ]
 
 unemp15 <- read_excel('laucnty15.xlsx')
-unemp15 <- separate(unemp12, County, into = c("County.name", "State"), sep=",")
-unemp15 <- unemp12[-c(3221:3223), ]
+unemp15 <- separate(unemp15, County, into = c("County.name", "State"), sep=",")
+unemp15 <- unemp15[-c(3221:3223), ]
 
 #Combine all the dataframes from different years into one dataframe
-unemployment_df <- bind_rows(unemp91, unemp92, unemp95, unemp96, unemp99, unemp00, unemp03, unemp04, unemp07,  unemp08, unemp11, unemp12, .id = NULL)
+unemployment_df <- bind_rows(unemp12, unemp15, .id = NULL)
 names(unemployment_df)[names(unemployment_df)=="County.name"] <- "county"
 names(unemployment_df)[names(unemployment_df)=="State"] <- "state"
 names(unemployment_df)[names(unemployment_df)=="County Code"] <- "county.fips"
@@ -269,7 +273,7 @@ unemployment_df$county.fips <- as.numeric(unemployment_df$county.fips)
 unemployment_df$year <- as.numeric(unemployment_df$year)
 
 #Remove untidy dataframes from the environment
-rm(unemp91, unemp92, unemp95, unemp96, unemp99, unemp00, unemp03, unemp04, unemp07,  unemp08, unemp11, unemp12) 
+rm(unemp12, unemp15) 
 
 # There is an extra space in front or back of the state names. Need to remove them
 unemployment_df <- unemployment_df %>% 
@@ -284,112 +288,68 @@ unemployment_df <- unemployment_df %>%
   arrange(county.fips, year) %>%
   group_by(county.fips) %>%
   mutate(unemp_lag = lag(unemp)) %>%
-  filter(year %% 2 == 0)
+  filter(year %% 2 == 1)
 
 #Calculate the one year percent change for unemployment
 unemployment_df$unemp_gro <- (unemployment_df$unemp - unemployment_df$unemp_lag)/unemployment_df$unemp_lag
 
 #subsetting only the necessary columns for the final dataframe.
-unemployment_df <- unemployment_df[c(2:5,11)]
+unemployment_df2 <- unemployment_df[c(2:5,11)]
 
 #Renaming certain objects in the county names
-unemployment_df <- unemployment_df %>% 
+unemployment_df2 <- unemployment_df2 %>% 
   mutate(county = str_replace_all(county, " parish", "")) %>%
   mutate(county = str_replace_all(county, " city", "")) %>%
   mutate(county = str_replace_all(county, " town", ""))
 
+#Removing untidy dataframes:
+rm(unemployment_df)
+
 #********************************************Merging all datasets************************************
 
-# Finally merging all the 3 dataframes: bea_df, p2election_df, and unemployment_df
+# Finally merging all the 3 dataframes: bea_df2, election_df, and unemployment_df2
 
-beabls_df <- merge(unemployment_df, bea_df, by= c('county.fips', 'year'), all.x = TRUE) #Merging first two datasets
-beablselec <- merge(beabls_df, p2election_df, by =c('county.fips', 'year'), all.x = TRUE)
-#filtering to remove AK from the dataset. After doing this, all the states matched between the two datasets. We check this using the unique function.
-merged_df1 <- beablselec[c(1,2,12,13,8,14,15,16,5,9,10,11)] #Subsetting into the final dataframe with only variables and in proper order.
+beabls_df <- merge(unemployment_df2, bea_df2, by= c('county.fips'), all.x = TRUE) #Merging first two datasets
+beablselec <- merge(beabls_df, election_df, by =c('county.fips'), all.x = TRUE)
 
-#Incumbency dummy:
-incumbency <- read.csv("incumbency.csv") 
-names(incumbency)[names(incumbency)=="Ã¯..year"] <- "year"
+merged_df1 <- beablselec[c(1:3,5,9:12,16:19)] #Subsetting into the final dataframe with only variables and in proper order.
+names(merged_df1)[names(merged_df1)=="county.x"] <- "county"
+names(merged_df1)[names(merged_df1)=="state.x"] <- "state"
 
-merged_df2 <- merge(merged_df1, incumbency, by = 'year', all.x = TRUE)  
-
+#Remove untidy dataframes:
+rm(beabls_df, beablselec, election_df, unemployment_df2, bea_df2)
 
 #Rural dummy:
 rural <- read.csv("rural.csv")
 rural <- rural[c(1,4,5)]
-names(rural)[names(rural)=="Ã¯..county.fips"] <- "county.fips"
+names(rural)[names(rural)=="ï..county.fips"] <- "county.fips"
 
-merged_df3 <- merge(merged_df2, rural, by = 'county.fips', all.x = TRUE)
-
+p2_merged_df <- merge(merged_df1, rural, by = 'county.fips', all.x = TRUE)
 
 # White dummy
-race <- read.csv("race.csv")
-names(race)[names(race)=="Ã¯..county.fips"] <- "county.fips"
-race <- race[c(1:5)]
-race$white <- race$whitemale + race$whitefemale
-race <- race[c(1:3,6)]
+race <- read.csv("race2015.csv")
+race <- race[-c(1:3)]
+names(race)[names(race)=="FIPS"] <- "county.fips"
 
-merged_df4 <- merge(merged_df3, race, by = c('county.fips', 'year', 'state'), all.x = TRUE)
+p2_merged_df2 <- merge(p2_merged_df, race, by = c('county.fips'), all.x = TRUE)
 
-merged_df4$white.percent <- merged_df4$white / merged_df4$Pop
-merged_df4 <- merged_df4[-c(15)] #Removing the column with white population total
+p2_merged_df2$white.percent <- p2_merged_df2$white / p2_merged_df2$pop
 
 #Removing duplicate counties. There were 6 of them.
-issue.data <- merged_df4 %>%
+issue.data <- p2_merged_df2 %>%
   group_by(county.fips) %>%
   summarise(issue = n())
 
-merged_df4 %<>% merge(issue.data) %>%
-  mutate(drop = ifelse(issue > 6 & is.na(Pop), 1, 0)) %>%
+p2_merged_df2 %<>% merge(issue.data) %>%
+  mutate(drop = ifelse(issue > 6 & is.na(pop), 1, 0)) %>%
   filter(drop == 0) %>%
   select(-drop, -issue)
 
 #Remove previous dataframes:
-#rm(bea_df, beabls_df, beablselec, p2election_df, incumbency, merged_df1, merged_df2, merged_df3, rural, 
-#unemployment_df)
+rm(issue.data, merged_df1, race, rural, p2_merged_df)
 
-#********************************************Regressions************************************
+#Creating the dv with change in rep voteshare from 2012 to 2016. And removing unnecessary columns:
+p2_merged_df2$rep.share.gro = p2_merged_df2$rep.share - p2_merged_df2$repshare.lag
+p2_merged_df3 <- p2_merged_df2[-c(15:17)]
 
-#Main economic variables only:
-m1_fe <- plm(rep.share ~ unemp_gro + PCI_gro, merged_df4)
-
-summary(m1_fe)
-
-m2_fe <- plm(rep.share ~ unemp_gro + unemp_gro:rep_incumb + repshare.lag + PCI_gro + rep_incumb + Pop + rural + white.percent, merged_df4, model = 'within')
-
-summary(m2_fe)
-
-table(merged_df4$repshare.lag)
-
-m3_fe <- plm(rep.share ~ unemp_gro + repshare.lag + PCI_gro + rep_incumb, merged_df4, model = 'within')
-
-
-
-
-
-
-
-
-
-
-
-#Some other things:
-#Just some checks. No need to perform
-#unique(df1$state.x) 
-#unique(df1$state) 
-
-#all(df$state.x == df$state.y, na.rm=TRUE) #To check if two columns are identical
-#all(df$county.x == df$county.y, na.rm=TRUE) #To check if two columns are identical
-
-
-#df3 <- df[df$state.x != df$state.y, ] #This shows that many states don't correspond to each other. We need to list them
-
-
-
-
-
-
-
-
-#Correlation matrix for all the variables: independent and dependent
-#cor(merged_df1[,c(6:10)], use="complete.obs", method="pearson")
+p2_merged_df4 <- merge(p2_merged_df3, edu.data)

@@ -36,7 +36,7 @@ election_df2$state <- as.character(election_df2$state)
 election_df2 <- election_df2[c(1,2,5,7,10)]
 
 #Merging republican and democratic data to get the two-party voteshare:
-election_df <- merge(election_df1, election_df2, by = c('county.fips', 'year', 'county', 'year', 'state'), 
+election_df <- merge(election_df1, election_df2, by = c('county.fips', 'year', 'county', 'state'), 
                      all = TRUE)
 
 #Creating a variable for republican two-party vote share:
