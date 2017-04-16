@@ -172,7 +172,7 @@ _collinearity between these two variables_
 
 $pop$: The population of a county in 2015 is used as a demographic control variable. Like in the previous model, this variable is introduced to control for the size of the counties.
 
-$educ$: The percentage of people in a county with less than high school degree in 2015 is used as a social/demographic control variable to account for the impact of education (or lack thereof). This variable is calculated by dividing the total number of people with less than high school degree (i.e. less than 12 years of formal education) by the total population of that county in 2015. _see if the same justification is used elsewhere_ _justify what a Trump voter is expected to be and hence control for that_  
+$educ$: The percentage of people in a county with less than high school degree in 2015 is used as a social/demographic control variable to account for the impact of education (or lack thereof). This variable is calculated by dividing the total number of people with less than high school degree (i.e. less than 12 years of formal education) by the total population of that county in 2015. _see if the same justification is used elsewhere_ _justify what a Trump voter is expected to be and hence control for that_  _check if it is 25 years and above_
 
 $white.percent$: The percentage of white people (both male and female combined) in a county in 2015 is used as another demographic control variable. Like in the previous model, this variable is introduced to control for race and the percentage is calculated by dividing the total number of white people in a county in 2015 by the total population of that county for the same year. _why white is used instead of black_
 
@@ -186,23 +186,11 @@ The regression estimation technique used for this model is a Ordinary Least Squa
 
 ##Data sources and cleaning:
 
-The data necessary to carry out the quantitative analysis in this paper were obtained from multiple sources and rigorously cleaned and merged together using open source software R studio. 
+The data necessary to carry out the quantitative analysis in this paper were obtained from multiple sources and rigorously cleaned and merged together using open source software R studio to extract the variables described above. The dependent variables on both parts of the research were obtained from election data that consisted of the Republican vote-share in the presidential election between 1992 and 2016. The dataset came from Dave Leip's Atlas of U.S. Presidential Elections.[^2] To calculate the two-party voteshare, the voteshare for Republican party was divided by the sum of voteshares for Republican and Democratic party. The lag of republican voteshare used in the first part of the research was calculated based on the same election dataset. The data on unemployment from 1992 to 2015 was obtained from the Bureau of Labor Statistics (BLS) website.[^3] To calculate the growth in unemployment rate between two years, the unemployment rate for previous year was subtracted from the unemployment rate of the current year, and then the result was divided by the unemployment rate of the previous year to get the growth rate. The data on other explanatory economic variable, i.e. per capita income, and the population of each county from 1992 to 2015 were called from the Bureau of Economic Affairs (BEA) API directly into R studio.[^4] Data used to construct the incumbency dummy was created manually based on common knowledge and merged into the final dataframe. _Put table on Appendix with president's name and years and dummy_ Data used to create the rural dummy was obtained from the United States Census Bureau.[^5] Demographic data on educational attainment was not available for several years between 1992 and 2012, hence education related variable wasn't included in the model in the first part of the research. However, for the second part of the research, educational attainment data for 2012 and 2015 was obtained from the United States Census Bureau.[^6] The race data that included the number of whites in each county between 1992 to 2015 was obtained from the database of the National Cancer Institute.[^7] The counts of race and education data were converted into percentages by combining them with the population data obtained from BEA. All the dataframes were merged based on county fips (unique identification for each county set by the US Census Bureau).
 
-The election data consisting of the republican vote-share in the presidential election between 1992 and 2016 came from Dave Leip's Atlas of U.S. Presidential Elections and was obtained from a third party, i.e. Çilek Agaci's github repository (Source: https://github.com/cilekagaci/us-presidential-county-1960-2016). The repository data was matched and confirmed with Dave Leip's data, which is often used by researchers in academia to carry out election related analysis. _goes on footnote_
+Due to inconsistent nomenclature of counties and county-equivalents, and incomplete observations over various data sources, all the counties of Alaska and Puerto Rico were removed from the final dataset. Hawaaii and Washington DC, however, were not removed since they were made to appear consistent over multiple datasets.    
 
-The data on unemployment from 1992 to 2015 was obtained from the Bureau of Labor Statistics (BLS). 
-
-The data on other economic variables such as Per Capita Income and the population of each county from 1992 to 2015 were called  from the Bureau of Economic Affairs (BEA) API directly into R studio. 
-
-Data used to construct the incumbency dummy was created manually based on common knowledge and merged into the final dataframe. _Put table on Appendix with president's name and years and dummy_  
-
-Data used to create the urban/rural dummy was obtained from the United States Census Bureau (2010 Census, Summary File 1, Table P2). 
-
-Demographic data on educational attainment and proportion of population  based on race from 1992 to 2015 were obtained from _mention from_. 
-
-All the dataframes were then merged together. 
-
-Due to inconsistent nomenclature of counties and county-equivalents and incomplete observations over various data sources, all the counties of Alaska and Puerto Rico were removed from the final dataset. Due to inconsistency in the nomenclature and grouping of various counties in Virginia, they were also removed from the final dataframe. 
+Due to inconsistency in the nomenclature and grouping of various counties in Virginia, they were also removed from the final dataframe. 
 
 For the first part of the paper, the final panel dataframe consisted of _number_ number of counties over a period of 6 election years from 1992 to 2012 with election, economic, demographic, and dummy variables for those years. _total observations_
 
@@ -278,6 +266,17 @@ University Press, 1987); Robert S. Erikson, 'Economic Conditions and the Preside
 Science Review, 83 (1989), 567-73; Thomas M. Holbrook, 'Presidential Elections in Space and Time', American
 Journal of Political Science, 35 (1991), 91-109.  
 
+[^2]: Dave Leip's Election Data was obtained from a third party, i.e. Çilek Agaci's github repository (Source: https://github.com/cilekagaci/us-presidential-county-1960-2016). The repository data was matched and confirmed with Dave Leip's actual website. His dataset is often used by researchers in academia to carry out election related analysis as such.
+
+[^3]: _BLS Webpage Link_
+
+[^4]: _BEA API Link_
+
+[^5]: _2010 Census, Summary File 1, Table P2_ put link as well
+
+[^6]: _Link of ACS date and page_
+
+[^7]: _Link SEER Stat_
 \pagebreak
 
 #Bibliography:
