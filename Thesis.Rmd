@@ -92,44 +92,65 @@ _After looking at the ANES survey data we can decide which of the other peculiar
 \pagebreak
 
 #Methodology:
-Describe what key processes will be used. _see below fo key processes_
+This paper analyzes the research questions using quantitative regression models. The specifications of the models are based on literature review and checked for biases and perfomed robustness tests, which are included in the Appendix.   
 
-\pagebreak
+The research question is divided into two sections: the first part studies the effect of county-level economic variables on Republican vote share from 1992 to 2012, and the second part studies the effect of county-level economic variables on the change in Republican voteshare from 2012 to 2016. 
 
-#Model Specification:
+##Part I:
+
+###Model Specification:
   
-## Research Question and Hypothesis: _research question should be mentioned in the intro as well already._
-  
-##Regression Equation
+_research question should be mentioned in the intro as well already._
+
+Research Question: What are the effects of county-level economic variables on the two-party vote share of the Republican party in the Presidential election?
+
+Hyopthesis: Depending on the type of economic variable, its effect on the Presidential two-party vote share of the Republican party can be different. A rise in unemployment rate will have a negative impact on Republican vote share, since voters identify the Democratic party as the one more capable for tackling the issue of unemployment and for providing welfare and other benefits caused by the rise in unemployment. On the other hand, a rise in Per capita income will have a negative impact on Republican vote share because a higher per capita income is associated with factors such as high education, urban setting, liberal views and therefore do not align with the conservative agenda of the Republican party.
+
+###Regression Equation: 
+
+$$rep.share_{i,t} = \alpha + \beta_1 (unemp\_gro_{i,t}) + \beta_2 (pci\_gro_{i,t}) + \beta_3 (controls) + \epsilon $$
+
+###Dependent Variable:
+$rep.share_{i,t}$: The dependent variable is the two-party vote share of the Republican party at the United States Presidential Election for county (i) in election year (t). Considering the effect of the third party in the U.S. Presidential election to be approximately equal on both the Democratic and the Republican party and insignificant in relation to the voteshare of these two major parties _cite someone who has given this logic, Eisenberg and Ketcham 2004_, I have decided to eliminate the third-party vote share. Hence, the republican voteshare shown here is the republican proportion of the "two-party vote share." _For example from the Dataset_ If, in a county, Republicans obtained 55 percent of the votes, Democrats obtained 40 percent, and the third party obtained 5 percent, then the value of _rep.share_ will be 0.578 instead of 0.55. Different scholars have used different versions of this variable in their analysis. Most of them use the voteshare of the incumbent party however, in this case, the research question aims to explore the effect of economic variables on the Republican party specifically. Hence, the usage of republican vote share becomes logical.   
+
+###Independent Variables:
+$unemp\_gro_{i,t}$: The first independent variable, which is also the explanatory economic variable, is the growth in unemployment rate for county (i) between election year (t) and the year before (t-1). _For example_ and _Justify the usage of growth instead of absolute value_ and _justify the usage of the value from year before_ and _cite_  
+
+$pci\_gro_{i,t}$: The second independent variable, is the growth in per capita income for county (i) between election year (t) and the year before (t-1). It is calculated using the same method as the growth in unemployment rate. _justify the usage_ and _cite_ 
+
+_collinearity between these two variables_ and _justify the usage of both two together_ and _list some other ones that they replace, for example unemployment substitutes output growth, etc._ 
+
+###Control Variables:
+$repshare.lag_{i,t-4}$: The two-party vote share of the Republican party in a county (i) in the previous presidential election (t-4) is used as a control variable. This variable is expected to measure the party affiliation of a specific county. _cite someone who has used this_ In the United States, many states and counties within them are known to be historically _another term: perennially_ blue or red. What this means is that the voting behavior of counties are often pre-determined based on how they voted in the election before. Not accounting for this variable could cause ommitted variable bias, result in biased estimates for other explanatory variables, and deteriorate the explanatory power of the model by affecting the goodness of fit (i.e. R-squared).   
+
+$Pop_{i,t}$: The population of a county(i) in the election year(t) is used as a control variable. This variable is introduced to control for the size of the counties. _explain why this is important_
+
+$white.percent_{i,t}$: The percentage of white people (both male and female combined) in a county(i)
+
+$rep\_incumb_t$:
+
+$rural_i$:
+
+###Estimation Technique:
+_KISS_ for variables
+
+For the first part of the research, a Fixed Effects Model of estimation (called FE estimation hereafter) is used. FE estimation is ideal here due to the presence of a Panel Data and it has been preferred over Random Effects Model of estimation after performing Hausman test _See Figure_
+
+
+##Part II:
+
+
+
+
+
+
 
 ##Data sources and cleaning:
 The data necessary to carry out the quantitative analysis in this paper were obtained from multiple sources and cleaned and merged together using open source software R studio. The election data consisting of the republican vote-share in the presidential election between 1992 and 2016 came from Dave Leip's Atlas of U.S. Presidential Elections and was obtained from a third party, i.e. Çilek Agaci's github repository (Source: https://github.com/cilekagaci/us-presidential-county-1960-2016). The repository data was matched and confirmed with Dave Leip's data, which is often used by researchers in academia to carry out election related analysis. The data on unemployment from 1992 to 2015 was obtained from the Bureau of Labor Statistics (BLS). The data on other economic variables such as Per Capita Income, Per Capita Current Transfer, and Adjustment in Residence, and the population of each county from 1992 to 2015 were called  from the Bureau of Economic Affairs (BEA) API directly into R studio. Data used to construct the incumbency dummy was created manually based on common knowledge and merged into the final dataframe. Similarly, data used to construct the swing state dummy was based on _show based on what_ and merged into the final dataframe. Data used to create the urban/rural dummy was obtained from the United States Census Bureau (2010 Census, Summary File 1, Table P2). Demographic data on educational attainment and proportion of population  based on race from 1992 to 2015 were obtained from _mention from_. All the dataframes were then merged together. Due to inconsistent nomenclature of counties and county-equivalents and incomplete observations over various data sources, all the counties of Alaska and Puerto Rico were removed from the final dataset. Due to inconsistency in the nomenclature and grouping of various counties in Virginia, they were also removed from the final dataframe. For the first part of the paper, the final panel dataframe consisted of _number_ number of counties over a period of 6 election years from 1992 to 2012 with election, economic, demographic, and dummy variables for those years. For the second part of the paper, the final cross-sectional dataframe consisted of _number_ of counties with election data from 2012 and 2016 and economic and demographic data from 2015.           
 
 
 
-##Dependent Variable:
-_vote.percent_:   
-Total presidential vote share of the Republican Party in a county in a given election year is the dependent variable used in the first part of the paper. Different scholars have used  different versions of this variable in their analysis. Some scholars use the voteshare of the incumbent party while others use the voteshare of the Republican or a Democratic party. In the case of this paper, the main question circles around republican party and Donald Trump and hence the inclusion of republican voteshare seems logical. Eisenberg and Ketcham (2004), for example, use the Democratic party's two-party voteshare. In this paper, we use a overall voteshare and not the two-party voteshare _justify why_ or just find a way to do _two party vote share_.   
 
-_vote.diff_:  
-In the second part of the paper, however, I use the difference in voteshare of the Republican party in 2012 and 2016 Presidential election in a county as the dependent variable. 
-
-
-##Independent Variable:
--Education (replace this with the data from census API)
--Demographic Data from Census (male, female, ethnicity, religion, education)
--Unemployment
--Per capita income
--Employment in industry
--Current Transfer Receipts
--Adjustment for Residence
--Dummy for incumbent party
--Rural or urban county
-
-##Key Processes: 
--Descriptive summary, inferential statistics(using OLS, fixed effects, etc.)
--Discussion of Different Biases and ways to resolve them
--Robustness Discussion
 
 \pagebreak
 
