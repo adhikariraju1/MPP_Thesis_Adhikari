@@ -4,8 +4,8 @@ title: 'What happened on November 8, 2016 ?: A Study of Republican Vote Share an
 author: "Raju Adhikari"
 date: "March 16, 2017"
 output:
-  pdf_document: default
   word_document: default
+  pdf_document: default
 csl: apa.csl
 bibliography: sources.bib
 ---
@@ -141,7 +141,7 @@ _KISS_ for variables _describe here, look on Mendeley_
 
 ###Estimation Technique:
 
-The regression estimation technique used for the model above is a Fixed Effects Model of estimation (called FE estimation, hereafter). FE estimation is ideal here due to the presence of a Panel Dataset and it has been preferred over Random Effects Model of estimation after performing Hausman test. _See Figure in Appendix_ The FE estimation explain the 'within' county variation i.e. it explains the effect of the explanatory variables on the dependent variable for each specific county over a period of time. Time invariant fixed effects, such as the variable $rural$ is not accounted for in the FE estimation, although it maybe introduced as an interaction term (which will be explained in the Analysis section below). _some theory behind Fixed Effects one or two lines_
+The regression estimation technique used for the model above is a Fixed Effects Model of estimation (called FE estimation, hereafter). FE estimation is ideal here due to the presence of a Panel Dataset and it has been preferred over Random Effects Model of estimation after performing Hausman test. _See Figure in Appendix_ The FE estimation explains the 'within' county variation i.e. it explains the effect of the explanatory variables on the dependent variable for each specific county over a period of time. Time invariant fixed effects, such as the variable $rural$ is not accounted for in the FE estimation, although it maybe introduced as an interaction term (which will be explained in the Analysis section below). _some theory behind Fixed Effects one or two lines_
 
 
 ##Part II:
@@ -158,33 +158,55 @@ $$rep.share.gro = \alpha + \beta_1 (unemp\_gro) + \beta_2 (pci\_gro) + \beta_3 (
 
 ###Dependent Variable:
 
-$rep.share.gro$:
+$rep.share.gro$: The dependent variable is the difference in the two-party vote share of the Republican party at the United States Presidential Election, for each county between election year 2012 and 2016. _For example from the Dataset_ If, in a county in 2012, the two-party vote share for a Republican party is 0.55 and in 2016 it is 0.60, then the value of $rep.share.gro$ will be 0.60-0.55 = 0.05. This indicates a growth of 5 percentage point in voteshare for Donald Trump compared to what the Republican nominee Mitt Romney obtained in 2012. A positive value means that Donald Trump received more votes in that county compared to Mitt Romney. The difference in using this variable, compared to the one used for the model in Part I, is that we are trying to measure Trump-specific effect here. Depending on how the dependent variable reacts to different explanatory variables in this model, we can come to conclusions on whether Trump was a generic Republican or not and if he was affected by the same factors that affected Republican candidates in the past.  
 
 ###Independent Variables:
 
-$unemp\_gro$: _justify using 2015 instead of 2016_ 
+$unemp\_gro$: The first independent variable, which is also the explanatory economic variable, is the growth in unemployment rate for each county between 2015 and 2012. An ideal measurement would have been to see the growth in unemployment rate between 2012 and 2016, since both are election years. A positive value means that the unemployment rate in 2015 was greater than in 2012 and vice versa. However, economic data for 2016 is not available yet, which limited our ability to use the most recent data. However, the usage of 2015 unemployment rate should not be problematic and is infact considered an appropriate measure to conduct an analysis as such in the event of no other optimal option.  _For example_ and _Justify the usage of 2015_.
 
-$pci\_gro$:
-
-###Control Variables:
-
-$pop$:
-
-$educ$:
-
-$white.percent$:
-
-$rural$:
-
-_collinearity of control variables with the independent variable or the dependent variable_ _show it in a matrix in the appendix and present the result in a line or two here to justify their inclusion_ 
+$pci\_gro$: The second independent variable is the growth in per capita income for each county between 2015 and 2012. It is calculated using the same method as the growth in unemployment rate and with similar limitation in terms of the data for 2016. A positive value means that the per capita income in 2015 was greater than in 2012.  
 
 _collinearity between these two variables_
 
-###Estimation Technique:
+###Control Variables:
 
+$pop$: The population of a county in 2015 is used as a demographic control variable. Like in the previous model, this variable is introduced to control for the size of the counties.
+
+$educ$: The percentage of people in a county with less than high school degree in 2015 is used as a social/demographic control variable to account for the impact of education (or lack thereof). This variable is calculated by dividing the total number of people with less than high school degree (i.e. less than 12 years of formal education) by the total population of that county in 2015. _see if the same justification is used elsewhere_ _justify what a Trump voter is expected to be and hence control for that_  
+
+$white.percent$: The percentage of white people (both male and female combined) in a county in 2015 is used as another demographic control variable. Like in the previous model, this variable is introduced to control for race and the percentage is calculated by dividing the total number of white people in a county in 2015 by the total population of that county for the same year. _why white is used instead of black_
+
+$rural$: A dummy variable for rural is used, similar to the one in the model in Part I. A value of 1 means a county is rural and a value of 0 means it is urban.
+
+_collinearity of control variables with the independent variable or the dependent variable_ _show it in a matrix in the appendix and present the result in a line or two here to justify their inclusion_ 
+
+###Estimation Technique
+
+The regression estimation technique used for this model is a Ordinary Least Squares Model of estimation (called OLS estimation, hereafter). OLS estimation is ideal here due to the presence of a Cross-Sectional Dataset with no time-wise variation. The measures of the previous election(i.e. 2012) is incorporated in the cross section as a first-differencing. The OLS estimation explains the effect of the explanatory variables on the dependent variable for each specific county between 2012 and 2015. _Something more on OLS and what is does here_
 
 ##Data sources and cleaning:
-The data necessary to carry out the quantitative analysis in this paper were obtained from multiple sources and cleaned and merged together using open source software R studio. The election data consisting of the republican vote-share in the presidential election between 1992 and 2016 came from Dave Leip's Atlas of U.S. Presidential Elections and was obtained from a third party, i.e. Çilek Agaci's github repository (Source: https://github.com/cilekagaci/us-presidential-county-1960-2016). The repository data was matched and confirmed with Dave Leip's data, which is often used by researchers in academia to carry out election related analysis. The data on unemployment from 1992 to 2015 was obtained from the Bureau of Labor Statistics (BLS). The data on other economic variables such as Per Capita Income, Per Capita Current Transfer, and Adjustment in Residence, and the population of each county from 1992 to 2015 were called  from the Bureau of Economic Affairs (BEA) API directly into R studio. Data used to construct the incumbency dummy was created manually based on common knowledge and merged into the final dataframe. Similarly, data used to construct the swing state dummy was based on _show based on what_ and merged into the final dataframe. Data used to create the urban/rural dummy was obtained from the United States Census Bureau (2010 Census, Summary File 1, Table P2). Demographic data on educational attainment and proportion of population  based on race from 1992 to 2015 were obtained from _mention from_. All the dataframes were then merged together. Due to inconsistent nomenclature of counties and county-equivalents and incomplete observations over various data sources, all the counties of Alaska and Puerto Rico were removed from the final dataset. Due to inconsistency in the nomenclature and grouping of various counties in Virginia, they were also removed from the final dataframe. For the first part of the paper, the final panel dataframe consisted of _number_ number of counties over a period of 6 election years from 1992 to 2012 with election, economic, demographic, and dummy variables for those years. For the second part of the paper, the final cross-sectional dataframe consisted of _number_ of counties with election data from 2012 and 2016 and economic and demographic data from 2015.           
+
+The data necessary to carry out the quantitative analysis in this paper were obtained from multiple sources and rigorously cleaned and merged together using open source software R studio. 
+
+The election data consisting of the republican vote-share in the presidential election between 1992 and 2016 came from Dave Leip's Atlas of U.S. Presidential Elections and was obtained from a third party, i.e. Çilek Agaci's github repository (Source: https://github.com/cilekagaci/us-presidential-county-1960-2016). The repository data was matched and confirmed with Dave Leip's data, which is often used by researchers in academia to carry out election related analysis. _goes on footnote_
+
+The data on unemployment from 1992 to 2015 was obtained from the Bureau of Labor Statistics (BLS). 
+
+The data on other economic variables such as Per Capita Income and the population of each county from 1992 to 2015 were called  from the Bureau of Economic Affairs (BEA) API directly into R studio. 
+
+Data used to construct the incumbency dummy was created manually based on common knowledge and merged into the final dataframe. _Put table on Appendix with president's name and years and dummy_  
+
+Data used to create the urban/rural dummy was obtained from the United States Census Bureau (2010 Census, Summary File 1, Table P2). 
+
+Demographic data on educational attainment and proportion of population  based on race from 1992 to 2015 were obtained from _mention from_. 
+
+All the dataframes were then merged together. 
+
+Due to inconsistent nomenclature of counties and county-equivalents and incomplete observations over various data sources, all the counties of Alaska and Puerto Rico were removed from the final dataset. Due to inconsistency in the nomenclature and grouping of various counties in Virginia, they were also removed from the final dataframe. 
+
+For the first part of the paper, the final panel dataframe consisted of _number_ number of counties over a period of 6 election years from 1992 to 2012 with election, economic, demographic, and dummy variables for those years. _total observations_
+
+For the second part of the paper, the final cross-sectional dataframe consisted of _number_ of counties with election data from 2012 and 2016 and economic and demographic data from 2015.      _total observations_     
 
 \pagebreak
 
