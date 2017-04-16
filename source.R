@@ -81,10 +81,10 @@ stargazer::stargazer(p2_m1_logit, type = 'text', digits = 2, header = FALSE,
 
 
 #Adding Controls (Logit)
-p2_m2_logit <- glm(flip ~ unemp_gro + pci_gro + pop + total + white.percent + 
+p2_m2_logit <- glm(flip ~ unemp_gro + pci_gro + pop + educ + white.percent + 
                      rural, logit.data, family = binomial(link = "logit"))
 stargazer::stargazer(p2_m2_logit, type = 'text', digits = 2, header = FALSE,   
-                     title = 'Base Model Logit', font.size = 'normalsize')
+                     title = 'With Controls Model Logit', font.size = 'normalsize')
 
 
 #Interpretations:
@@ -92,10 +92,10 @@ stargazer::stargazer(p2_m2_logit, type = 'text', digits = 2, header = FALSE,
 
 
 #Adding Interactions (Logit)
-p2_m3_logit <- glm(flip ~ unemp_gro + pci_gro + pop + total + white.percent + total:white.percent + 
+p2_m3_logit <- glm(flip ~ unemp_gro + pci_gro + pop + educ + white.percent + educ:white.percent + 
                      white.percent:rural + rural, logit.data, family = binomial(link = "logit"))
 stargazer::stargazer(p2_m3_logit, type = 'text', digits = 2, header = FALSE,   
-                     title = 'Base Model Logit', font.size = 'normalsize')
+                     title = 'With Interactions Model Logit', font.size = 'normalsize')
 
 
 
@@ -111,6 +111,14 @@ source("heat-map.R")
 #************************************************************************
 p2_merged_df4 %>% filter(state != "HI") %>% county.heatmap("rep.share") + 
   scale_fill_gradient2(low = "#085BB2", high = "#FF2312", mid = "#4DAFFF", midpoint = 0.40)
+
+logit.data %>% filter(state != "HI") %>% county.heatmap("unemp_gro") + 
+  scale_fill_gradient2(low = "#085BB2", high = "#FF2312", mid = "#4DAFFF", midpoint = 0)
+
+
+logit.data %>% filter(state != "HI") %>% county.heatmap("total") + 
+  scale_fill_gradient2(low = "#085BB2", high = "#FF2312", mid = "#4DAFFF", midpoint = 0.49)
+
 
 #************************************************************************
                               #Scatter plots

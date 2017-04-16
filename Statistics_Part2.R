@@ -359,6 +359,10 @@ logit.data <- p2_merged_df4 %>%
   mutate(flip = is.rep.2016 - is.rep.2012) %>%
   filter(flip != -1)
 
+#Create education percentage and rename education variable:
+logit.data$educ = logit.data$total / logit.data$pop
+
+
 #Remove previous dataframes:
 rm(election_df1, election_df2)
 rm(beaPop, beaPCI, beaPercapita_Current_Transfer, beaAdjustment_Residence)
