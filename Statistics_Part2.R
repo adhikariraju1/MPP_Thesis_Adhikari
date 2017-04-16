@@ -58,8 +58,7 @@ election_df$is.rep.2012 <- as.numeric(election_df$is.rep.2012)
 
 election_df <- election_df[c(1:4,7:10)]
 
-#Remove untidy dataframes:
-rm(election_df1, election_df2)
+
 
 #********************************************BEA economic datasets************************************
 
@@ -232,11 +231,6 @@ bea_df2 <- bea_df2 %>%
   mutate(county.fips = ifelse(county.fips == 15901, 15009, county.fips))
 
 
-#Removing all previous untidy dataframes
-rm(beaPop, beaPCI, beaPercapita_Current_Transfer, beaAdjustment_Residence)
-rm(Population, PerCapitaIncome, PerCapitaCurrentTransfer, AdjustmentResidence, bea_df)
-
-
 #TOTO: Just saw that maui needs to have a fips code of 15009 instead of 15901 in order to merge with other datasets. I put the code above, but it didn"t work.
 
 #TOTO: In terms of the counties in Virginia that appear with a plus sign(+), it is difficult to separate them since other variables would have to separated too and we have no means of doing that. So, what I did was that, when I did the merging at the end, I merged not by bea_df but by other dataframes. So it automatically removed the ones that had the plus sign. I guess I can say that I couldn"t incoroporate them in the model because of the complexity of the data and hence I removed them. What do you say?
@@ -272,8 +266,6 @@ unemployment_df <- replace_na(unemployment_df, list(state="DC", unemployment_df$
 unemployment_df$county.fips <- as.numeric(unemployment_df$county.fips)
 unemployment_df$year <- as.numeric(unemployment_df$year)
 
-#Remove untidy dataframes from the environment
-rm(unemp12, unemp15) 
 
 # There is an extra space in front or back of the state names. Need to remove them
 unemployment_df <- unemployment_df %>% 
@@ -302,9 +294,6 @@ unemployment_df2 <- unemployment_df2 %>%
   mutate(county = str_replace_all(county, " city", "")) %>%
   mutate(county = str_replace_all(county, " town", ""))
 
-#Removing untidy dataframes:
-rm(unemployment_df)
-
 #********************************************Merging all datasets************************************
 
 # Finally merging all the 3 dataframes: bea_df2, election_df, and unemployment_df2
@@ -315,9 +304,6 @@ beablselec <- merge(beabls_df, election_df, by =c('county.fips'), all.x = TRUE)
 merged_df1 <- beablselec[c(1:3,5,9:12,16:19)] #Subsetting into the final dataframe with only variables and in proper order.
 names(merged_df1)[names(merged_df1)=="county.x"] <- "county"
 names(merged_df1)[names(merged_df1)=="state.x"] <- "state"
-
-#Remove untidy dataframes:
-rm(beabls_df, beablselec, election_df, unemployment_df2, bea_df2)
 
 #Rural dummy:
 rural <- read.csv("rural.csv")
@@ -345,11 +331,42 @@ p2_merged_df2 %<>% merge(issue.data) %>%
   filter(drop == 0) %>%
   select(-drop, -issue)
 
-#Remove previous dataframes:
-rm(issue.data, merged_df1, race, rural, p2_merged_df)
 
 #Creating the dv with change in rep voteshare from 2012 to 2016. And removing unnecessary columns:
 p2_merged_df2$rep.share.gro = p2_merged_df2$rep.share - p2_merged_df2$repshare.lag
 p2_merged_df3 <- p2_merged_df2[-c(15:17)]
 
+## Load and clean the education data:
+edu.data <- rio::import("ACS_15_5YR_B15003_with_ann.csv", skip = 1) %>%
+  select(-matches("Margin"), -`Estimate; Total:`) %>%
+  select(matches("school|Kinder|grade|id2")) %>%
+  dplyr::rename(county.fips = Id2)
+
+colnames(edu.data) <- colnames(edu.data) %>% 
+  stringi::stri_replace_all_fixed("Estimate; Total: - ", "") %>%
+  stringi::stri_replace_all_fixed(" ", "") %>%
+  stringi::stri_replace_all_regex(",|'", "")
+
+edu.data %<>%
+  select(-Professionalschooldegree, -Regularhighschooldiploma, -`12thgradenodiploma`) %>%
+  mutate(total = rowSums(.) - county.fips) %>%
+  select(county.fips, total)
+
 p2_merged_df4 <- merge(p2_merged_df3, edu.data)
+
+#Creating the new variable for flip, which will be the dependent variable for the logit model.
+logit.data <- p2_merged_df4 %>%
+  mutate(flip = is.rep.2016 - is.rep.2012) %>%
+  filter(flip != -1)
+
+#Remove previous dataframes:
+rm(election_df1, election_df2)
+rm(beaPop, beaPCI, beaPercapita_Current_Transfer, beaAdjustment_Residence)
+rm(Population, PerCapitaIncome, PerCapitaCurrentTransfer, AdjustmentResidence, bea_df)
+rm(unemp12, unemp15, unemployment_df) 
+rm(beabls_df, beablselec, election_df, unemployment_df2, bea_df2)
+rm(issue.data, merged_df1, race, rural, p2_merged_df, p2_merged_df2, p2_merged_df3, edu.data)
+
+
+export(logit.data, "part2data.csv")
+

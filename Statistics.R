@@ -161,10 +161,6 @@ names(bea_df)[names(bea_df)=="GeoFips"] <- "county.fips"
 bea_df$county.fips <- as.numeric(bea_df$county.fips)
 
 
-#Removing all previous untidy dataframes
-rm(beaPop, beaPCI, beaPercapita_Current_Transfer, beaAdjustment_Residence)
-rm(Population, PerCapitaIncome, PerCapitaCurrentTransfer, AdjustmentResidence)
-
 ## Custom function
 geo_seperate <- function(text, digit = 1) {
   # This function is to use the text in the column GeoName and seperate them into two parts; the one with the state and the one with counties. Then use dplyr to mutate the columns respectivly
@@ -304,8 +300,6 @@ unemployment_df <- replace_na(unemployment_df, list(state="DC", unemployment_df$
 unemployment_df$county.fips <- as.numeric(unemployment_df$county.fips)
 unemployment_df$year <- as.numeric(unemployment_df$year)
 
-#Remove untidy dataframes from the environment
-rm(unemp91, unemp92, unemp95, unemp96, unemp99, unemp00, unemp03, unemp04, unemp07,  unemp08, unemp11, unemp12) 
 
 # There is an extra space in front or back of the state names. Need to remove them
 unemployment_df <- unemployment_df %>% 
@@ -359,16 +353,13 @@ merged_df3 <- merge(merged_df2, rural, by = 'county.fips', all.x = TRUE)
 
 
 # White dummy
-race <- read.csv("race.csv")
-names(race)[names(race)=="ï..county.fips"] <- "county.fips"
-race <- race[c(1:5)]
-race$white <- race$whitemale + race$whitefemale
-race <- race[c(1:3,6)]
+race <- read.csv("race1992_2012.csv")
+race <- race[-c(1:2)]
+names(race)[names(race)=="FIPS"] <- "county.fips"
 
-merged_df4 <- merge(merged_df3, race, by = c('county.fips', 'year', 'state'), all.x = TRUE)
+merged_df4 <- merge(merged_df3, race, by = c('county.fips', 'year'), all.x = TRUE)
 
 merged_df4$white.percent <- merged_df4$white / merged_df4$Pop
-merged_df4 <- merged_df4[-c(15)] #Removing the column with white population total
 
 #Removing duplicate counties. There were 6 of them.
 issue.data <- merged_df4 %>%
@@ -380,31 +371,15 @@ merged_df4 %<>% merge(issue.data) %>%
   filter(drop == 0) %>%
   select(-drop, -issue)
 
-#Remove previous dataframes:
-#rm(bea_df, beabls_df, beablselec, election_df, incumbency, merged_df1, merged_df2, merged_df3, rural, 
-   #unemployment_df)
+#Remove untidy dataframes from the environment
+rm(election_df1, election_df2)
+rm(beaPop, beaPCI, beaPercapita_Current_Transfer, beaAdjustment_Residence)
+rm(Population, PerCapitaIncome, PerCapitaCurrentTransfer, AdjustmentResidence)
+rm(unemp91, unemp92, unemp95, unemp96, unemp99, unemp00, unemp03, unemp04, unemp07,  unemp08, unemp11, unemp12) 
+rm(bea_df, beabls_df, beablselec, election_df, incumbency, merged_df1, merged_df2, merged_df3, rural, unemployment_df)
+rm(race, issue.data)
 
 export(merged_df4, "part1data.csv")
-
-
-
-
-#Some other things:
-#Just some checks. No need to perform
-#unique(df1$state.x) 
-#unique(df1$state) 
-
-#all(df$state.x == df$state.y, na.rm=TRUE) #To check if two columns are identical
-#all(df$county.x == df$county.y, na.rm=TRUE) #To check if two columns are identical
-
-
-#df3 <- df[df$state.x != df$state.y, ] #This shows that many states don't correspond to each other. We need to list them
-
-
-
-
-
-
 
 
 #Correlation matrix for all the variables: independent and dependent
