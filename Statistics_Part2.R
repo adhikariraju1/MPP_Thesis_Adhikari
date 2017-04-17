@@ -321,7 +321,7 @@ p2_merged_df2 <- merge(p2_merged_df, race, by = c('county.fips'), all.x = TRUE)
 
 p2_merged_df2$white.percent <- p2_merged_df2$white / p2_merged_df2$pop
 
-#Removing duplicate counties. There were 6 of them.
+#Removing duplicate counties. There were 6 of them. #TOTO: this is not working since it is showing a total of 3118 counties instead of 3112.
 issue.data <- p2_merged_df2 %>%
   group_by(county.fips) %>%
   summarise(issue = n())
