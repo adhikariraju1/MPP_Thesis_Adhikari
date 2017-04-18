@@ -354,6 +354,7 @@ edu.data %<>%
 
 p2_merged_df4 <- merge(p2_merged_df3, edu.data)
 
+
 #Creating the new variable for flip, which will be the dependent variable for the logit model.
 logit.data <- p2_merged_df4 %>%
   mutate(flip = is.rep.2016 - is.rep.2012) %>%
@@ -374,3 +375,8 @@ rm(issue.data, merged_df1, race, rural, p2_merged_df, p2_merged_df2, p2_merged_d
 
 export(logit.data, "part2data.csv")
 
+state.unemp <- read.csv("st.unemployment_2012-2015.csv")
+p2_merged_df5 <- merge(p2_merged_df4, state.unemp, by = c("state"), all.x = TRUE)
+
+p2_merged_df5$rel.unemp = p2_merged_df5$unemp_gro - p2_merged_df5$st.unemp.gro
+p2_merged_df5$educ = p2_merged_df5$total / p2_merged_df5$pop
