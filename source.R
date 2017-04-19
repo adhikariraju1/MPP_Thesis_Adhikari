@@ -5,7 +5,7 @@
 
 #Loading all the necessary packages
 packages <- c("bea.R", "acs", "magrittr", "httr", "tidyr", "blsAPI", "rjson", "readxl", "dplyr", "jsonlite",
-              "stringr", "rJava", "xlsx", "qdap", "data.table", "plm", "rio", "Zelig", "stargazer", "knitr", "fBasics")
+              "stringr", "rJava", "xlsx", "qdap", "data.table", "plm", "rio", "Zelig", "stargazer", "knitr")
 load <- lapply(packages, require, character.only = T)
 
 #Setting the working directory
@@ -63,49 +63,55 @@ stargazer::stargazer(p1_m2b_fe, type = 'text', digits = 2, header = FALSE,
 #********************************************************************************************
 source("Statistics_Part2.R")
 #********************************************************************************************
-
-#Base Model with Unemployment (OLS and Logit)
-p2_m1a_ols <- lm(rep.share.gro ~ unemp_gro, p2_merged_df5)
-p2_m1a_logit <- glm(flip ~ unemp_gro, logit.data, family = binomial(link = "logit"))
-
-stargazer::stargazer(p2_m1a_ols, p2_m1a_logit, type = 'text', digits = 2, header = FALSE,   
-                     title = 'Base Model with Unemployment (OLS and Logit)', font.size = 'normalsize', out = 'p2m1a.htm')
-
-
-#Base Model with PCI (OLS and Logit)
-p2_m1b_ols <- lm(rep.share.gro ~ pci_gro, p2_merged_df5)
-p2_m1b_logit <- glm(flip ~ pci_gro, logit.data, family = binomial(link = "logit"))
-
-stargazer::stargazer(p2_m1b_ols, p2_m1b_logit, type = 'text', digits = 2, header = FALSE,   
-                     title = 'Base Model with PCI(OLS and Logit)', font.size = 'normalsize', out = 'p2m1b.htm')
-
-
-#Full Model with Unemployment (OLS and Logit): 
-
-p2_m2a_ols <- lm(rep.share.gro ~ unemp_gro + pop + educ + white.percent + as.factor(rural):white.percent + 
+#Using rep.share.gro:
+#Unemployment (OLS)
+m1 <- lm(rep.share.gro ~ unemp_gro, p2_merged_df5)
+m2 <- lm(rep.share.gro ~ unemp_gro + pop_thou + uneduc + white.percent + as.factor(rural):white.percent + 
                    + as.factor(rural), p2_merged_df5)
+stargazer::stargazer(m1, m2, type = 'text', digits = 2, header = FALSE,   
+                     title = 'Model with Unemployment (OLS)', font.size = 'normalsize', out = 'm1m2.htm')
 
-p2_m2a_logit <- glm(flip ~ unemp_gro + pop + educ + white.percent + as.factor(rural):white.percent + 
-                    + as.factor(rural), logit.data, family = binomial(link = "logit"))
-
-stargazer::stargazer(p2_m2a_ols, p2_m2a_logit, type = 'text', digits = 2, header = FALSE,   
-                     title = 'Full Model with Unemployment (OLS and Logit)', font.size = 'normalsize', out = 'p2m2a.htm')
-
-
-#Full Model with Unemployment (OLS and Logit):
-p2_m2b_ols <- lm(rep.share.gro ~ pci_gro + pop + educ + white.percent + as.factor(rural):white.percent + 
+#PCI (OLS)
+m3 <- lm(rep.share.gro ~ pci_gro + pci_gro^2, p2_merged_df5)
+m4 <- lm(rep.share.gro ~ pci_gro + pci_gro^2 + pop_thou + uneduc + white.percent + as.factor(rural):white.percent + 
                    + as.factor(rural), p2_merged_df5)
+stargazer::stargazer(m3, m4, type = 'text', digits = 2, header = FALSE,   
+                     title = 'Model with PCI (OLS)', font.size = 'normalsize', out = 'm3m4.htm')
 
-p2_m2b_logit <- glm(flip ~ pci_gro + pop + educ + white.percent + as.factor(rural):white.percent + 
-                      + as.factor(rural), logit.data, family = binomial(link = "logit"))
+#Using rep.share and a LDV:
+#Unemployment (OLS)
+m5 <- lm(rep.share ~ unemp_gro + repshare.lag, p2_merged_df5)
+m6 <- lm(rep.share ~ unemp_gro + repshare.lag + pop_thou + uneduc + white.percent + as.factor(rural):white.percent + 
+                   + as.factor(rural), p2_merged_df5)
+stargazer::stargazer(m5, m6, type = 'text', digits = 2, header = FALSE,   
+                     title = 'Model with Unemployment (OLS)', font.size = 'normalsize', out = 'm5m6.htm')
 
-stargazer::stargazer(p2_m2b_ols, p2_m2b_logit, type = 'text', digits = 2, header = FALSE,   
-                     title = 'Full Model with PCI (OLS and Logit)', font.size = 'normalsize', out = 'p2m2b.htm')
+#PCI (OLS)
+m7 <- lm(rep.share ~ pci_gro + pci_gro^2 + repshare.lag, p2_merged_df5)
+m8 <- lm(rep.share ~ pci_gro + pci_gro^2 + repshare.lag + pop_thou + uneduc + white.percent + as.factor(rural):white.percent + 
+                   + as.factor(rural), p2_merged_df5)
+stargazer::stargazer(m7, m8, type = 'text', digits = 2, header = FALSE,   
+                     title = 'Model with PCI (OLS)', font.size = 'normalsize', out = 'm7m8.htm')
+
+
+
+
+####################################Playing around########################33
+
+test1 <- lm(rep.share ~ repshare.lag + unemp_gro + pop_thou + uneduc + white.percent + as.factor(rural):white.percent + 
+              + as.factor(rural), p2_merged_df5)
+summary(test1)
+
+
+test2 <- lm(rep.share ~ repshare.lag + pci_gro + pci_gro^2 + pop_thou + uneduc + white.percent + as.factor(rural):white.percent + 
+              + as.factor(rural), p2_merged_df5)
+summary(test2)
+
+
 
 
 
 #ReLogit:
-
 
 p2_m2_relogit <- zelig(flip ~ unemp_gro + pci_gro + pop + white.percent,
                        model = "relogit", data = logit.data, tau = 0.05)
@@ -115,12 +121,12 @@ t <- setx(p2_m2_relogit) %>% sim(p2_m2_relogit, .)
 
 #With relative unemp:
 
-p2_m4_ols <- lm(rep.share.gro ~ rel.unemp, p2_merged_df5)
-summary(p2_m4_ols)
+p2_m3a_ols <- lm(rep.share.gro ~ rel.unemp, p2_merged_df5)
+summary(p2_m3a_ols)
 
-p2_m5_ols <- lm(rep.share.gro ~ rel.unemp + pop + educ + white.percent + as.factor(rural):white.percent + 
+p2_m3b_ols <- lm(rep.share.gro ~ rel.unemp + pop + educ + white.percent + as.factor(rural):white.percent + 
                   + as.factor(rural), p2_merged_df5)
-summary(p2_m5_ols)
+summary(p2_m3b_ols)
 
 
 
@@ -134,26 +140,55 @@ source("heat-map.R")
 
 #Part II:
 
-p2_merged_df4 %>% filter(state != "HI") %>% county.heatmap("rep.share.gro") + 
-  scale_fill_gradient2(low = "#085BB2", high = "#FF2312", mid = "#4DAFFF", midpoint = 0) +
+descrip_df2 <- p2_merged_df5 %>%
+  mutate(rep.share.change = rep.share - repshare.lag)
+  
+descrip_df2 %>% filter(state != "HI") %>% county.heatmap("rep.share.change") + 
+  scale_fill_gradient2(low = "#085BB2", high = "#FF2312", mid = "#4DAFFF", midpoint = -0.02) +
   labs(title = "Change in voteshare for Republican party 2012 to 2016")
 
-logit.data %>% filter(state != "HI") %>% county.heatmap("flip") + 
+descrip_df2 %>% filter(state != "HI") %>% county.heatmap("flip") + 
   scale_fill_gradient2(low = "#085BB2", high = "#FF2312", mid = "#4DAFFF", midpoint = 0.5) +
   labs(title = "Counties that flipped from Democrat to Republican 2012 to 2016")
+
+#List the counties that flipped and put it in a table (all the names) for descriptive statistics:
+flipped_counties <- descrip_df2 %>%
+  filter(flip == 1)
+
+table(flipped_counties$state) #shows the number of counties in each state that flipped.
+#Higest are: IA 33, MI 12, MN 19, NY 20, WI 23
+
 
 #************************************************************************
                               #Scatter plots
 #************************************************************************
+#Overall unemployment growth
+hist(p2_merged_df5$unemp_gro)
+
+#Overall PCI growth
+hist(p2_merged_df5$pci_gro)
+
+#Overall unemployment growth for flipped counties
+logit.data1 <- logit.data %>%
+  dplyr::filter(flip == 1)
+
+hist(logit.data1$unemp_gro)
+
+#Overall pci growth for flipped counties
+hist(logit.data1$pci_gro)
 
 
 #Correlation:
 cor(merged_df4[,c("unemp_gro", "PCI_gro")], use="complete.obs", method="pearson")
 cor(merged_df4[,c("rep.share", "repshare.lag")], use="complete.obs", method="pearson")
 
-
-
 cor(p2_merged_df5[,c("unemp_gro", "pci_gro")], use="complete.obs", method="pearson")
+
+
+
+
+
+
 
 #Descriptive Stats:
 descrp_p1 <- merged_df4 %>%
