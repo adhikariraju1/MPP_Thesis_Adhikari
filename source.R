@@ -4,7 +4,7 @@
 #**********************************************************************************************
 
 #Loading all the necessary packages
-packages <- c("bea.R", "acs", "magrittr", "httr", "tidyr", "blsAPI", "rjson", "readxl", "dplyr", "jsonlite",
+packages <- c("bea.R", "acs", "haven", "plyr", "magrittr", "httr", "tidyr", "blsAPI", "rjson", "readxl", "dplyr", "broom", "jsonlite",
               "stringr", "rJava", "xlsx", "qdap", "data.table", "plm", "rio", "Zelig", "stargazer", "knitr", "lmtest")
 load <- lapply(packages, require, character.only = T)
 
@@ -32,22 +32,6 @@ part1_df <- merged_df4 %>%
   rename(pop_thou = Pop_thou, pci_gro = PCI_gro)
 
 
-f1 <- plm(rep.share ~ unemp_gro + repshare.lag, part1_df, model = 'within')
-f2 <- plm(rep.share ~ unemp_gro + repshare.lag + pop_thou + white.percent + as.factor(rep_incumb)
-          + unemp_gro:as.factor(rep_incumb) + as.factor(rural_percent)
-          + white.percent:as.factor(rural_percent), part1_df, model = 'within')
-
-stargazer::stargazer(f1, f2, type = 'text', digits = 2, header = FALSE,   
-                     title = 'Model with Unemployment (OLS)', font.size = 'normalsize', out = 'fixed_part1.htm')
-
-test1 <- coeftest(f2, vcovHC(f2, method = "arellano"))
-
-stargazer::stargazer(test1, type = 'text', digits = 2, header = FALSE,   
-                     title = 'Model with Arellano', font.size = 'normalsize', out = 'fixed_part1_arellano.htm')
-
-
-
-
 part2_df <- p2_merged_df6 %>%
   mutate(year = "2016") %>%
   mutate(rep_incumb = "0") %>%
@@ -58,11 +42,68 @@ part2_df <- p2_merged_df6 %>%
 part2_df$year <- as.numeric(part2_df$year)
 part2_df$rep_incumb <- as.numeric(part2_df$rep_incumb)
 
-  
+
 forecast_df <- bind_rows(part1_df, part2_df)
 
 
+f1 <- plm(rep.share ~ unemp_gro + repshare.lag, data = filter(forecast_df, year < 2016), model = 'within')
+f2 <- plm(rep.share ~ unemp_gro + repshare.lag + pop_thou + white.percent + as.factor(rep_incumb)
+          + unemp_gro:as.factor(rep_incumb) + rural_percent:white.percent, data = filter(forecast_df, year < 2016), model = 'within')
 
+stargazer::stargazer(f1, f2, type = 'text', digits = 2, header = FALSE,   
+                     title = 'Model with Unemployment (OLS)', font.size = 'normalsize', out = 'fixed_part1.htm')
+
+test1 <- coeftest(f2, vcovHC(f2, method = "arellano"))
+
+stargazer::stargazer(test1, type = 'text', digits = 2, header = FALSE,   
+                     title = 'Model with Arellano', font.size = 'normalsize', out = 'fixed_part1_arellano.htm')
+
+
+augment(f2, newdata = filter(forecast_df, year == 2016))
+predict(f2, filter(forecast_df, year == 2016), se.fit = TRUE, interval = "confidence")
+predict(f2, filter(forecast_df, year == 2016), se.fit = TRUE, interval = "prediction")
+
+
+
+
+######################################################Alternate####################################################
+
+tidy(f2)
+str(fixef(f2))
+intercept <- data.frame(county.fips = names(fixef(f2)),
+           fixef = as.vector(fixef(f2)))
+
+part2a_df <- merge(part2_df, intercept)
+part2a_df <- part2a_df %>%
+  mutate(pred_repshare = fixef - unemp_gro*0.0247103253 + repshare.lag*0.7276273733 + pop_thou*0.0001052426 
+         + white.percent*0.1558135764 - rep_incumb* 0.0404342633 - unemp_gro*rep_incumb*0.0367096008 + 
+           white.percent*rural_percent*0.0057858007)
+
+plot(part2a_df$pred_repshare, part2a_df$rep.share)
+abline(0, 1)
+
+##################################################################################################################
+part2a_df2 <- part2a_df %>%
+  mutate(resid = rep.share - pred_repshare)%>%
+  select(county.fips, resid)
+
+p2_merged_df7 <- merge(p2_merged_df6, part2a_df2)
+
+
+p2_merged_df7_swing <- p2_merged_df7 %>%
+  filter(state == "CO" | state == "FL" | state == "IA" 
+         | state == "NC" | state == "NH" | state == "OH" | state == "PA" 
+         | state == "VA" | state == "NV" | state == "WI")
+
+p2_merged_df7_rust <- p2_merged_df7 %>%
+  filter(state == "NY" | state == "PA" | state == "WV" | state == "OH" | state == "IN"
+         | state == "MI" | state == "IL" | state == "IA" | state == "WI")
+
+
+
+
+
+#################################################################################################################
 #Base regression(OLS, FE, RE) with Unemployment: m1a
 p1_m1a_ols <- lm(rep.share ~ unemp_gro + repshare.lag, merged_df4)
 p1_m1a_fe <- plm(rep.share ~ unemp_gro + repshare.lag, merged_df4, model = 'within')
@@ -149,18 +190,18 @@ m22 <- lm(rep.share.gro ~ jobs_gro + av_wage_gro + pop_thou + uneduc + white.per
 
 #New Model with Share of Manufacturing Jobs and Average Wage and LFPR:
 
-m24 <- lm(rep.share ~ repshare.lag + manu_share_gro + av_wage_gro + lfpr_male_gro + pop_thou + uneduc + white.percent + 
-            + rural_percent, p2_merged_df6)
+m24 <- lm(resid ~ manu_share_gro + av_wage_gro + lfpr_male_gro + pop_thou + uneduc + white.percent + 
+            + rural_percent, p2_merged_df7)
 summary(m24)
 
 #For swing states:
-m25 <- lm(rep.share ~ repshare.lag + manu_share_gro + av_wage_gro + lfpr_male_gro + pop_thou + uneduc + white.percent + 
-            + rural_percent, p2_merged_df6_swing)
+m25 <- lm(resid ~ manu_share_gro + av_wage_gro + lfpr_male_gro + pop_thou + uneduc + white.percent + 
+            + rural_percent, p2_merged_df7_swing)
 summary(m25)
 
 #For rust belt states:
-m26 <- lm(rep.share ~ repshare.lag + manu_share_gro + av_wage_gro + lfpr_male_gro + pop_thou + uneduc + white.percent + 
-            + rural_percent, p2_merged_df6_rust)
+m26 <- lm(resid ~ manu_share_gro + av_wage_gro + lfpr_male_gro + pop_thou + uneduc + white.percent + 
+            + rural_percent, p2_merged_df7_rust)
 summary(m26)
 
 
