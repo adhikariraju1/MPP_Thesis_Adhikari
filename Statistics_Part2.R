@@ -131,27 +131,50 @@ PerCapitaCurrentTransfer <- jsonlite::fromJSON(beaPercapita_Current_Transfer)$BE
 PerCapitaCurrentTransfer <- PerCapitaCurrentTransfer %>%
   select(GeoFips, GeoName, Year, PCCT)
 
-#BEA Regional Income Data: Adjustment for Residence equals the inflows to that county minus the outflows from that county
-beaAdjustment_Residence <- list(
+#BEA Regional Income Data: Manufacturing jobs
+beaManufacturing <- list(
   'UserID' = beaKey ,
   'Method' = 'GetData',
   'datasetname' = 'RegionalIncome',
-  'TableName' = 'CA91' ,
-  'LineCode' = '30',
+  'TableName' = 'CA25N' ,
+  'LineCode' = '500',
   'Year' = '2012, 2015' ,
   'GeoFips' = 'COUNTY' ,
   'ResultFormat' = 'json'
 );
 
-beaAdjustment_Residence <- beaGet(beaAdjustment_Residence, asString = T, asTable = F)
-AdjustmentResidence <- jsonlite::fromJSON(beaAdjustment_Residence)$BEAAPI$Results$Data %>%
+beaManufacturing <- beaGet(beaManufacturing, asString = T, asTable = F)
+Manufacturing <- jsonlite::fromJSON(beaManufacturing)$BEAAPI$Results$Data %>%
   mutate(DataValue = ifelse(DataValue == '(NA)', NA, DataValue),
          DataValue = as.numeric(DataValue)) %>%
-  rename(Year = TimePeriod, Adj_res = DataValue) %>%
+  rename(Year = TimePeriod, manu = DataValue) %>%
   mutate(Year = as.numeric(Year))
 
-AdjustmentResidence <- AdjustmentResidence %>%
-  select(GeoFips, GeoName, Year, Adj_res)
+Manufacturing <- Manufacturing %>%
+  select(GeoFips, GeoName, Year, manu)
+
+# Private non-farm employment(we need to divide manufacturing by this)
+beaPrivate <- list(
+  'UserID' = beaKey ,
+  'Method' = 'GetData',
+  'datasetname' = 'RegionalIncome',
+  'TableName' = 'CA25N' ,
+  'LineCode' = '90',
+  'Year' = '2012, 2015' ,
+  'GeoFips' = 'COUNTY' ,
+  'ResultFormat' = 'json'
+);
+
+beaPrivate <- beaGet(beaPrivate, asString = T, asTable = F)
+Private <- jsonlite::fromJSON(beaPrivate)$BEAAPI$Results$Data %>%
+  mutate(DataValue = ifelse(DataValue == '(NA)', NA, DataValue),
+         DataValue = as.numeric(DataValue)) %>%
+  rename(Year = TimePeriod, private = DataValue) %>%
+  mutate(Year = as.numeric(Year))
+
+Private <- Private %>%
+  select(GeoFips, GeoName, Year, private)
+
 
 #BEA Regional Income Data: Employment(Total number of jobs) by county
 beaEMP <- list(
@@ -198,10 +221,10 @@ Wage <- Wage %>%
 #Merging all BEA dataframes
 bea_df <- merge(Population, PerCapitaIncome, by = c('GeoFips', 'Year', 'GeoName'), all=T)
 bea_df <- merge(bea_df, PerCapitaCurrentTransfer, by = c('GeoFips', 'Year', 'GeoName'), all=T)
-bea_df <- merge(bea_df, AdjustmentResidence, by = c('GeoFips', 'Year', 'GeoName'), all=T)
 bea_df <- merge(bea_df, Jobs, by = c('GeoFips', 'Year', 'GeoName'), all=T)
 bea_df <- merge(bea_df, Wage, by = c('GeoFips', 'Year', 'GeoName'), all=T)
-
+bea_df <- merge(bea_df, Manufacturing, by = c('GeoFips', 'Year', 'GeoName'), all=T)
+bea_df <- merge(bea_df, Private, by = c('GeoFips', 'Year', 'GeoName'), all=T)
 
 names(bea_df)[names(bea_df)=="GeoFips"] <- "county.fips"
 bea_df$county.fips <- as.numeric(bea_df$county.fips)
@@ -239,7 +262,7 @@ bea_df$county <- tolower(bea_df$county) #Changed the county names to lowercase
 
 #Rename the Year variable to year.
 bea_df <- bea_df %>%
-  rename(year = Year, pop = Pop, pci = PCI, pcct = PCCT, adj_res = Adj_res)
+  rename(year = Year, pop = Pop, pci = PCI, pcct = PCCT)
 
 bea_df <- bea_df %>%
   arrange(county.fips, year) %>%
@@ -247,23 +270,24 @@ bea_df <- bea_df %>%
   mutate(pci_lag = lag(pci)) %>%
   mutate(pop_lag = lag(pop)) %>%
   mutate(pcct_lag = lag(pcct)) %>%
-  mutate(adj_res_lag = lag(adj_res)) %>%
   mutate(jobs_lag = lag(jobs)) %>%
   mutate(av_wage_lag = lag(av_wage)) %>%
+  mutate(manu_share = manu / private) %>%
+  mutate(manu_share_lag = lag(manu_share)) %>%
   filter(year %% 2 == 1)
 
 #Calculate the one year percent change for all the economic variables from BEA
 bea_df <- bea_df %>%
   mutate(pci_gro = (pci - pci_lag) / pci_lag, 
          pcct_gro = (pcct - pcct_lag) /pcct_lag, 
-         adj_gro = (adj_res - adj_res_lag) / adj_res_lag, 
          jobs_gro = (jobs - jobs_lag) / jobs_lag,
-         av_wage_gro = (av_wage - av_wage_lag) / av_wage_lag)
+         av_wage_gro = (av_wage - av_wage_lag) / av_wage_lag,
+         manu_share_gro = (manu_share - manu_share_lag) / manu_share_lag)
 
 #subsetting only the necessary columns for the final dataframe.
 bea_df <- bea_df %>%
   mutate(pop_thou = pop / 1000) %>%
-  select(county.fips, year, state, county, pop, pop_thou, pci_gro, pcct_gro, adj_gro, jobs_gro, av_wage_gro)
+  select(county.fips, year, state, county, pop, pop_thou, pci_gro, pcct_gro, jobs_gro, av_wage_gro, manu_share_gro)
  
 bea_df <- bea_df %>% 
   mutate(county = str_replace_all(county, " city", "")) %>%
@@ -342,7 +366,7 @@ beablselec <- merge(beabls_df, election_df, by =c('county.fips'), all.x = TRUE)
 
 p2_merged_df1 <- beablselec %>%
   select(county.fips, county.x, state.x, unemp_gro, pop, pop_thou, pci_gro, pcct_gro, 
-         adj_gro, jobs_gro, av_wage_gro, rep.share, repshare.lag, is.rep.2012, is.rep.2016) %>%
+         jobs_gro, av_wage_gro, manu_share_gro, rep.share, repshare.lag, is.rep.2012, is.rep.2016) %>%
   rename(county = county.x, state = state.x)
   
 #Rural dummy:
@@ -403,16 +427,16 @@ p2_merged_df5 <- p2_merged_df4 %>%
 p2_merged_df5 <- p2_merged_df5 %>%
   mutate(rep.share.gro = (rep.share - repshare.lag)/repshare.lag)
 
-#Remove previous dataframes:
-rm(election_df1, election_df2)
-rm(beaPop, beaPCI, beaPercapita_Current_Transfer, beaAdjustment_Residence)
-rm(Population, PerCapitaIncome, PerCapitaCurrentTransfer, AdjustmentResidence, bea_df)
-rm(unemp12, unemp15, unemployment_df) 
-rm(beabls_df, beablselec, election_df)
-rm(issue.data, race, rural, p2_merged_df1, p2_merged_df2, p2_merged_df3, edu.data, p2_merged_df4)
 
+p2_merged_df5_swing <- p2_merged_df5 %>%
+  filter(state == "CO" | state == "FL" | state == "IA" 
+         | state == "NC" | state == "NH" | state == "OH" | state == "PA" 
+         | state == "VA" | state == "NV" | state == "WI")
 
-export(p2_merged_df5, "part2data.csv")
+p2_merged_df5_rust <- p2_merged_df5 %>%
+  filter(state == "NY" | state == "PA" | state == "WV" | state == "OH" | state == "IN"
+         | state == "MI" | state == "IL" | state == "IA" | state == "WI")
+
 
 ###############################################################Some playing around with employment data#########################
 emp.data <- rio::import("ACS_15_5YR_S2301_with_ann.csv", skip = 1) %>%
@@ -421,9 +445,58 @@ emp.data <- rio::import("ACS_15_5YR_S2301_with_ann.csv", skip = 1) %>%
   select(-matches("Unemployment")) %>%
   select(-matches("Female")) %>%
   select(-matches("AGE")) %>%
-  select(-matches("DISABILITY"))
+  select(-matches("DISABILITY")) %>%
+  select(-matches("Employment")) %>%
+  select(-matches("RACE")) %>%
+  select(-matches("EDUCATIONAL")) %>%
+  select(-matches("POVERTY")) %>%
+  select(-Id, -Geography)
 
-#######################################################More with BEA data##############################33
+names(emp.data)[names(emp.data)=="Labor Force Participation Rate; Estimate; White alone, not Hispanic or Latino"] <- "lfpr_white_2015"
+names(emp.data)[names(emp.data)=="Labor Force Participation Rate; Estimate; Population 20 to 64 years - SEX - Male"] <- "lfpr_male_2015"
+names(emp.data)[names(emp.data)=="Id2"] <- "county.fips"
+
+emp.data <- emp.data %>%
+  select(county.fips, lfpr_male_2015, lfpr_white_2015) 
+
+emp.data2012 <- rio::import("ACS_12_5YR_S2301_with_ann.csv", skip = 1) %>%
+  select(-matches("Margin")) %>%
+  select(-matches("Total")) %>%
+  select(-matches("Unemployment")) %>%
+  select(-matches("Female")) %>%
+  select(-matches("AGE")) %>%
+  select(-matches("DISABILITY")) %>%
+  select(-matches("Employment")) %>%
+  select(-matches("RACE")) %>%
+  select(-matches("EDUCATIONAL")) %>%
+  select(-matches("POVERTY")) %>%
+  select(-matches("Employed")) %>%
+  select(-Id, -Geography)
+
+names(emp.data2012)[names(emp.data2012)=="In labor force; Estimate; White alone, not Hispanic or Latino"] <- "lfpr_white_2012"
+names(emp.data2012)[names(emp.data2012)=="In labor force; Estimate; SEX - Male"] <- "lfpr_male_2012"
+names(emp.data2012)[names(emp.data2012)=="Id2"] <- "county.fips"
+
+emp.data2012 <- emp.data2012 %>%
+  select(county.fips, lfpr_male_2012, lfpr_white_2012) 
+
+emp.df <- merge(emp.data, emp.data2012)
+
+p2_merged_df6 <- merge(p2_merged_df5, emp.df, all.x = TRUE)
+
+p2_merged_df6 <- p2_merged_df6 %>%
+  mutate(lfpr_male_gro = lfpr_male_2015 - lfpr_male_2012) %>%
+  mutate(lfpr_white_gro = lfpr_white_2015 - lfpr_white_2012)
+
+#Remove previous dataframes:
+rm(election_df1, election_df2)
+rm(beaPop, beaPCI, beaPercapita_Current_Transfer, beaManufacturing, beaPrivate, beaEMP, beaWage)
+rm(Population, PerCapitaIncome, PerCapitaCurrentTransfer, bea_df, Jobs, Wage, Manufacturing, Private)
+rm(unemp12, unemp15, unemployment_df) 
+rm(beabls_df, beablselec, election_df)
+rm(issue.data, race, rural, p2_merged_df1, p2_merged_df2, p2_merged_df3, edu.data, p2_merged_df4, emp.data, emp.data2012, emp.df)
 
 
+############################################################3333333
+export(p2_merged_df5, "part2data.csv")
 

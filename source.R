@@ -5,7 +5,7 @@
 
 #Loading all the necessary packages
 packages <- c("bea.R", "acs", "magrittr", "httr", "tidyr", "blsAPI", "rjson", "readxl", "dplyr", "jsonlite",
-              "stringr", "rJava", "xlsx", "qdap", "data.table", "plm", "rio", "Zelig", "stargazer", "knitr", "GGally")
+              "stringr", "rJava", "xlsx", "qdap", "data.table", "plm", "rio", "Zelig", "stargazer", "knitr")
 load <- lapply(packages, require, character.only = T)
 
 #Setting the working directory
@@ -101,12 +101,21 @@ m21 <- lm(rep.share.gro ~ jobs_gro + av_wage_gro + pop_thou + uneduc + white.per
 m22 <- lm(rep.share.gro ~ jobs_gro + av_wage_gro + pop_thou + uneduc + white.percent + as.factor(rural):uneduc + 
            + as.factor(rural), p2_merged_df5)
 
-####################################Playing around########################33
+#New Model with Share of Manufacturing Jobs and Average Wage and LFPR:
 
+m24 <- lm(rep.share ~ repshare.lag + manu_share_gro + av_wage_gro + lfpr_male_gro + pop_thou + uneduc + white.percent + 
+            + rural_percent, p2_merged_df6)
+summary(m24)
 
+#For swing states:
+m25 <- lm(rep.share ~ repshare.lag + manu_share_gro + av_wage_gro + lfpr_male_gro + pop_thou + uneduc + white.percent + 
+            + rural_percent, p2_merged_df6_swing)
+summary(m25)
 
-
-
+#For rust belt states:
+m26 <- lm(rep.share ~ repshare.lag + manu_share_gro + av_wage_gro + lfpr_male_gro + pop_thou + uneduc + white.percent + 
+            + rural_percent, p2_merged_df6_rust)
+summary(m26)
 
 
 
