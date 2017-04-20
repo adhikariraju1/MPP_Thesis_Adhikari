@@ -5,7 +5,7 @@
 
 #Loading all the necessary packages
 packages <- c("bea.R", "acs", "magrittr", "httr", "tidyr", "blsAPI", "rjson", "readxl", "dplyr", "jsonlite",
-              "stringr", "rJava", "xlsx", "qdap", "data.table", "plm", "rio", "Zelig", "stargazer", "knitr")
+              "stringr", "rJava", "xlsx", "qdap", "data.table", "plm", "rio", "Zelig", "stargazer", "knitr", "GGally")
 load <- lapply(packages, require, character.only = T)
 
 #Setting the working directory
@@ -87,25 +87,23 @@ stargazer::stargazer(m5, m6, type = 'text', digits = 2, header = FALSE,
                      title = 'Model with Unemployment (OLS)', font.size = 'normalsize', out = 'm5m6.htm')
 
 #PCI (OLS)
-m7 <- lm(rep.share ~ pci_gro + pci_gro^2 + repshare.lag, p2_merged_df5)
-m8 <- lm(rep.share ~ pci_gro + pci_gro^2 + repshare.lag + pop_thou + uneduc + white.percent + as.factor(rural):white.percent + 
+m7 <- lm(rep.share ~ pci_gro + I(pci_gro^2) + repshare.lag, p2_merged_df5)
+m8 <- lm(rep.share ~ pci_gro + I(pci_gro^2) + repshare.lag + pop_thou + uneduc + white.percent + as.factor(rural):white.percent + 
                    + as.factor(rural), p2_merged_df5)
 stargazer::stargazer(m7, m8, type = 'text', digits = 2, header = FALSE,   
                      title = 'Model with PCI (OLS)', font.size = 'normalsize', out = 'm7m8.htm')
 
+#New Models with Total Jobs and Average Wage:
 
-
+m20 <- lm(rep.share.gro ~ jobs_gro + av_wage_gro, p2_merged_df5)
+m21 <- lm(rep.share.gro ~ jobs_gro + av_wage_gro + pop_thou + uneduc + white.percent + as.factor(rural):white.percent + 
+           + as.factor(rural), p2_merged_df5)
+m22 <- lm(rep.share.gro ~ jobs_gro + av_wage_gro + pop_thou + uneduc + white.percent + as.factor(rural):uneduc + 
+           + as.factor(rural), p2_merged_df5)
 
 ####################################Playing around########################33
 
-test1 <- lm(rep.share ~ repshare.lag + unemp_gro + pop_thou + uneduc + white.percent + as.factor(rural):white.percent + 
-              + as.factor(rural), p2_merged_df5)
-summary(test1)
 
-
-test2 <- lm(rep.share ~ repshare.lag + pci_gro + pci_gro^2 + pop_thou + uneduc + white.percent + as.factor(rural):white.percent + 
-              + as.factor(rural), p2_merged_df5)
-summary(test2)
 
 
 
@@ -159,6 +157,7 @@ table(flipped_counties$state) #shows the number of counties in each state that f
 #Higest are: IA 33, MI 12, MN 19, NY 20, WI 23
 
 
+
 #************************************************************************
                               #Scatter plots
 #************************************************************************
@@ -198,7 +197,16 @@ table_p1 <- basicStats(merged_df4)
 kable(descrp_p1, align="c", caption="Summary of Descriptive Statistics", digits = 2)
 
 
+descrp_p2 <- p2_merged_df5 %>%
+  select(unemp_gro, pci_gro, pcct_gro, jobs_gro, av_wage_gro)
 
+set.seed(42)
+graph1 <- data.frame(unemp_gro = rnorm(100),
+               pci_gro = rnorm(100),
+               pcct_gro = rnorm(100),
+               jobs_gro = rnorm(100),
+               av_wage_gro = rnorm(100))
+ggpairs(graph1)
 
 #********************
   # table(merged_df4$repshare.lag)

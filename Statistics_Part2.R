@@ -153,11 +153,55 @@ AdjustmentResidence <- jsonlite::fromJSON(beaAdjustment_Residence)$BEAAPI$Result
 AdjustmentResidence <- AdjustmentResidence %>%
   select(GeoFips, GeoName, Year, Adj_res)
 
+#BEA Regional Income Data: Employment(Total number of jobs) by county
+beaEMP <- list(
+  'UserID' = beaKey ,
+  'Method' = 'GetData',
+  'datasetname' = 'RegionalIncome',
+  'TableName' = 'CA30' ,
+  'LineCode' = '240',
+  'Year' = '2012, 2015' ,
+  'GeoFips' = 'COUNTY' ,
+  'ResultFormat' = 'json'
+);
+
+beaEMP <- beaGet(beaEMP, asString = T, asTable = F)
+Jobs <- jsonlite::fromJSON(beaEMP)$BEAAPI$Results$Data %>%
+  mutate(DataValue = ifelse(DataValue == '(NA)', NA, DataValue),
+         DataValue = as.numeric(DataValue)) %>%
+  rename(Year = TimePeriod, jobs = DataValue) %>%
+  mutate(Year = as.numeric(Year))
+Jobs <- Jobs %>%
+  select(GeoFips, GeoName, Year, jobs)
+
+#Average wage by county
+beaWage <- list(
+  'UserID' = beaKey ,
+  'Method' = 'GetData',
+  'datasetname' = 'RegionalIncome',
+  'TableName' = 'CA30' ,
+  'LineCode' = '290',
+  'Year' = '2012, 2015' ,
+  'GeoFips' = 'COUNTY' ,
+  'ResultFormat' = 'json'
+);
+
+beaWage <- beaGet(beaWage, asString = T, asTable = F)
+Wage <- jsonlite::fromJSON(beaWage)$BEAAPI$Results$Data %>%
+  mutate(DataValue = ifelse(DataValue == '(NA)', NA, DataValue),
+         DataValue = as.numeric(DataValue)) %>%
+  rename(Year = TimePeriod, av_wage = DataValue) %>%
+  mutate(Year = as.numeric(Year))
+Wage <- Wage %>%
+  select(GeoFips, GeoName, Year, av_wage)
 
 #Merging all BEA dataframes
 bea_df <- merge(Population, PerCapitaIncome, by = c('GeoFips', 'Year', 'GeoName'), all=T)
 bea_df <- merge(bea_df, PerCapitaCurrentTransfer, by = c('GeoFips', 'Year', 'GeoName'), all=T)
 bea_df <- merge(bea_df, AdjustmentResidence, by = c('GeoFips', 'Year', 'GeoName'), all=T)
+bea_df <- merge(bea_df, Jobs, by = c('GeoFips', 'Year', 'GeoName'), all=T)
+bea_df <- merge(bea_df, Wage, by = c('GeoFips', 'Year', 'GeoName'), all=T)
+
 
 names(bea_df)[names(bea_df)=="GeoFips"] <- "county.fips"
 bea_df$county.fips <- as.numeric(bea_df$county.fips)
@@ -204,18 +248,22 @@ bea_df <- bea_df %>%
   mutate(pop_lag = lag(pop)) %>%
   mutate(pcct_lag = lag(pcct)) %>%
   mutate(adj_res_lag = lag(adj_res)) %>%
+  mutate(jobs_lag = lag(jobs)) %>%
+  mutate(av_wage_lag = lag(av_wage)) %>%
   filter(year %% 2 == 1)
 
 #Calculate the one year percent change for all the economic variables from BEA
 bea_df <- bea_df %>%
   mutate(pci_gro = (pci - pci_lag) / pci_lag, 
          pcct_gro = (pcct - pcct_lag) /pcct_lag, 
-         adj_gro = (adj_res - adj_res_lag) / adj_res_lag)
+         adj_gro = (adj_res - adj_res_lag) / adj_res_lag, 
+         jobs_gro = (jobs - jobs_lag) / jobs_lag,
+         av_wage_gro = (av_wage - av_wage_lag) / av_wage_lag)
 
 #subsetting only the necessary columns for the final dataframe.
 bea_df <- bea_df %>%
   mutate(pop_thou = pop / 1000) %>%
-  select(county.fips, year, state, county, pop, pop_thou, pci_gro, pcct_gro, adj_gro)
+  select(county.fips, year, state, county, pop, pop_thou, pci_gro, pcct_gro, adj_gro, jobs_gro, av_wage_gro)
  
 bea_df <- bea_df %>% 
   mutate(county = str_replace_all(county, " city", "")) %>%
@@ -294,7 +342,7 @@ beablselec <- merge(beabls_df, election_df, by =c('county.fips'), all.x = TRUE)
 
 p2_merged_df1 <- beablselec %>%
   select(county.fips, county.x, state.x, unemp_gro, pop, pop_thou, pci_gro, pcct_gro, 
-         adj_gro, rep.share, repshare.lag, is.rep.2012, is.rep.2016) %>%
+         adj_gro, jobs_gro, av_wage_gro, rep.share, repshare.lag, is.rep.2012, is.rep.2016) %>%
   rename(county = county.x, state = state.x)
   
 #Rural dummy:
@@ -374,5 +422,8 @@ emp.data <- rio::import("ACS_15_5YR_S2301_with_ann.csv", skip = 1) %>%
   select(-matches("Female")) %>%
   select(-matches("AGE")) %>%
   select(-matches("DISABILITY"))
+
+#######################################################More with BEA data##############################33
+
 
 
