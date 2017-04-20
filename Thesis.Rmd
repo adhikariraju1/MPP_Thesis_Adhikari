@@ -14,7 +14,7 @@ bibliography: sources.bib
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_knit$set(root.dir = "C:/RajuPC/MPP Final Thesis/WorkingDirectory")
 
-#source("source.R")
+source("source.R")
 
 ```
 \pagebreak
@@ -236,6 +236,17 @@ _Put the hand made table from the Lit. review note book_
 #Appendix:
 
 (Test results of all the tests, graphs, tables, plots, etc. that don't go in the main body of the paper.)
+
+```{r}
+ggpairs(graph1)
+```
+
+```{r}
+map1
+
+map2
+```
+
 
 \pagebreak
 

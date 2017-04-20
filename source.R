@@ -26,9 +26,9 @@ p1_m1a_ols <- lm(rep.share ~ unemp_gro + repshare.lag, merged_df4)
 p1_m1a_fe <- plm(rep.share ~ unemp_gro + repshare.lag, merged_df4, model = 'within')
 p1_m1a_re <- plm(rep.share ~ unemp_gro + repshare.lag, merged_df4, model = 'random')
 
-phtest(p1_m1_fe, p1_m1_re) #Hausman test to choose between FE and RE shows that FE is better since p-value < 0.05
+phtest(p1_m1a_fe, p1_m1a_re) #Hausman test to choose between FE and RE shows that FE is better since p-value < 0.05
 
-stargazer::stargazer(p1_m1_ols, p1_m1_fe, p1_m1_re, type = 'text', digits = 2, header = FALSE,   
+stargazer::stargazer(p1_m1a_ols, p1_m1a_fe, p1_m1a_re, type = 'text', digits = 2, header = FALSE,   
                      title = 'Base Model with Unemployment (OLS, FE, RE)', font.size = 'normalsize', out = 'p1m1a.htm')
 
 
@@ -109,26 +109,6 @@ m22 <- lm(rep.share.gro ~ jobs_gro + av_wage_gro + pop_thou + uneduc + white.per
 
 
 
-#ReLogit:
-
-p2_m2_relogit <- zelig(flip ~ unemp_gro + pci_gro + pop + white.percent,
-                       model = "relogit", data = logit.data, tau = 0.05)
-summary(p2_m2_relogit)
-t <- setx(p2_m2_relogit) %>% sim(p2_m2_relogit, .)
-
-
-#With relative unemp:
-
-p2_m3a_ols <- lm(rep.share.gro ~ rel.unemp, p2_merged_df5)
-summary(p2_m3a_ols)
-
-p2_m3b_ols <- lm(rep.share.gro ~ rel.unemp + pop + educ + white.percent + as.factor(rural):white.percent + 
-                  + as.factor(rural), p2_merged_df5)
-summary(p2_m3b_ols)
-
-
-
-
 
 #************************************************************************
 source("heat-map.R")
@@ -141,11 +121,11 @@ source("heat-map.R")
 descrip_df2 <- p2_merged_df5 %>%
   mutate(rep.share.change = rep.share - repshare.lag)
   
-descrip_df2 %>% filter(state != "HI") %>% county.heatmap("rep.share.change") + 
+map1 <- descrip_df2 %>% filter(state != "HI") %>% county.heatmap("rep.share.change") + 
   scale_fill_gradient2(low = "#085BB2", high = "#FF2312", mid = "#4DAFFF", midpoint = -0.02) +
   labs(title = "Change in voteshare for Republican party 2012 to 2016")
 
-descrip_df2 %>% filter(state != "HI") %>% county.heatmap("flip") + 
+map2 <- descrip_df2 %>% filter(state != "HI") %>% county.heatmap("flip") + 
   scale_fill_gradient2(low = "#085BB2", high = "#FF2312", mid = "#4DAFFF", midpoint = 0.5) +
   labs(title = "Counties that flipped from Democrat to Republican 2012 to 2016")
 
@@ -167,14 +147,6 @@ hist(p2_merged_df5$unemp_gro)
 #Overall PCI growth
 hist(p2_merged_df5$pci_gro)
 
-#Overall unemployment growth for flipped counties
-logit.data1 <- logit.data %>%
-  dplyr::filter(flip == 1)
-
-hist(logit.data1$unemp_gro)
-
-#Overall pci growth for flipped counties
-hist(logit.data1$pci_gro)
 
 
 #Correlation:
@@ -193,19 +165,16 @@ cor(p2_merged_df5[,c("unemp_gro", "pci_gro")], use="complete.obs", method="pears
 descrp_p1 <- merged_df4 %>%
   select(rep.share, unemp_gro, PCI_gro, Pop, repshare.lag, white.percent)
 
-table_p1 <- basicStats(merged_df4)
-kable(descrp_p1, align="c", caption="Summary of Descriptive Statistics", digits = 2)
-
 
 descrp_p2 <- p2_merged_df5 %>%
   select(unemp_gro, pci_gro, pcct_gro, jobs_gro, av_wage_gro)
 
 set.seed(42)
 graph1 <- data.frame(unemp_gro = rnorm(100),
-               pci_gro = rnorm(100),
-               pcct_gro = rnorm(100),
-               jobs_gro = rnorm(100),
-               av_wage_gro = rnorm(100))
+                     pci_gro = rnorm(100),
+                     pcct_gro = rnorm(100),
+                     jobs_gro = rnorm(100),
+                     av_wage_gro = rnorm(100))
 ggpairs(graph1)
 
 #********************
