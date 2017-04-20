@@ -5,7 +5,7 @@
 
 #Loading all the necessary packages
 packages <- c("bea.R", "acs", "magrittr", "httr", "tidyr", "blsAPI", "rjson", "readxl", "dplyr", "jsonlite",
-              "stringr", "rJava", "xlsx", "qdap", "data.table", "plm", "rio", "Zelig", "stargazer", "knitr")
+              "stringr", "rJava", "xlsx", "qdap", "data.table", "plm", "rio", "Zelig", "stargazer", "knitr", "lmtest")
 load <- lapply(packages, require, character.only = T)
 
 #Setting the working directory
@@ -20,6 +20,48 @@ datagovkey <- "ubFrNGonfwMQm3lK04C6djaMcqFuIe5mvev4RooI"
 #**********************************************************************************************
 source("Statistics.R")
 #**********************************************************************************************
+#********************************************************************************************
+source("Statistics_Part2.R")
+#********************************************************************************************
+
+#For forecasting:
+part1_df <- merged_df4 %>%
+  mutate(pci_gro_sq = PCI_gro^2) %>%
+  select(county.fips, year, county, state, rep.share, repshare.lag, unemp_gro, 
+         PCI_gro, pci_gro_sq, Pop_thou, white.percent, rep_incumb, rural_percent) %>%
+  rename(pop_thou = Pop_thou, pci_gro = PCI_gro)
+
+
+f1 <- plm(rep.share ~ unemp_gro + repshare.lag, part1_df, model = 'within')
+f2 <- plm(rep.share ~ unemp_gro + repshare.lag + pop_thou + white.percent + as.factor(rep_incumb)
+          + unemp_gro:as.factor(rep_incumb) + as.factor(rural_percent)
+          + white.percent:as.factor(rural_percent), part1_df, model = 'within')
+
+stargazer::stargazer(f1, f2, type = 'text', digits = 2, header = FALSE,   
+                     title = 'Model with Unemployment (OLS)', font.size = 'normalsize', out = 'fixed_part1.htm')
+
+test1 <- coeftest(f2, vcovHC(f2, method = "arellano"))
+
+stargazer::stargazer(test1, type = 'text', digits = 2, header = FALSE,   
+                     title = 'Model with Arellano', font.size = 'normalsize', out = 'fixed_part1_arellano.htm')
+
+
+
+
+part2_df <- p2_merged_df6 %>%
+  mutate(year = "2016") %>%
+  mutate(rep_incumb = "0") %>%
+  mutate(pci_gro_sq = pci_gro^2) %>%
+  select(county.fips, year, county, state, rep.share, repshare.lag, unemp_gro,
+         pci_gro, pci_gro_sq, pop_thou, white.percent, rep_incumb, rural_percent)
+
+part2_df$year <- as.numeric(part2_df$year)
+part2_df$rep_incumb <- as.numeric(part2_df$rep_incumb)
+
+  
+forecast_df <- bind_rows(part1_df, part2_df)
+
+
 
 #Base regression(OLS, FE, RE) with Unemployment: m1a
 p1_m1a_ols <- lm(rep.share ~ unemp_gro + repshare.lag, merged_df4)
@@ -60,9 +102,13 @@ stargazer::stargazer(p1_m2b_fe, type = 'text', digits = 2, header = FALSE,
                      title = 'Full Model with PCI (FE)', font.size = 'normalsize', out = 'p1m2b.htm')
 
 
-#********************************************************************************************
-source("Statistics_Part2.R")
-#********************************************************************************************
+
+
+
+
+
+
+
 #Using rep.share.gro:
 #Unemployment (OLS)
 m1 <- lm(rep.share.gro ~ unemp_gro, p2_merged_df5)
@@ -166,10 +212,6 @@ cor(p2_merged_df5[,c("unemp_gro", "pci_gro")], use="complete.obs", method="pears
 
 
 
-
-
-
-
 #Descriptive Stats:
 descrp_p1 <- merged_df4 %>%
   select(rep.share, unemp_gro, PCI_gro, Pop, repshare.lag, white.percent)
@@ -188,3 +230,26 @@ ggpairs(graph1)
 
 #********************
   # table(merged_df4$repshare.lag)
+
+################################# FINAL REGRESSIONS ######################################################
+
+f1 <- plm(rep.share ~ unemp_gro + repshare.lag, merged_df4, model = 'within')
+f2 <- plm(rep.share ~ unemp_gro + repshare.lag + Pop_thou + white.percent + as.factor(rep_incumb)
+          + unemp_gro:as.factor(rep_incumb) + as.factor(rural)
+          + white.percent:as.factor(rural), merged_df4, model = 'within')
+
+stargazer::stargazer(f1, f2, type = 'text', digits = 2, header = FALSE,   
+                     title = 'Model with Unemployment (OLS)', font.size = 'normalsize', out = 'fixed_part1.htm')
+
+test1 <- coeftest(f2, vcovHC(f2, method = "arellano"))
+
+stargazer::stargazer(test1, type = 'text', digits = 2, header = FALSE,   
+                     title = 'Model with Arellano', font.size = 'normalsize', out = 'fixed_part1_arellano.htm')
+
+f3 <- plm(rep.share ~ PCI_gro + repshare.lag, merged_df4, model = 'within')
+f4 <- plm(rep.share ~ PCI_gro + repshare.lag + Pop_thou + white.percent + as.factor(rep_incumb)
+          + PCI_gro:as.factor(rep_incumb) + as.factor(rural)
+          + white.percent:as.factor(rural), merged_df4, model = 'within')
+
+stargazer::stargazer(f1, f2, type = 'text', digits = 2, header = FALSE,   
+                     title = 'Model with Unemployment (OLS)', font.size = 'normalsize', out = 'fixed_part1.htm')

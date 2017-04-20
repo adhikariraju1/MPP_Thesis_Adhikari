@@ -379,6 +379,11 @@ rm(unemp91, unemp92, unemp95, unemp96, unemp99, unemp00, unemp03, unemp04, unemp
 rm(bea_df, beabls_df, beablselec, election_df, incumbency, merged_df1, merged_df2, merged_df3, rural, unemployment_df)
 rm(race, issue.data)
 
+
+#Make Pop to Pop_thou
+merged_df4 <- merged_df4 %>%
+  mutate(Pop_thou = Pop / 1000)
+
 export(merged_df4, "part1data.csv")
 
 

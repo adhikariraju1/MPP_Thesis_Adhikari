@@ -428,15 +428,6 @@ p2_merged_df5 <- p2_merged_df5 %>%
   mutate(rep.share.gro = (rep.share - repshare.lag)/repshare.lag)
 
 
-p2_merged_df5_swing <- p2_merged_df5 %>%
-  filter(state == "CO" | state == "FL" | state == "IA" 
-         | state == "NC" | state == "NH" | state == "OH" | state == "PA" 
-         | state == "VA" | state == "NV" | state == "WI")
-
-p2_merged_df5_rust <- p2_merged_df5 %>%
-  filter(state == "NY" | state == "PA" | state == "WV" | state == "OH" | state == "IN"
-         | state == "MI" | state == "IL" | state == "IA" | state == "WI")
-
 
 ###############################################################Some playing around with employment data#########################
 emp.data <- rio::import("ACS_15_5YR_S2301_with_ann.csv", skip = 1) %>%
@@ -487,6 +478,21 @@ p2_merged_df6 <- merge(p2_merged_df5, emp.df, all.x = TRUE)
 p2_merged_df6 <- p2_merged_df6 %>%
   mutate(lfpr_male_gro = lfpr_male_2015 - lfpr_male_2012) %>%
   mutate(lfpr_white_gro = lfpr_white_2015 - lfpr_white_2012)
+
+
+
+#Swing states and Rust belt states:
+p2_merged_df6_swing <- p2_merged_df6 %>%
+  filter(state == "CO" | state == "FL" | state == "IA" 
+         | state == "NC" | state == "NH" | state == "OH" | state == "PA" 
+         | state == "VA" | state == "NV" | state == "WI")
+
+p2_merged_df6_rust <- p2_merged_df6 %>%
+  filter(state == "NY" | state == "PA" | state == "WV" | state == "OH" | state == "IN"
+         | state == "MI" | state == "IL" | state == "IA" | state == "WI")
+
+
+
 
 #Remove previous dataframes:
 rm(election_df1, election_df2)
