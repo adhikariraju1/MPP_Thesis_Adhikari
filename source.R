@@ -50,7 +50,7 @@ f1 <- plm(rep.share ~ unemp_gro + repshare.lag, data = filter(forecast_df, year 
 f2 <- plm(rep.share ~ unemp_gro + repshare.lag + pop_thou + white.percent + as.factor(rep_incumb)
           + unemp_gro:as.factor(rep_incumb) + rural_percent:white.percent, data = filter(forecast_df, year < 2016), model = 'within')
 
-stargazer::stargazer(f1, f2, type = 'text', digits = 2, header = FALSE,   
+stargazer::stargazer(f2, type = 'text', digits = 2, header = FALSE,   
                      title = 'Model with Unemployment (OLS)', font.size = 'normalsize', out = 'fixed_part1.htm')
 
 test1 <- coeftest(f2, vcovHC(f2, method = "arellano"))
@@ -79,23 +79,33 @@ part2a_df <- part2a_df %>%
          + white.percent*0.1558135764 - rep_incumb* 0.0404342633 - unemp_gro*rep_incumb*0.0367096008 + 
            white.percent*rural_percent*0.0057858007)
 
-plot(part2a_df$pred_repshare, part2a_df$rep.share)
-abline(0, 1)
+png("Plot.png", width = 1800, height = 1800,
+    res = 300)
+
+ggplot(part2a_df) +
+  geom_point(aes(x = pred_repshare, y = rep.share), alpha = 0.25) +
+  geom_abline(slope = 1, intercept = 0) +
+  labs(x = "Predicted Republican Voteshare", y = "Actual Republican Voteshare",
+       title = "Residuals from 2016 US Presidential Elections Forecasting",
+       caption = "Source: Dave Liep, US Election Atlas") +
+  theme_classic()
+
+dev.off()
 
 ##################################################################################################################
 part2a_df2 <- part2a_df %>%
   mutate(resid = rep.share - pred_repshare)%>%
   select(county.fips, resid)
 
-p2_merged_df7 <- merge(p2_merged_df6, part2a_df2)
+p2_merged_df8 <- merge(p2_merged_df7, part2a_df2, all.x = TRUE)
 
 
-p2_merged_df7_swing <- p2_merged_df7 %>%
+p2_merged_df8_swing <- p2_merged_df8 %>%
   filter(state == "CO" | state == "FL" | state == "IA" 
          | state == "NC" | state == "NH" | state == "OH" | state == "PA" 
          | state == "VA" | state == "NV" | state == "WI")
 
-p2_merged_df7_rust <- p2_merged_df7 %>%
+p2_merged_df8_rust <- p2_merged_df8 %>%
   filter(state == "NY" | state == "PA" | state == "WV" | state == "OH" | state == "IN"
          | state == "MI" | state == "IL" | state == "IA" | state == "WI")
 
@@ -190,18 +200,15 @@ m22 <- lm(rep.share.gro ~ jobs_gro + av_wage_gro + pop_thou + uneduc + white.per
 
 #New Model with Share of Manufacturing Jobs and Average Wage and LFPR:
 
-m24 <- lm(resid ~ manu_share_gro + av_wage_gro + lfpr_male_gro + pop_thou + uneduc + white.percent + 
-            + rural_percent, p2_merged_df7)
-summary(m24)
-
+m24 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc, p2_merged_df8)
+stargazer::stargazer(m24, type = 'text', digits = 2, header = FALSE,   
+                     title = 'OLS Model for 2016 Residuals', font.size = 'normalsize', out = 'm24.htm')
 #For swing states:
-m25 <- lm(resid ~ manu_share_gro + av_wage_gro + lfpr_male_gro + pop_thou + uneduc + white.percent + 
-            + rural_percent, p2_merged_df7_swing)
+m25 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc, p2_merged_df8_swing)
 summary(m25)
 
 #For rust belt states:
-m26 <- lm(resid ~ manu_share_gro + av_wage_gro + lfpr_male_gro + pop_thou + uneduc + white.percent + 
-            + rural_percent, p2_merged_df7_rust)
+m26 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc, p2_merged_df8_rust)
 summary(m26)
 
 
@@ -284,8 +291,8 @@ stargazer::stargazer(f1, f2, type = 'text', digits = 2, header = FALSE,
 
 test1 <- coeftest(f2, vcovHC(f2, method = "arellano"))
 
-stargazer::stargazer(test1, type = 'text', digits = 2, header = FALSE,   
-                     title = 'Model with Arellano', font.size = 'normalsize', out = 'fixed_part1_arellano.htm')
+stargazer::stargazer(f2, test1, type = 'text', digits = 2, header = FALSE,   
+                     title = 'Fixed Effects model (before and after Arellano)', font.size = 'normalsize', out = 'fixed_part1_arellano.htm')
 
 f3 <- plm(rep.share ~ PCI_gro + repshare.lag, merged_df4, model = 'within')
 f4 <- plm(rep.share ~ PCI_gro + repshare.lag + Pop_thou + white.percent + as.factor(rep_incumb)

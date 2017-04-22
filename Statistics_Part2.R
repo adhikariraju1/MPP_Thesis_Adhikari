@@ -479,17 +479,31 @@ p2_merged_df6 <- p2_merged_df6 %>%
   mutate(lfpr_male_gro = lfpr_male_2015 - lfpr_male_2012) %>%
   mutate(lfpr_white_gro = lfpr_white_2015 - lfpr_white_2012)
 
+########################################################################################333
+#Gini Coefficient:
+gini.data2015 <- rio::import("ACS_15_5YR_B19083_with_ann.csv", skip = 1)
+names(gini.data2015)[names(gini.data2015)=="Estimate; Gini Index"] <- "gini_2015"
+names(gini.data2015)[names(gini.data2015)=="Id2"] <- "county.fips"
+
+gini.data2015 <- gini.data2015 %>%
+  select(county.fips, gini_2015)
 
 
-#Swing states and Rust belt states:
-p2_merged_df6_swing <- p2_merged_df6 %>%
-  filter(state == "CO" | state == "FL" | state == "IA" 
-         | state == "NC" | state == "NH" | state == "OH" | state == "PA" 
-         | state == "VA" | state == "NV" | state == "WI")
+gini.data2012 <- rio::import("ACS_12_5YR_B19083_with_ann.csv", skip = 1)
+names(gini.data2012)[names(gini.data2012)=="Estimate; Gini Index"] <- "gini_2012"
+names(gini.data2012)[names(gini.data2012)=="Id2"] <- "county.fips"
 
-p2_merged_df6_rust <- p2_merged_df6 %>%
-  filter(state == "NY" | state == "PA" | state == "WV" | state == "OH" | state == "IN"
-         | state == "MI" | state == "IL" | state == "IA" | state == "WI")
+gini.data2012 <- gini.data2012 %>%
+  select(county.fips, gini_2012)
+
+gini_df <- merge(gini.data2012, gini.data2015)
+
+gini_df <- gini_df %>%
+  mutate(gini_gro = gini_2015 - gini_2012)
+
+####################################################
+
+p2_merged_df7 <- merge(p2_merged_df6, gini_df, all.x = TRUE) 
 
 
 
@@ -500,9 +514,9 @@ rm(beaPop, beaPCI, beaPercapita_Current_Transfer, beaManufacturing, beaPrivate, 
 rm(Population, PerCapitaIncome, PerCapitaCurrentTransfer, bea_df, Jobs, Wage, Manufacturing, Private)
 rm(unemp12, unemp15, unemployment_df) 
 rm(beabls_df, beablselec, election_df)
-rm(issue.data, race, rural, p2_merged_df1, p2_merged_df2, p2_merged_df3, edu.data, p2_merged_df4, emp.data, emp.data2012, emp.df)
+rm(issue.data, race, rural, p2_merged_df1, p2_merged_df2, p2_merged_df3, edu.data, p2_merged_df4, emp.data, emp.data2012, emp.df, gini_df, gini.data2012, gini.data2015, intercept, p2_merged_df6)
 
 
 ############################################################3333333
-export(p2_merged_df5, "part2data.csv")
+export(p2_merged_df7, "part2data.csv")
 
