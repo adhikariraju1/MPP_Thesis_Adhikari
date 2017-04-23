@@ -6,7 +6,7 @@
 #Loading all the necessary packages
 packages <- c("bea.R", "acs", "haven", "magrittr", "httr", "tidyr", "blsAPI", "rjson", "readxl", "broom", "jsonlite",
               "stringr", "rJava", "xlsx", "qdap", "data.table", "plm", "rio", "Zelig", "stargazer", "knitr", 
-              "lmtest", "GGally", "ggplot2", "plyr", "dplyr")
+              "lmtest", "GGally", "ggplot2", "interplot", "plyr", "dplyr")
 load <- lapply(packages, require, character.only = T)
 
 #Setting the working directory
@@ -25,12 +25,13 @@ source("Statistics.R")
 source("Statistics_Part2.R")
 #********************************************************************************************
 
-#Part I : Descriptive Stats:
+#Part I:
+#####
 descrp_p1 <- merged_df4 %>%
   select(rep.share, repshare.lag, unemp_gro, Pop_thou, white.percent, rep_incumb, rural_percent)
 
 set.seed(42)
-#####
+
 correlation_p1 <- data.frame(rep.share = rnorm(100),
                              repshare.lag = rnorm(100),
                              unemp_gro = rnorm(100))
@@ -49,15 +50,10 @@ f2 <- plm(rep.share ~ unemp_gro + repshare.lag + Pop_thou + white.percent + as.f
           + white.percent:as.factor(rural), merged_df4, model = 'within')
 
 test1 <- coeftest(f2, vcovHC(f2, method = "arellano"))
+#####
+#interplot marginal effects plots
 
-
-
-
-
-
-
-
-
+#**************************************************************************************************************************
 #For forecasting:
 part1_df <- merged_df4 %>%
   mutate(pci_gro_sq = PCI_gro^2) %>%
@@ -127,11 +123,29 @@ ggplot(part2a_df) +
 dev.off()
 
 ##################################################################################################################
+
 part2a_df2 <- part2a_df %>%
   mutate(resid = rep.share - pred_repshare)%>%
   select(county.fips, resid)
 
 p2_merged_df8 <- merge(p2_merged_df7, part2a_df2, all.x = TRUE)
+######
+
+
+descrp_p2 <- p2_merged_df8 %>%
+  select(resid, manu_share_gro, av_wage_gro, lfpr_male_gro, gini_gro, uneduc)
+
+set.seed(42)
+
+correlation_p3 <- data.frame(resid = rnorm(100),
+                             manu_share_gro = rnorm(100),
+                             av_wage_gro = rnorm(100),
+                             lfpr_male_gro = rnorm(100),
+                             gini_gro = rnorm(100),
+                             uneduc = rnorm(100))
+corplot3 <- ggpairs(correlation_p3)
+
+#####
 
 
 p2_merged_df8_swing <- p2_merged_df8 %>%
@@ -144,35 +158,22 @@ p2_merged_df8_rust <- p2_merged_df8 %>%
          | state == "MI" | state == "IL" | state == "IA" | state == "WI")
 
 
+m24 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc, p2_merged_df8)
+
+#For swing states:
+m25 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc, p2_merged_df8_swing)
+
+#For rust belt states:
+m26 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc, p2_merged_df8_rust)
+
 
 
 
 #################################################################################################################
-#Base regression(OLS, FE, RE) with Unemployment: m1a
-p1_m1a_ols <- lm(rep.share ~ unemp_gro + repshare.lag, merged_df4)
-p1_m1a_fe <- plm(rep.share ~ unemp_gro + repshare.lag, merged_df4, model = 'within')
-p1_m1a_re <- plm(rep.share ~ unemp_gro + repshare.lag, merged_df4, model = 'random')
 
-phtest(p1_m1a_fe, p1_m1a_re) #Hausman test to choose between FE and RE shows that FE is better since p-value < 0.05
-
-#Full FE Model with Unemployment: m2a
-p1_m2a_fe <- plm(rep.share ~ unemp_gro + repshare.lag + Pop + white.percent + as.factor(rep_incumb)
-               + unemp_gro:as.factor(rep_incumb) + as.factor(rural)
-               + white.percent:as.factor(rural), merged_df4, model = 'within')
 
 
 #New Model with Share of Manufacturing Jobs and Average Wage and LFPR:
-
-m24 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc, p2_merged_df8)
-stargazer::stargazer(m24, type = 'text', digits = 2, header = FALSE,   
-                     title = 'OLS Model for 2016 Residuals', font.size = 'normalsize', out = 'm24.htm')
-#For swing states:
-m25 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc, p2_merged_df8_swing)
-summary(m25)
-
-#For rust belt states:
-m26 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc, p2_merged_df8_rust)
-summary(m26)
 
 
 

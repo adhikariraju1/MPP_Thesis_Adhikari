@@ -176,11 +176,11 @@ Hypothesis: Keeping in mind that Donald Trump's victory was unprecendented and h
 
 ###Research Equation:
 
-$$residual = \alpha + \beta_1 (manu\_share\_gro) + \beta_2 (av\_wage\_gro) + \beta_3 (lfpr\_male\_gro) + \beta_4 (gini\_gro) + \beta_5 (uneduc) + \epsilon $$
+$$resid = \alpha + \beta_1 (manu\_share\_gro) + \beta_2 (av\_wage\_gro) + \beta_3 (lfpr\_male\_gro) + \beta_4 (gini\_gro) + \beta_5 (uneduc) + \epsilon $$
 
 ###Dependent Variable:
 
-$residual$: The dependent variable is the difference in the actual two-party vote share of the Republican party in the 2016 United States Presidential Election from the predicted vote share based on the model in Step I of this paper. Substituting the values of different explanatory variables in equation 1, pertaining to election year 2016, we will get the value of the predicted republican vote share for each county for 2016. For example, if the predicted Republican voteshare for a county is 0.55 but the actual Republican voteshare is 0.60, then that means the _residual_ value for that county will be 0.60-0.55 = 0.05. This means that 5 percentage point increase in the Republican voteshare is not explained by the model represented by equation 1 and therefore, we would need to test a bunch of new explanatory variables, which could possibly explain this residual. A positive residual means that the Republican party outperfomed our forecasting model in those counties, a negtive residual means that the Republican party underperfomed, a value of 0 means that our forecasting model was able to accurately predict the actual voteshare of the party for 2016. The difference in using residual instead of simply voteshare for 2016, like the one used for the model in Part I, is that we are trying to measure Trump-specific effect here. Depending on how the forecasting performs and how the residual reacts to different explanatory variables in this model, we can come to conclusions on whether Trump was a generic Republican or not and which new factors played significant role in his victory.
+$resid$: The dependent variable is the difference in the actual two-party vote share of the Republican party in the 2016 United States Presidential Election from the predicted vote share based on the model in Step I of this paper. Substituting the values of different explanatory variables in equation 1, pertaining to election year 2016, we will get the value of the predicted republican vote share for each county for 2016. For example, if the predicted Republican voteshare for a county is 0.55 but the actual Republican voteshare is 0.60, then that means the _residual_ value for that county will be 0.60-0.55 = 0.05. This means that 5 percentage point increase in the Republican voteshare is not explained by the model represented by equation 1 and therefore, we would need to test a bunch of new explanatory variables, which could possibly explain this residual. A positive residual means that the Republican party outperfomed our forecasting model in those counties, a negtive residual means that the Republican party underperfomed, a value of 0 means that our forecasting model was able to accurately predict the actual voteshare of the party for 2016. The difference in using residual instead of simply voteshare for 2016, like the one used for the model in Part I, is that we are trying to measure Trump-specific effect here. Depending on how the forecasting performs and how the residual reacts to different explanatory variables in this model, we can come to conclusions on whether Trump was a generic Republican or not and which new factors played significant role in his victory.
 
 ###Variables from Rival Theories:
 
@@ -210,7 +210,7 @@ A list of all the variables and other specific details on them are available in 
 
 #Result and Analysis:
 
-##First Part: 
+##First Part: Creating and analyzing a model to explain the Republican two-party vote share between 1992 and 2012 
 
 ###Descriptive Statistics: 
 _FigX_ shows the how the main independent variable, the lag dependent variable and the dependent variable are correlated to one another, and therefore provide some basic understanding on how their causal relationship could turn out to be. We can see that growth in unemployment negatively correlated with the republican voteshare, whereas, the voteshare in previous election to be positively correlated with the present voteshare. Both of these correlations are in line with the theory established earlier in the paper. 
@@ -228,7 +228,7 @@ _color code pos and neg or strong or weak correlation_
 print(corplot2, progress = F)
 ```
 
-The descriptive summary table (see _figX_ under Appendix) gives a complete overview of the central tendency and the variation of all the variables. Nonetheless, some observations about their relevance in the election context deserves elaboration.    
+The descriptive summary table (see _figX_ under Appendix) gives a complete overview of the central tendency and the variation of all the variables. Nonetheless, some observations about their relevance in the election context deserves elaboration. _elaborate here_   
 
 ###Regression Output and Results:
 
@@ -239,10 +239,66 @@ stargazer::stargazer(f1, f2, test1, type = 'latex', digits = 2, header = FALSE,
                      title = 'Fixed Effects Estimate Model', font.size = 'normalsize')
 ```
 
+Due to the inclusion of a lag dependent variable _repshare.lag_, an Arellano-Bond test is conducted to account for nickell bias. Therefore, the estimates in the third column, with corrected standard errors, are used for interpretation. Growth in unemployment has a negative effect on Republican two-party vote share with stastical significance at 99 percent. One percent growth in unemployment rate between the year preceeding the election and the election year will result in a fall of Republican two-party vote share by 0.02 percentage points. This result is in line with the issue-priority theory, which says that higher unemployment benefits the Democratic party. It is important to note that the effect of  the growth in unemployment is obtained by controlling for the Republican vote share from previous election which shows an extremely high effect on the current vote share with high statistical significance. While the increase in the percentage of white people in a county increases the republican vote share, the effect is even bigger if we look at rural white population. 
 
-##Second Part: Descriptive and Inferential
+```{r, eval = FALSE}
+interplot(m = f2, var1 = "white.percent", var2 = "rural_percent") +
+  xlab("Percentage of total population living in rural areas") +
+  ylab("Marginal effect of the percentage of white people on Republican vote share") +
+  ggtitle("Don't know what") +
+  geom_hline(yintercept = 0, linetype = "dashed")
 
-##Third Part: Descriptive and Inferential
+```
+
+
+_explain marginal effect_ Validating Norpoth's cost of ruling theory, the incumbency factor shows that if the incumbent is a Republican, then the Republican voteshare goes down, suggesting that voters do not like to keep the same party in power for many terms _source_. Moreover, the effect of unemployment growth on the Republican vote share is even higher, meaning the negative impact of unemployment growth is exacerbated, when the Republican party is incumbent. This result is in line with the theory that voters punish the incumbent for difficult economic condition. 
+
+```{r, eval = FALSE}
+interplot(m = f2, var1 = "unemp_gro", var2 = "rep_incumb") +
+  xlab("Republican Incumbent Dummy") +
+  ylab("Marginal effect of the growth in unemployment rate on Republican vote share") +
+  ggtitle("Don't know what") +
+  geom_hline(yintercept = 0, linetype = "dashed")
+
+```
+
+In this case, they do so, even though they believe that the Republican party is less suited to solve the issue of unemployment. _explain marginal effect_ This model explains the "within variation" for each county in the United States and therefore excludes any time-invariant effects. Since, rurality is a time-invariant variable, we interact it with _white.percent_ to capture it's marginal effect. The model explains 46 percent of the variation in the Republican voteshare over the period of 1992 and 2012, which is a substantial result considering the plethora of factors that play a role in determining voting behavior.
+
+##Second Part: Using the model to make a forecast for 2016 Presidential Election
+
+From the model above, we have unique coefficient estimates for each variable and a unique intercept for each county. By substituting the values of these variables for 2015 in the equation, we can forecast the republican two-party vote share for each county in the 2016 election. The graph below shows the accuracy of the prediction as we compare the predicted Republican vote share with actual vote share obtained during the election. _explain how far the model is_ The counties that fall on the 45-degree line represent the ones where the model was able to accurately predict the actual voteshare. As we can see there are many counties (above and below the 45 degree line), where there are residuals, i.e. differences in the predicted and actual vote share. The Democratic counties where the Republican voteshare is below 50 percent, the actual voteshare was much less than what our model predicted to be. However, in the Republican counties, the actual voteshare is much higher than what our model predicted showing a big cluster of counties above the 45 degree line. What caused the Republican-leaning counties to vote significantly higher for Donald Trump and what led the Democratic -leaning counties to vote lower for him than what the traditional model would expect to is a question that needs more exploration. In order to understand this difference (residual), we will need to test various rival hypothesis with the aim of explaining the effect that Donald Trump had that other traditional generic Republicans didn't have in the past.   
+
+```{r}
+ggplot(part2a_df) +
+  geom_point(aes(x = pred_repshare, y = rep.share), alpha = 0.25) +
+  geom_abline(slope = 1, intercept = 0) +
+  labs(x = "Predicted Republican Voteshare", y = "Actual Republican Voteshare",
+       title = "Residuals from 2016 US Presidential Elections Forecasting",
+       caption = "Source for actual 2016 vote shares: Dave Leip's Atlas of U.S. Presidential Elections") +
+  theme_classic()
+```
+
+
+##Third Part: Creating and analyzing a model to explain the residual obtained from the forecasting exercise i.e. "Trump effect"
+
+###Descriptive Statistics:
+
+The 2016 Presidential election took everyone by surprise and to explain it has been an arduous task to say the least. Since, we have established that a traditional model doesn't suffice when it comes to exploring the nuances of this year's election, it is important to resort to some rival theories and test their relevance. In the table below, we see the correlation matrix of some of the rival variables and the residual obtained from the forecasting exercise to create a premise for further exploration. 
+
+```{r}
+print(corplot3, progress = F)
+```
+
+###Regression Output and Results:
+
+
+```{r, results='asis', warning=FALSE, message=FALSE}
+stargazer::stargazer(m24, m25, m26, type = 'latex', digits = 2, header = FALSE,   
+                     title = 'Testing Rival Theories for 2016 Residuals using OLS Estimate', font.size = 'normalsize')
+
+```
+
+
 _collinearity matrix_ _may include PCI and square of PCI_ _Check collinearity with inequality and significance_
 
 _Put the hand made table from the Lit. review note book_
