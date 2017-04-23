@@ -4,19 +4,19 @@ title: 'What happened on November 8, 2016 ?: A Study of Republican Vote Share an
 author: "Raju Adhikari"
 date: "March 16, 2017"
 output:
-  word_document: default
   pdf_document: default
+  word_document: default
 csl: apa.csl
 bibliography: sources.bib
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_knit$set(root.dir = "C:/RajuPC/MPP Final Thesis/WorkingDirectory")
 
-#source("source.R")
-
+source("source.R")
 ```
+
 \pagebreak
 
 #Acknowledgement:
@@ -184,7 +184,7 @@ $residual$: The dependent variable is the difference in the actual two-party vot
 
 ###Variables from Rival Theories:
 
-$manu\_share\_gro$: The first independent variable is the change in the ratio of manufacturing jobs to total jobs between 2012 and 2015. An ideal measurement would have been to see the change between 2012 and 2016, since both are election years. However, the data for 2016 is not yet available and the usage of 2015 values should not be problematic considering that the explanatory variable is a slow-changing variable. _show using evidence from data_ 
+$manu\_share\_gro$: The first independent variable is the change in the ratio of manufacturing jobs to total private non-farm jobs between 2012 and 2015. An ideal measurement would have been to see the change between 2012 and 2016, since both are election years. However, the data for 2016 is not yet available and the usage of 2015 values should not be problematic considering that the explanatory variable is a slow-changing variable. _show using evidence from data_ 
 
 $av\_wage\_gro$: The second independent variable is the change in average wage between 2012 and 2015, measured in _dollars_. A positive value means that the average wage has increased in the county while a negative represents that it has decreased. 
 
@@ -200,7 +200,9 @@ The regression estimation technique used for this model is a Ordinary Least Squa
 
 ##Data sources and cleaning:
 
-The data necessary to carry out the quantitative analysis in this paper were obtained from multiple sources and rigorously cleaned and merged together using open source software R studio to extract the variables described above. The dependent variables on both parts of the research were obtained from election data that consisted of the Republican vote-share in the presidential election between 1992 and 2016. The dataset came from Dave Leip's Atlas of U.S. Presidential Elections.[^2] To calculate the two-party voteshare, the voteshare for Republican party was divided by the sum of voteshares for Republican and Democratic party. The lag of republican voteshare used in the first part of the research was calculated based on the same election dataset. The data on unemployment from 1992 to 2015 was obtained from the Bureau of Labor Statistics (BLS) website.[^3] To calculate the growth in unemployment rate between two years, the unemployment rate for previous year was subtracted from the unemployment rate of the current year, and then the result was divided by the unemployment rate of the previous year to get the growth rate. The data on other explanatory economic variable, i.e. per capita income, and the population of each county from 1992 to 2015 were called from the Bureau of Economic Affairs (BEA) API directly into R studio.[^4] Data used to construct the incumbency dummy was created manually based on common knowledge and merged into the final dataframe. _Put table on Appendix with president's name and years and dummy_ Data used to create the rural dummy was obtained from the United States Census Bureau.[^5] Demographic data on educational attainment was not available for several years between 1992 and 2012, hence education related variable wasn't included in the model in the first part of the research. However, for the second part of the research, educational attainment data for 2015 was obtained from the United States Census Bureau.[^6] The race data that included the number of whites in each county between 1992 to 2015 was obtained from the database of the National Cancer Institute.[^7] The counts of race and education data were converted into percentages by combining them with the population data obtained from BEA. All the dataframes were merged based on county fips (unique identification for each county set by the US Census Bureau). There are a total of 3142 counties (or county-equivalents) in the United States. However, due to inconsistent nomenclature of counties and county-equivalents, and the matching problem it created since many counties have been reshaped over the years, some selected counties were removed from the dataset. All the 29 boroughs of Alaska were removed from the final dataset due to difficulty in matching them to the county fips across multiple datasets. Maui and Kalawao counties of Hawaaii were merged together into the same county called Maui to make it consistent over multiple datasets. These processes resulted in a total of 3112 counties. The final merged panel dataset, which was used for the first part of the research, hence contained 3112 counties x 6 election years = 18672 observations. For the second part of the paper, the final cross-sectional dataframe consists of 3112 counties. _remember if we do logit, we will do it for 3086 counties and if we do ols we will do it for 3112 counties_     
+The data necessary to carry out the quantitative analysis in this paper were obtained from multiple sources and rigorously cleaned and merged together using open source software R studio to extract the variables described above. The entire paper is also written on R markdown. The dependent variable was obtained from election data that contained both Republican and Democratic vote share in Presidential elections between 1992 and 2016. The dataset came from Dave Leip's Atlas of U.S. Presidential Elections.[^2] To calculate the two-party vote share, the voteshare for Republican party was divided by the sum of vote shares for Republican and Democratic party. The lag of republican vote share used in the first part of the research was calculated based on the same election dataset. The data on unemployment from 1992 to 2015 was obtained from the Bureau of Labor Statistics (BLS).[^3] To calculate the growth in unemployment rate between two years, the unemployment rate for previous year was subtracted from the unemployment rate of the current year, and then the result was divided by the unemployment rate of the previous year. The data on population for each county from 1992 to 2015 were called from the Bureau of Economic Affairs (BEA) API directly into R studio.[^4] Data used to construct the incumbency dummy was created manually based on common knowledge and merged into the final dataframe. _Put table on Appendix with president's name and years and dummy_ Data on rural population was obtained from the United States Census Bureau.[^5] Demographic data on educational attainment was not available for several years between 1992 and 2012, hence education related variable wasn't included in the model in the first part of the research. However, for the second part of the research, educational attainment data for 2015 was obtained from the United States Census Bureau as well.[^6] The race data that included white population in each county between 1992 to 2015 was obtained from the database of the National Cancer Institute.[^7] The counts of race and education data were converted into percentages by combining them with the population data obtained from BEA. The data on Labor Force Participation rate[^24] and Gini coefficient[^25] for 2012 and 2015 were obtained from the United States Census Bureau. The data on manufacturing jobs, total number of private non-farm jobs, and average wage were called directly from the BEA API.[^26]   
+
+All the dataframes were merged based on county fips (unique identification for each county assigned by the US Census Bureau). There are a total of 3142 counties (or county-equivalents) in the United States. However, due to inconsistent nomenclature of counties and county-equivalents, and the matching problem it created since many counties have been reshaped over the years, some counties were removed from the dataset. All the 29 boroughs of Alaska were removed from the final dataset due to difficulty in matching them to the county fips across multiple datasets. Maui and Kalawao counties of Hawaaii were merged together into the same county called Maui to make it consistent over multiple datasets. These processes resulted in a total of 3112 counties. The final merged panel dataset, which was used for the first part of the research, hence contained 3112 counties x 6 election years = 18672 observations. For the second part of the paper, the final cross-sectional dataframe consists of 3112 counties. 
 
 A list of all the variables and other specific details on them are available in _table X_ under the Appendix section.
 
@@ -208,8 +210,35 @@ A list of all the variables and other specific details on them are available in 
 
 #Result and Analysis:
 
-##First Part: Descriptive and Inferential:
-_collinearity matrix_
+##First Part: 
+
+###Descriptive Statistics: 
+_FigX_ shows the how the main independent variable, the lag dependent variable and the dependent variable are correlated to one another, and therefore provide some basic understanding on how their causal relationship could turn out to be. We can see that growth in unemployment negatively correlated with the republican voteshare, whereas, the voteshare in previous election to be positively correlated with the present voteshare. Both of these correlations are in line with the theory established earlier in the paper. 
+
+```{r}
+print(corplot1, progress = F)
+```
+
+_FigX_ shows the correlation between the dependent variable with other control variables. The percentage of people living in a rural area and the percentage of white people in a county are both positively correlated with republican voteshare. These control variables are not changes, but the absolute measurements for the specific election year. We also see a negative correlation between republican incumbency and the republican voteshare. The one correlation that stands out is the positive correlation between number of people in county (in thousands) and the republican voteshare. 
+_what do the normal distribution things show_ 
+_can we put a line in the plots_
+_color code pos and neg or strong or weak correlation_
+
+```{r}
+print(corplot2, progress = F)
+```
+
+The descriptive summary table (see _figX_ under Appendix) gives a complete overview of the central tendency and the variation of all the variables. Nonetheless, some observations about their relevance in the election context deserves elaboration.    
+
+###Regression Output and Results:
+
+_FigX_ shows the regression output with Fixed Effects estimate, showing the relationship between unemployment growth and other political and demographic controls for US Presidential elections between 1992 and 2012. 
+
+```{r, results='asis', warning=FALSE, message=FALSE}
+stargazer::stargazer(f1, f2, test1, type = 'latex', digits = 2, header = FALSE,   
+                     title = 'Fixed Effects Estimate Model', font.size = 'normalsize')
+```
+
 
 ##Second Part: Descriptive and Inferential
 
@@ -321,6 +350,12 @@ Key, V.O., Munger, F., 1970. Social Determinism and electoral Decision: The Case
 [^22]: Source: http://fivethirtyeight.com/features/education-not-income-predicted-who-would-vote-for-trump/
 
 [^23]: Source: https://www.brookings.edu/blog/fixgov/2016/11/18/educational-rift-in-2016-election/
+
+[^24]: The data on Labor Force participation rate is obtained from U.S. Census Bureau, 2011-2015 American Community Survey 5-Year Estimates, Table S2301, Employment Status. The data on 2012 is obtained from 2008-2012 American Community Survey 5-Year Estimates. (Link: https://factfinder.census.gov/faces/tableservices/jsf/pages/productview.xhtml?pid=ACS_15_5YR_S2301&prodType=table.
+
+[^25]: The data on Gini coefficient for 2015 is obtained from U.S. Census Bureau, 2011-2015 American Community Survey 5-Year Estimates, Table B19083, Gini Index of Income Inequality. The data for 2012 is obtained from the 2008-2012 American Community Survey 5-Year Estimates, Table B19083. (Link: https://factfinder.census.gov/faces/tableservices/jsf/pages/productview.xhtml?pid=ACS_15_5YR_B19083&prodType=table)
+
+[^26]: The data on manufacturing jobs for each county is obtained from the Bureau of Economic Affairs' API call for "RegionalIncome dataset, table CA25N, Linecode 500." The data on total private non-farm employment for each county is obtained from the same API call for "RegionalIncome dataset, table CA25N, Linecode 90." The data on average wage was obtained from "RegionalIncome dataset, table CA30, Linecode 290." (Link: https://www.bea.gov/API/signup/index.cfm).
 
 \pagebreak
 

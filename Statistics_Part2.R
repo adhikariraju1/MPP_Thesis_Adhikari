@@ -514,7 +514,7 @@ rm(beaPop, beaPCI, beaPercapita_Current_Transfer, beaManufacturing, beaPrivate, 
 rm(Population, PerCapitaIncome, PerCapitaCurrentTransfer, bea_df, Jobs, Wage, Manufacturing, Private)
 rm(unemp12, unemp15, unemployment_df) 
 rm(beabls_df, beablselec, election_df)
-rm(issue.data, race, rural, p2_merged_df1, p2_merged_df2, p2_merged_df3, edu.data, p2_merged_df4, emp.data, emp.data2012, emp.df, gini_df, gini.data2012, gini.data2015, intercept, p2_merged_df6)
+rm(issue.data, race, rural, p2_merged_df1, p2_merged_df2, p2_merged_df3)
 
 
 ############################################################3333333
