@@ -6,7 +6,7 @@
 #Loading all the necessary packages
 packages <- c("bea.R", "acs", "haven", "magrittr", "httr", "tidyr", "blsAPI", "rjson", "readxl", "broom", "jsonlite",
               "stringr", "rJava", "xlsx", "qdap", "data.table", "plm", "rio", "Zelig", "stargazer", "knitr", 
-              "lmtest", "GGally", "ggplot2", "interplot", "plyr", "dplyr")
+              "lmtest", "GGally", "viridis", "ggmap", "ggplot2", "interplot", "plyr", "dplyr")
 load <- lapply(packages, require, character.only = T)
 
 #Setting the working directory
@@ -168,6 +168,13 @@ m26 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro +
 
 
 
+m27 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc + lfpr_male_gro:uneduc, p2_merged_df8)
+
+#For swing states:
+m28 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc + lfpr_male_gro:uneduc, p2_merged_df8_swing)
+
+#For rust belt states:
+m29 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc + lfpr_male_gro:uneduc, p2_merged_df8_rust)
 
 #################################################################################################################
 
@@ -180,21 +187,16 @@ m26 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro +
 #************************************************************************
 source("heat-map.R")
 #************************************************************************
-
-
-
-#Part II:
-
-#descrip_df2 <- p2_merged_df5 %>%
- # mutate(rep.share.change = rep.share - repshare.lag)
+maps_df <- p2_merged_df8 %>%
+  mutate(rep.share.change = rep.share - repshare.lag)
   
-#map1 <- descrip_df2 %>% filter(state != "HI") %>% county.heatmap("rep.share.change") + 
- # scale_fill_gradient2(low = "#085BB2", high = "#FF2312", mid = "#4DAFFF", midpoint = -0.02) +
- # labs(title = "Change in voteshare for Republican party 2012 to 2016")
+map1 <- maps_df %>% filter(state != "HI") %>% county.heatmap("rep.share.change") + 
+  scale_fill_gradient2(low = "#085BB2", high = "#FF2312", mid = "#4DAFFF", midpoint = -0.02) +
+  labs(title = "Change in voteshare for Republican party 2012 to 2016")
 
-#map2 <- descrip_df2 %>% filter(state != "HI") %>% county.heatmap("flip") + 
-#  scale_fill_gradient2(low = "#085BB2", high = "#FF2312", mid = "#4DAFFF", midpoint = 0.5) +
-#  labs(title = "Counties that flipped from Democrat to Republican 2012 to 2016")
+map2 <- maps_df %>% filter(state != "HI") %>% county.heatmap("flip") + 
+  scale_fill_gradient2(low = "#085BB2", high = "#FF2312", mid = "#4DAFFF", midpoint = 0.5) +
+  labs(title = "Counties that flipped from Democrat to Republican 2012 to 2016")
 
 #List the counties that flipped and put it in a table (all the names) for descriptive statistics:
 #flipped_counties <- descrip_df2 %>%

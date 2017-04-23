@@ -4,8 +4,8 @@ title: 'What happened on November 8, 2016 ?: A Study of Republican Vote Share an
 author: "Raju Adhikari"
 date: "March 16, 2017"
 output:
-  pdf_document: default
   word_document: default
+  pdf_document: default
 csl: apa.csl
 bibliography: sources.bib
 ---
@@ -289,8 +289,21 @@ The 2016 Presidential election took everyone by surprise and to explain it has b
 print(corplot3, progress = F)
 ```
 
+_US situation in these variables_ 
+
+```{r}
+map1
+
+```
+
+```{r}
+map2
+
+```
+
 ###Regression Output and Results:
 
+The regression output below shows the effect various factors on all the counties, on counties in swing states, and on counties in rust-belt states respectively. The reason for this differentiation is driven by the way swing states acted during the Presidential election and the how the rust-belt states, that had previously voted for Obama favored Trump this time. Here is the table showing the swing states how they acted in the past few elections and same goes for rust-belt states. _make a table and put it_  
 
 ```{r, results='asis', warning=FALSE, message=FALSE}
 stargazer::stargazer(m24, m25, m26, type = 'latex', digits = 2, header = FALSE,   
@@ -298,8 +311,16 @@ stargazer::stargazer(m24, m25, m26, type = 'latex', digits = 2, header = FALSE,
 
 ```
 
+The first hypothesis that change is employment scenario had a role to play in increasing votes for Trump can be rejected when we look at the whole county's example. Neither change in manufacturing jobs not the labor force participation rate among male show any significant effect on the increased Republican support in 2016. The benefits of globalization and a boom in service industry has helped many counties around the country as the loss of labor-intensive and manufacturing-based works have been accepted by the workforce. Inclusion of women in the workforce and their contribution to the economy is also a reason why the loss of specific types of jobs do not show a big effect on the national level. However, if we look at the effect, only in rust-belt states, we see that labor force participation rate among males to be moderately significant (90 percent) in explaining the rise in Republican vote share in those counties. The negative effect of the change in labor force participation rate among male on Republican vote share suggests that the rise in Republican vote share in these rust-belt counties were due to a decline in participation by men. Their frustration is justified by the changing employment scenario where manufacturing jobs are being replaced by cheap labor in foreign countries and that these people aren't provided with enough opportunities to make a good living through another sector.
 
-_collinearity matrix_ _may include PCI and square of PCI_ _Check collinearity with inequality and significance_
+The second theory regarding the influence of wage changes in the rise of Republican vote share holds partially true and in some what ambiguous way. Overall in the United States, we see that a decline in average wage benefits the Republican vote share in a highly significant way, meaning people who are resented that their wages have not gone up are looking for a change in the government. However, as we change the scenario to just swing states, the significance of this variable declines and even changes its nature. In swing states, as average wage goes up, so does the support for Republican vote share. _why_
+
+The third theory regarding inequality is also significant when analyzing the counties all over the country as we can see that a rise in gini coefficient, meaning high inequality, has a positive effect on Republican vote share. This is also surprising at some level because it was Bernie Sanders' campaign that was more dedicated to tackling this issue. But one can assume that his loss in the Democratic Primaries could have turned many of his supporters either to the Republican side or into non-voters. This assumption would require testing which is not carried out in this paper.
+
+The theory that hold true unanimously, in overall analysis of all counties in the US, and also in more focused analysis of swing states and rust-belt states is the "education theory." The higher of number of people in a county with less than high school degree, the bigger their effect in the rise of the Republican vote share in this year' election. A one percent increase in the number of uneducated people shows almost a one-third percentage point increase in the vote share for the Republican party.  
+
+_show the result in maps next to each other with heat map for the variables that are significant_
+
 
 _Put the hand made table from the Lit. review note book_
 
@@ -326,8 +347,7 @@ _Put the hand made table from the Lit. review note book_
 
 _a dummy for Southern States was taken_ [@Abrams1980].
 
-_it would be interesting to see how people assign blame for their economic conditions on the President even if their regional governor or majority representation in the house may be from the non-incumbent's party._ 
-Moreover, Curry [@Curry2012] writes that economic influence on the vote for president has been continuous and is not necessarily dependent on federal government control over the economy.
+
 
 Three main inferences made by Bartels[@Bartels2005] are:
 - The white working class has not abandoned the Democratic Party.
