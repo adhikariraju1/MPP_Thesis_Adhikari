@@ -515,8 +515,9 @@ rm(Population, PerCapitaIncome, PerCapitaCurrentTransfer, bea_df, Jobs, Wage, Ma
 rm(unemp12, unemp15, unemployment_df) 
 rm(beabls_df, beablselec, election_df)
 rm(issue.data, race, rural, p2_merged_df1, p2_merged_df2, p2_merged_df3)
+rm(edu.data, emp.data, emp.data2012, emp.df, gini.data2012, gini.data2015, gini_df)
+rm(p2_merged_df4, p2_merged_df5, p2_merged_df6)
 
-
-############################################################3333333
+############################################################
 export(p2_merged_df7, "part2data.csv")
 

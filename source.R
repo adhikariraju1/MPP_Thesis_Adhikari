@@ -4,9 +4,9 @@
 #**********************************************************************************************
 
 #Loading all the necessary packages
-packages <- c("bea.R", "acs", "haven", "magrittr", "httr", "tidyr", "blsAPI", "rjson", "readxl", "broom", "jsonlite",
-              "stringr", "rJava", "xlsx", "qdap", "data.table", "plm", "rio", "Zelig", "stargazer", "knitr", 
-              "lmtest", "GGally", "viridis", "ggmap", "ggplot2", "interplot", "plyr", "dplyr")
+packages <- c("bea.R", "acs", "haven", "httr", "blsAPI", "rjson", "readxl", "broom", "jsonlite",
+              "stringr", "rJava", "xlsx", "qdap", "data.table", "plm", "rio", "Zelig", "stargazer", 
+              "lmtest", "GGally", "viridis", "ggmap", "sjPlot", "sjmisc", "ggplot2", "knitr", "tidyr", "magrittr", "plyr", "dplyr")
 load <- lapply(packages, require, character.only = T)
 
 #Setting the working directory
@@ -24,59 +24,61 @@ source("Statistics.R")
 #********************************************************************************************
 source("Statistics_Part2.R")
 #********************************************************************************************
+#************************************************************************
+source("heat-map.R")
+#************************************************************************
 
 #Part I:
-#####
+#Correlation Plots for Part I:
 descrp_p1 <- merged_df4 %>%
   select(rep.share, repshare.lag, unemp_gro, Pop_thou, white.percent, rep_incumb, rural_percent)
 
 corplot1 <- descrp_p1 %>%
   select(rep.share, repshare.lag, unemp_gro) %>%
   ggpairs(lower = list("continuous" = "smooth"))
-#####
+
 corplot2 <- descrp_p1 %>%
   select(rep.share, Pop_thou, white.percent, rural_percent) %>%
   ggpairs(lower = list("continuous" = "smooth"))
 
-#####
 
+#We see that Los Angeles county is skewing the normal distribution of Population. So we filter it out.
 merged_df4 <- merged_df4 %>%
   filter(Pop_thou <= 7500)
 
+#Regression Models:
 f1 <- plm(rep.share ~ unemp_gro + repshare.lag, merged_df4, model = 'within')
 f2 <- plm(rep.share ~ unemp_gro + repshare.lag + Pop_thou + white.percent + as.factor(rep_incumb)
           + unemp_gro:as.factor(rep_incumb) + as.factor(rural)
           + white.percent:as.factor(rural), merged_df4, model = 'within')
 
+#Regression after Arellano-Bond:
 test1 <- coeftest(f1, vcovHC(f1, method = "arellano"))
 test2 <- coeftest(f2, vcovHC(f2, method = "arellano"))
-#####
-#interplot marginal effects plots
+
+#Marginal effects plots
 
 #**************************************************************************************************************************
 #For forecasting:
 
-part2_df <- p2_merged_df7 %>%
-  mutate(rep_incumb = 0) %>%
-  dplyr::select(county.fips, county, state, rep.share, repshare.lag, unemp_gro,
-         pci_gro, pop_thou, white.percent, rep_incumb, rural_percent, is.rep.2012)
-
-######################################################Alternate####################################################
+p2_merged_df7 <- p2_merged_df7 %>%
+  mutate(rep_incumb = 0)
 
 tidy(f2)
 str(fixef(f2))
 intercept <- data.frame(county.fips = names(fixef(f2)),
            fixef = as.vector(fixef(f2)))
 
-part2a_df <- merge(part2_df, intercept)
-part2a_df <- part2a_df %>%
+p2_merged_df7 <- merge(p2_merged_df7, intercept)
+
+p2_merged_df7 <- p2_merged_df7 %>%
   mutate(pred_repshare = fixef - unemp_gro*0.0247103253 + repshare.lag*0.7276273733 + pop_thou*0.0001052426 
          + white.percent*0.1558135764 - rep_incumb* 0.0404342633 - unemp_gro*rep_incumb*0.0367096008 + 
            white.percent*rural_percent*0.0057858007)
 
-png("Plot.png", width = 1800, height = 1800,
-    res = 300)
-part2a_df %>%
+#png("Plot.png", width = 1800, height = 1800,
+    #res = 300)
+p2_merged_df7 %>%
   filter(!is.na(rep.share)) %>%
 ggplot() +
   geom_point(aes(x = pred_repshare, y = rep.share, colour = as.factor(is.rep.2012)), alpha = 0.25) +
@@ -92,34 +94,28 @@ ggplot() +
     legend.position = "none"
   )
 
-dev.off()
+#dev.off()
 
+part2_merged_df8 <- part2_merged_df7 %>%
+  mutate(resid = rep.share - pred_repshare)
+
+##################################################################################################################
 p2_merged_df8$resid %>% abs() %>% mean(na.rm = T)
 ##################################################################################################################
 
-part2a_df2 <- part2a_df %>%
-  mutate(resid = rep.share - pred_repshare)%>%
-  select(county.fips, resid)
 
-p2_merged_df8 <- merge(p2_merged_df7, part2a_df2, all.x = TRUE)
-######
-
+#For correlation plot for part 2:
 
 descrp_p2 <- p2_merged_df8 %>%
   select(resid, manu_share_gro, av_wage_gro, lfpr_male_gro, gini_gro, uneduc)
 
-set.seed(42)
 
-correlation_p3 <- data.frame(resid = rnorm(100),
-                             manu_share_gro = rnorm(100),
-                             av_wage_gro = rnorm(100),
-                             lfpr_male_gro = rnorm(100),
-                             gini_gro = rnorm(100),
-                             uneduc = rnorm(100))
-corplot3 <- ggpairs(correlation_p3)
+corplot3 <- descrp_p2 %>%
+  select(rep.share, manu_share_gro, av_wage_gro, lfpr_male_gro, gini_gro, uneduc) %>%
+  ggpairs(lower = list("continuous" = "smooth"))
 
-#####
 
+#Creating separate dataframes for swing and rust-belt states:
 
 p2_merged_df8_swing <- p2_merged_df8 %>%
   filter(state == "CO" | state == "FL" | state == "IA" 
@@ -145,9 +141,7 @@ m26 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro +
 
 
 
-#************************************************************************
-source("heat-map.R")
-#************************************************************************
+
 maps_df <- p2_merged_df8 %>%
   mutate(rep.share.change = rep.share - repshare.lag)
   
