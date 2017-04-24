@@ -43,20 +43,22 @@ corplot2 <- descrp_p1 %>%
 
 
 #We see that Los Angeles county is skewing the normal distribution of Population. So we filter it out.
-merged_df4 <- merged_df4 %>%
+merged_df5 <- merged_df4 %>%
   filter(Pop_thou <= 7500)
 
 #Regression Models:
-f1 <- plm(rep.share ~ unemp_gro + repshare.lag, merged_df4, model = 'within')
+f1 <- plm(rep.share ~ unemp_gro + repshare.lag, merged_df5, model = 'within')
 f2 <- plm(rep.share ~ unemp_gro + repshare.lag + Pop_thou + white.percent + as.factor(rep_incumb)
-          + unemp_gro:as.factor(rep_incumb) + as.factor(rural)
-          + white.percent:as.factor(rural), merged_df4, model = 'within')
+          + unemp_gro:as.factor(rep_incumb) + rural_percent
+          + white.percent:rural_percent, merged_df5, model = 'within')
 
 #Regression after Arellano-Bond:
 test1 <- coeftest(f1, vcovHC(f1, method = "arellano"))
 test2 <- coeftest(f2, vcovHC(f2, method = "arellano"))
 
 #Marginal effects plots
+
+
 
 #**************************************************************************************************************************
 #For forecasting:
@@ -96,11 +98,46 @@ ggplot() +
 
 #dev.off()
 
-part2_merged_df8 <- part2_merged_df7 %>%
+p2_merged_df8 <- p2_merged_df7 %>%
   mutate(resid = rep.share - pred_repshare)
 
 ##################################################################################################################
+#Table in forecasting section:
+
 p2_merged_df8$resid %>% abs() %>% mean(na.rm = T)
+
+bluetored <- p2_merged_df8 %>%
+  filter(is.rep.2012 == 0) %>%
+  filter(rep.share > 0.50)
+  
+count(bluetored)
+#221 counties changed from blue to red form 2012 to 2016.
+table1_b2r <- table(bluetored$state)
+table1_b2r
+
+#################################################################33
+bluetoredandhigher <- bluetored %>%
+  filter(resid > 0)
+
+count(bluetoredandhigher)
+#Out of them 152 of them were underpredicted by the forecasting model. 
+
+table2_b2rh <- table(bluetoredandhigher$state)
+table2_b2rh
+
+
+#
+redtored <- p2_merged_df8 %>%
+  filter(is.rep.2012 == 1) %>%
+  filter(rep.share > 0.50) %>%
+  filter(resid > 0)
+
+count(redtored)
+#1378 out of 2361 Republican counties where our model underpredicted.
+
+table3_r2rh <- table(redtored$state)
+table3_r2rh
+
 ##################################################################################################################
 
 
@@ -111,7 +148,7 @@ descrp_p2 <- p2_merged_df8 %>%
 
 
 corplot3 <- descrp_p2 %>%
-  select(rep.share, manu_share_gro, av_wage_gro, lfpr_male_gro, gini_gro, uneduc) %>%
+  select(resid, manu_share_gro, av_wage_gro, lfpr_male_gro, gini_gro, uneduc) %>%
   ggpairs(lower = list("continuous" = "smooth"))
 
 
