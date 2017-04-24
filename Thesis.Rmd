@@ -1,11 +1,23 @@
 ---
 title: 'What happened on November 8, 2016 ?: A Study of Republican Vote Share and
   County-level Economics at US Presidential Elections'
+
 author: "Raju Adhikari"
 date: "March 16, 2017"
+
 output:
-  word_document: default
-  pdf_document: default
+  pdf_document:
+    citation_package: natbib
+    toc: true
+
+header-includes:
+  - \usepackage{setspace}
+  - \setstretch{1.5}
+
+geometry: margin=3cm
+fontsize: 12
+
+link-citations: yes
 csl: apa.csl
 bibliography: sources.bib
 ---
@@ -235,8 +247,9 @@ The descriptive summary table (see _figX_ under Appendix) gives a complete overv
 _FigX_ shows the regression output with Fixed Effects estimate, showing the relationship between unemployment growth and other political and demographic controls for US Presidential elections between 1992 and 2012. 
 
 ```{r, results='asis', warning=FALSE, message=FALSE}
-stargazer::stargazer(f1, f2, test1, type = 'latex', digits = 2, header = FALSE,   
-                     title = 'Fixed Effects Estimate Model', font.size = 'normalsize')
+stargazer::stargazer(test1, test2, type = 'latex', digits = 2, header = FALSE,   
+                     title = 'Fixed Effects Estimate Model', font.size = 'normalsize',
+                     omit.stat = "f")
 ```
 
 Due to the inclusion of a lag dependent variable _repshare.lag_, an Arellano-Bond test is conducted to account for nickell bias. Therefore, the estimates in the third column, with corrected standard errors, are used for interpretation. Growth in unemployment has a negative effect on Republican two-party vote share with stastical significance at 99 percent. One percent growth in unemployment rate between the year preceeding the election and the election year will result in a fall of Republican two-party vote share by 0.02 percentage points. This result is in line with the issue-priority theory, which says that higher unemployment benefits the Democratic party. It is important to note that the effect of  the growth in unemployment is obtained by controlling for the Republican vote share from previous election which shows an extremely high effect on the current vote share with high statistical significance. While the increase in the percentage of white people in a county increases the republican vote share, the effect is even bigger if we look at rural white population. 
@@ -317,7 +330,7 @@ The second theory regarding the influence of wage changes in the rise of Republi
 
 The third theory regarding inequality is also significant when analyzing the counties all over the country as we can see that a rise in gini coefficient, meaning high inequality, has a positive effect on Republican vote share. This is also surprising at some level because it was Bernie Sanders' campaign that was more dedicated to tackling this issue. But one can assume that his loss in the Democratic Primaries could have turned many of his supporters either to the Republican side or into non-voters. This assumption would require testing which is not carried out in this paper.
 
-The theory that hold true unanimously, in overall analysis of all counties in the US, and also in more focused analysis of swing states and rust-belt states is the "education theory." The higher of number of people in a county with less than high school degree, the bigger their effect in the rise of the Republican vote share in this year' election. A one percent increase in the number of uneducated people shows almost a one-third percentage point increase in the vote share for the Republican party.  
+The theory that holds true unanimously, in overall analysis of all counties in the US, and also in more focused analysis of swing states and rust-belt states is the "education theory." The higher the number of people in a county with less than high school degree, the bigger their effect in the rise of the Republican vote share in this year's election. A one percent increase in the number of uneducated people shows almost a one-third percentage point increase in the vote share for the Republican party. In counties of rust belt states, the effect is even more with 1 percent increase in uneducated people increasing the resiudal by almost one percentage point.     
 
 _show the result in maps next to each other with heat map for the variables that are significant_
 
