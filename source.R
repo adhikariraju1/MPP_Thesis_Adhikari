@@ -68,6 +68,8 @@ stargazer::stargazer(f1, test1, f102, test102, type = 'html', digits = 2, header
                      title = 'Fixed Effects Estimate to Explain Republican two-party vote share(1992-2012)', font.size = 'normalsize',
                      out = 'tester.htm')
 
+stargazer::stargazer(p2_merged_df8, summary = TRUE, type = 'html',digits = 2, header = FALSE, title = "Step III Variables: Summary Statistics", font.size = 'normalsize', out ="summary2.htm")
+
 
 #Marginal effects plots
 
@@ -193,6 +195,17 @@ map1 <- maps_df %>% filter(state != "HI") %>% county.heatmap("rep.share.change")
 map2 <- maps_df %>% filter(state != "HI") %>% county.heatmap("flip") + 
   scale_fill_gradient2(low = "#085BB2", high = "#FF2312", mid = "#4DAFFF", midpoint = 0.5) +
   labs(title = "Counties that flipped from Democrat to Republican 2012 to 2016")
+
+
+map3 <- maps_df %>% filter(state != "HI") %>% county.heatmap("uneduc") + 
+  scale_fill_viridis(option = "A", discrete = FALSE) +
+  theme_minimal() +
+  labs(title = "Percentage of Population above 25 with less than High School Education")
+
+map4 <- maps_df %>% filter(state != "HI") %>% county.heatmap("resid") + 
+  scale_fill_viridis(option = "A", discrete = FALSE) +
+  theme_minimal() +
+  labs(title = "Residual")
 
 #List the counties that flipped and put it in a table (all the names) for descriptive statistics:
 #flipped_counties <- descrip_df2 %>%

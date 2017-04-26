@@ -383,6 +383,7 @@ rm(race, issue.data)
 #Make Pop to Pop_thou
 merged_df4 <- merged_df4 %>%
   mutate(Pop_thou = Pop / 1000) %>%
+  mutate(log.Pop = log(Pop)) %>%
   mutate(log.Pop_thou = log(Pop_thou)) %>%
   mutate(log.unemp_gro = log(unemp_gro)) %>%
   mutate(log.white.percent = log(white.percent)) %>%
