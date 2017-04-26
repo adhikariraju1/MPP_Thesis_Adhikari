@@ -30,13 +30,13 @@ source("source.R")
 
 #Acknowledgement:
 
-_**write once everything is written**_
+I would first like to express my gratitude to my wife Anna Marie Walter, for being a partner, friend, mentor, and critic during the process of this thesis, brainstorming with me even during odd hours of the night, and sacrificing outdoor activities on rare sunny days in Berlin. 
 
-\pagebreak
+I would like to express my sincere gratitude to my thesis advisor, Prof. Mark Andreas Kayser, who provided great support, detailed guidance, and positive criticisms that inspired me throughout the process to take on a challenging quantitative endeavor like this. I would also like to express my special appreciation to Prof. Simon Munzert, and friends Devvart Poddar, Mujahed Islam, and Alvaro Lopez for helping me with statistical methods, brainstorming, and R programming.
 
-#Abstract:
+I would also like to thank all my collegeues at the Hertie School, for sharing two rich years full of friendship, laughter, and knowledge with me - in classrooms, in pingpong rooms, and in out-of-country trips. To my family and friends in Nepal, in the United States, in Honduras, and everywhere around the world, I am deeply grateful for their support.
 
-_**write once everything is written**_
+Last, but not the least, I would like to thank my dog Mori for her unconditional love and stress-relieving presence, without which neither the time in Berlin nor the thesis writing process would have been possible.   
 
 \pagebreak
 
@@ -48,6 +48,11 @@ _"The economy, as an issue, is one of consensus. All voters want a good economy,
 - @Lewis-Beck2011
 
 #Introduction:
+
+Around the weeks and months surrounding the United States Presidential election of 2016, social media platforms were on fire, where people from all social, economic, and academic background were berating each other for supporting or not supporting certain candidates. Academics predicted the outcome based on their historical knowledge of elections and voting behavior, pollsters used randomized surveys simulated thousands of times to predict the correct victor with highest confidence and lowest range or variability, and media outlets showered people with news -real and fake- to turn this into the most exciting reality show of all times. Having lived in the South of the United States, in a historically red state for many years, and having been surrounded by some of the friendliest people who came from the Republican side of the American political spectrum, I was left questioning about the characteristics of Republican voters that the world portrayed after the election. This was my biggest motivation for this paper, more than the outcome of the election itself or its implications. In order to understand this better, I decided to analyze the 2016 elections from the perspective of Republican vote share and tried to draw comparisons with the Republican vote share in past elections compared to the recent one.
+
+To better understand voting behavior in American political scenario, I narrowed my focus to county-level social, economic, and demographic factors and connected them to Republican support. In the first part of this thesis, I analyze the effect of county-level factors on Republican two-party vote share. Following the framework of economic voting, while controlling for political factors such as previous election year vote share and incumbency, and demographic factors like white population and rurality, I use Fixed Effects estimation to analyze the effects of unemployment rate change on Republican vote share for elections between 1992 and 2012. The purpose of this analysis is not just to see the effects of these variables but also to create a sound statistical model that can be used to understand the 2016 election. With that purpose, in the second part of this thesis, I use the equation obtained from first part to predict Republican support for 2016 election. While, the process of forecasting an election that already happened may seem uncharacteristic of election forecasting pratice, there are some benefits to it. I will use the forecasting result to measure the difference in the actual vote share and the predicted vote share and use it to assess if the Republican candidate in 2016 fits the definition of a generic Republican candidate as outlined by the previous model. In the third part of the thesis, I will create and analyze a model that tests several rival theories surrounding the outcome of 2016 election and test their statistical significance in explaining the difference (i.e. the residual) obtained from the forecasting exercise. At the end, the goal is to go back to the original question of what affects a a Republican vote and how it is similar or different in 2016 from the years before. 
+
 
 _**give basic intro**_
 
@@ -289,31 +294,32 @@ _TableX_ shows the states where the previously Democratic counties turned Republ
 stargazer::stargazer(table100, type = "latex", summary = FALSE, header = FALSE, title = "Number of counties that turned Republican from Democrat between 2012 and 2016 and were underpredicted")
 ```
 
-_TableX_ shows the states where the counties stayed Republican between 2012 and 2016 and in how many of those counties our model made an underprediction of the Republican voteshare. We can see that 2361 counties stayed Republican between 2012 and 2016. Out of them, the Republican vote share of 1945 counties were underpredicted by our model.
-
-In a nutshell, what that means is that we underpredicted the Republican vote share in most of the counties that were won by Donald Trump in 2016. This may say that the forecast was a failure. However, if we look at the _maps_ below, we find an interesting observation that speaks volumes on the success of the forecasting model.
+_TableX_ shows the states where the counties stayed Republican between 2012 and 2016 and in how many of those counties our model made an underprediction of the Republican vote share. We can see that 2361 counties stayed Republican between 2012 and 2016. Out of them, the Republican vote share of 1945 counties were underpredicted by our model.
 
 ```{r, results='asis', warning=FALSE, message=FALSE}
 stargazer::stargazer(table200, summary = FALSE, type = "latex", header = FALSE, title = "Number of counties that stayed Republican between 2012 and 2016 and were underpredicted")   
 ```
 
+In a nutshell, what that means is that we underpredicted the Republican vote share in most of the counties that were won by Donald Trump in 2016. This may show that the forecast was a failure. However, if we look at the _maps_ below, we find an interesting observation that speaks volumes on the success of the forecasting model.
 
 ```{r, fig.cap = "Change in voteshare for Republican party 2012 to 2016"}
-map1 #accentuate the color to focus on common area
+map3 #accentuate the color to focus on common area
 ```
 
 ```{r, fig.cap = "Residual from the forecasting of 2016 election"}
-map3 #accentuate the color to focus on common area
+map4 #accentuate the color to focus on common area
 ```
+
+\pagebreak
 
 _Map X_ shows
 _Map Y_ shows
 
-DOnald Trump is not a generic Republican. THe model would have performed well for a generic republican running atop the ballot, but we see a systemic difference in the way _Region Name_ voted, and how our model predicted them to be. 
+The inference that we can draw from just the observation of these maps is that Donald Trump was not a generic Republican. The model would have performed well for a generic republican running atop the ballot, but we see a systemic difference in the way _Region Name_ voted and how our model predicted the vote share there to be. 
 
-The maps below show a systemic difference in _Region Name_.
+_The maps below show a systemic difference in Region Name._
 
-What caused the Republican-leaning counties to vote significantly higher for Donald Trump and what led the Democratic -leaning counties to switch to Republican is a question that needs more exploration and this forecasting exercise provides the perfect premise to do so. In order to understand this difference (residual), we will need to test various rival hypothesis with the aim of explaining the effect that Donald Trump had that other traditional generic Republicans didn't have in the past.   
+What caused the Republican-leaning counties to vote significantly higher for Donald Trump and what led the Democratic -leaning counties to switch to Republican is a question that needs more exploration and this forecasting exercise provides the perfect premise to do so. In order to understand this difference (residual), we will need to test various rival hypothesis with the aim of explaining the effect that Donald Trump had that other generic Republicans didn't have in the past.   
 
 ##Step III: Understanding the election of 2016
 
@@ -352,11 +358,9 @@ _Put the hand made table from the Lit. review note book_
 
 #Conclusion:
 
-\pagebreak
+Voting behavior is one of the highly studied subjects in political science yet one of the unpredictable ones. If we knew who would win an election based on historical data alone, then politics in itself would not be as interesting as it is now. This uncertainty, yet the necessity, in understanding election outcomes and their social, political, and economic causes makes the study of voting behavior extremely important in today's rapidly changing world. This paper was motivated with the idea of understanding a simple question- "why people vote the way they do?" To answer it, the best subject for exploration was provided by the recently concluded Presidential election in the United States that saw the rise of an unprecedented candidate in Donald Trump. The election was unique in two ways - in the outcome and in the factors leading up to it. In this paper, I tried to connect the two to get one step closer in understanding what affected it. To do this, first I questioned what factors influence the vote share of the Republican party in the United States. Regression analysis of historical data, spanning between 1992 and 2012 and consisting of various economic, political, and demographic variables at county-level suggested that the two-party vote share of the Republican party is highly affected by how the counties voted in previous election. This put the biggest share of burden on the political identities that counties have preserved historically and how those things are hard to shift. Economic variable like change in unemployment showed some significant effect, yet very weak. However, demographic identity of a county, i.e. race, showed strong effect on whether the county would lean Democratic or Republican. These findings weren't new and difference-making in the study of voting behavior. However, they provided me with a statistically sound model to use for the forecasting of the 2016 election and get closer to answering the Trump question that I began with.
 
-#Limitations and Further Research:
-
-- Can these economic conditions be found on individual-level survey data for 2016 to substantiate or repudiate the claims made above?  _depending on time, we can skip this and put it under further research possibilities at the end_
+Forecasting an election that had already occured may not seem such a fascinating idea. In this case though the relevance of such an endeavor comes from the fact that it helped us understand if the Republican candidate in 2016 was a generic Republican or not. A generic Republican would be the one that would fit the model created before. The unique similarity with the residuals obtained from the difference in actual and predicted vote share, and the difference in vote share between 2012 and 2016 showed that Trump was not a generic Republican and his effect could not be completely measured by the traditional model. The second model that was created to explain this residual using some, but not all, rival theories shed some light on the significance of their effect. Through an analysis of all the counties of United States, and then a separate study of just the swing states and the rust-belt states, we find that only education stands as a variable with strong and significant explanatory power in describing the 2016 election. In this process, we reject many theories regarding the effect of the change in manufacturing employment, labor force participation rate, inequality, or changes in wages on Republican vote share. The policy implication of the study is huge, as it not only provides an insight into the voting behavior of different demographic groups but also the motivations behind their vote. It is scary, yet insightful, to realize that education, or its lack thereof, in a small county in the United States can carry significant implications on the events around the world.
 
 \pagebreak
 
@@ -389,31 +393,9 @@ phtest(f2, f2random)
 plmtest(f2, c("time"), type=("bp"))
 ```
 
-(Test results of all the tests, graphs, tables, plots, etc. that don't go in the main body of the paper.)
+
 
 \pagebreak
-
-#Rough Notes:
-
-Three main inferences made by Bartels[@Bartels2005] are:
-- The white working class has not abandoned the Democratic Party.
-- The white working class has not become more conservative.
-- Working class moral values do not trump economics.
-
-Bartels [@Bartels2005] uses family income levels to categorize voters in terms of their economic status. He places families with incomes in the bottom third of the income distribution under "low income" or "working class" thus differentiating them from the middle and upper class families. 
-_how do we operationalize this is terms of county-level economic data._
-
-Bartels [@Bartels2005] illustrates the Democratic share of the two-party presidential vote among white voters in the bottom third of the income distribution and in the top third of the income distribution. He attributes the loss of support from white voters to Democratic candidates to the middle and upper income groups, while claiming that support for Democratic candidates has increased among low-income white voters. 
-
-_good point below_
-Bartels [@Bartels2005] argues that "Democratic identification declined by 18% among low-income whites (from 22% in 1952 to 4% in 2004) and by 29% among high-income whites (from 11% to 18%)." But he mentions that "However, it seems odd to attribute the Democrats' problems to the white working class when the corresponding decline among more affluent whites is so much larger." 
-
-Although one individual has one vote, the value of that vote may be different. 
-_can we see if the 18 percent decline among low-income whites (and seeing where they are concentrated) has more impact on the electoral outcome than the 29 percent decline among high-income whites who may be concentrated in bigger cities and urban areas and democratic states._
-
-
-
-
 
 [^2]: Dave Leip's Election Data is obtained from a third party, i.e. Çilek Agaci's github repository (Link: https://github.com/cilekagaci/us-presidential-county-1960-2016). The repository data is matched and confirmed with the data on Dave Leip's website. His dataset is often used by researchers in academia to carry out analysis involving US election results both at national and subnational level.
 

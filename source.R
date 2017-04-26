@@ -201,6 +201,10 @@ map3 <- maps_df %>% filter(state != "HI") %>% county.heatmap("resid") +
   scale_fill_viridis(option = "A", discrete = FALSE) +
   map_theme
 
+map4 <- maps_df %>% filter(state != "HI") %>% county.heatmap("rep.share.change") + 
+  scale_fill_viridis(option = "A", discrete = FALSE) +
+  map_theme
+
 #List the counties that flipped and put it in a table (all the names) for descriptive statistics:
 #flipped_counties <- descrip_df2 %>%
  # filter(flip == 1)

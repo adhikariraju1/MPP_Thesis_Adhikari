@@ -1,0 +1,18 @@
+
+#Rough Notes:
+
+Three main inferences made by Bartels[@Bartels2005] are:
+- The white working class has not abandoned the Democratic Party.
+- The white working class has not become more conservative.
+- Working class moral values do not trump economics.
+
+Bartels [@Bartels2005] uses family income levels to categorize voters in terms of their economic status. He places families with incomes in the bottom third of the income distribution under "low income" or "working class" thus differentiating them from the middle and upper class families. 
+_how do we operationalize this is terms of county-level economic data._
+
+Bartels [@Bartels2005] illustrates the Democratic share of the two-party presidential vote among white voters in the bottom third of the income distribution and in the top third of the income distribution. He attributes the loss of support from white voters to Democratic candidates to the middle and upper income groups, while claiming that support for Democratic candidates has increased among low-income white voters. 
+
+_good point below_
+Bartels [@Bartels2005] argues that "Democratic identification declined by 18% among low-income whites (from 22% in 1952 to 4% in 2004) and by 29% among high-income whites (from 11% to 18%)." But he mentions that "However, it seems odd to attribute the Democrats' problems to the white working class when the corresponding decline among more affluent whites is so much larger." 
+
+Although one individual has one vote, the value of that vote may be different. 
+_can we see if the 18 percent decline among low-income whites (and seeing where they are concentrated) has more impact on the electoral outcome than the 29 percent decline among high-income whites who may be concentrated in bigger cities and urban areas and democratic states._
