@@ -103,7 +103,6 @@ The United States presidential election of 2016 has stood out for many reasons- 
 The first theory that I aim to test is what I will call the "employment theory"[^14], which focuses on employment rather than unemployment. The underlying idea behind this theory is the impact of globalization on workers from sectors that have suffered the most due to changing economic dynamic. @Jensen2016 claim that the traditional measures such as unemployment and economic growth alone do not fully capture the effect of trade (by which they mean globalization) on workers' voting behavior. In their county level analysis they measure employment in firms that have been affected by trade liberalization and in doing so they introduce variable to measure employment in manufacturing and service sector [@Jensen2016]. In this paper, I will introduce a similar variable that will measure the change in the proportion of manufacturing jobs since the last election. The reason the change is measured in relation to the last election is embedded in the assumption that voters view the situation they are facing during this election with the situation they were facing at approximately the same time during the last election, explaining the change in their voting behavior from the last time. _cite this_ Another variable that I found extremely relevant in understanding the 2016 election is the labor force participation rate. According to the Bureau of Labor Statistics (BLS), "the labor force participation rate is the percentage of the population that is either employed or unemployed (that is, either working or actively seeking work)."[^15] The importance of this variable lies in the fact that there are many people in their prime working age who may not be participating in the labor force and hence reflecting certain peculiarities about the economy and its effect on them that could be translated into their voting behavior. A simple measure of unemployment rate doesn't capture what the labor force participation rate does, meaning a county with fairly low unemployment rate could be suffering from a low labor force participation rate as well. This is well evident in the example presented by the BLS in 2007 where the unemployment rate between July and August didn't change much despite a decline in the labor force participation by about 600,000 people [as cited in @Gustavsson2014]. This led me to include labor force participation rate as one of the variables to describe Republican vote share in the 2016 election. I base this on the recommendation made by @Gustavsson2014 who suggest using other labor market statistics before drawing any inferences about the labor market conditions and we have established before that these conditions play an extremely important role in voting behavior. Back in 2010 they claimed that "there are important, permanent, discouraged-worker effects among males in the US economy" and suggested that measures such as employment rate or some other measure includes groups suspected of being discouraged workers in addition to the ones unemployed [@Gustavsson2014]. Following up on the work of Gustavsson and Österholm, @Liu2014 argue that unemployment alone cannot explain the economic condition of a region and therefore region-specific employment policy should be driven in such a way so that the discouraged workers are brought back into the labor force. 
 
 ![Unemployment and Labor Force Participation Rate in the United States](picture.png)
-
 Source: [@Bullard2014]
 
 The second theory that I aim to test for the 2016 election result is what I will call the "wage theory".[^16] @Jensen2016 use average pay of the workers during the election year as an important regressor for the incumbent vote share. More importantly they include it in their county-level analysis. Voters are expected to reward the incumbent in the event of higher average wage. Following up on the same idea, I aim to include the change in average pay between the 2016 and the 2012 election. The change seems more logical than the absolute value as it can capture the difference in economic condition between two election years and hence help us explain the change in Republican vote share. The fact that wages for the poor have stagnated for many years could explain the frustration among voters and hence its expression through their votes.[^17] Grossman and Rossi-Hansberg, for instance, claim that in addition to the loss of many jobs that occurs due to offshoring, it also suppresses wages of certain low-skilled sectors in a large economy like the United States [as cited in @Margalit2011]. @Charles2013 also study the effect of local wages on voter turnout and analyze if they hold any effect on elections at diferent level in the United States.  
@@ -122,21 +121,20 @@ The types of techniques that authors use when modeling economic voting depends o
 
 #Methodology:
 
-This paper analyzes the research questions using quantitative regression models. The specifications of the models are based on literature review and checked for biases and perfomed robustness tests, which are included in the Appendix.   
-
-The research question is divided into two sections: the first section studies the effect of county-level economic variables on Republican vote share from 1992 to 2012, and the second section studies the effect of county-level economic and non-economic variables on the Republican voteshare of 2016 that is not explained by the model in the first part. These two researches are carried out in three steps as illustrated in the diagram below:
+This paper analyzes the research questions using quantitative regression models. The specifications of the models are based on literature review and checked for biases and perfomed robustness tests, which are included in the Appendix. _include them_   
+The research question is divided into two sections: the first section studies the effect of county level unemployment rate on Republican vote share from 1992 to 2012, and the second section studies the effect of county level economic and non-economic variables on the Republican vote share of 2016 that is not explained by the model in the first part. These two researches are carried out in three steps as illustrated in the diagram below:
 
 _Diagram_
 
-##Step I:
+##Step I:Understanding U.S. Presidential elections between 1992 to 2012
 
 ###Model Specification:
   
 _research question should be mentioned in the intro as well already._
 
-Research Question: What are the effects of county-level economic variables on the two-party vote share of the Republican party in the Presidential election?
+Research Question: What is the effect of county-level unemployment rate on the two-party vote share of the Republican party in the Presidential election between 1992 to 2012?
 
-Hyopthesis: A rise in unemployment rate will have a negative impact on Republican vote share, since voters identify the Democratic party as the one more capable for tackling the issue of unemployment and for providing welfare and other benefits necessary in the event of high unemployment. The hypothesis is drawn from the discussion of unemployment in the literature review that presents it as a key explanatory variable of the issue-ownership theory.
+Hyopthesis: A growth in unemployment rate will have a negative impact on Republican vote share, since voters identify the Democratic party as the one more capable for tackling the issue of unemployment and for providing welfare and other benefits necessary in the event of high unemployment. The hypothesis is drawn from the discussion of unemployment in the literature review that presents it as a key explanatory variable of the issue-ownership theory.
 
 ###Regression Equation: 
 
@@ -144,32 +142,32 @@ $$rep.share_{i,t} = \alpha + \beta_1 (unemp\_gro_{i,t}) + \beta_3 (controls) + \
 
 ###Dependent Variable:
 
-$rep.share_{i,t}$: The dependent variable is the two-party vote share of the Republican party at the United States Presidential Election for county (i) in election year (t). Considering the effect of the third party in the United States Presidential election to be approximately equal on both the Democratic and the Republican party and insignificant in relation to the voteshare of these two major parties _cite someone who has given this logic, Eisenberg and Ketcham 2004_, I have decided to eliminate the third-party vote share. Many others such as _XYZ_ and _XYZ_ have done the same thing in their analysis. Hence, the republican voteshare shown here is the republican proportion of the "two-party vote share." For example, in Abbeville county in South Carolina in 2000 Presidential Election, Republicans obtained 53.1 percent, Democrats obtained 45 percent, and other parties obtained 1.9 percent of the votes. Therefore the the value of _rep.share_ for Abbeville in 2000 will be the ratio of Republican share to the total share of Democrats and Republicans combined, i.e. 0.541. Different scholars have used different versions of this variable in their analysis. Most of them use the voteshare of the incumbent party however, in this case, the research question aims to explore the effect of economic variables on the Republican party specifically. Hence, the usage of republican vote share becomes logical.   
+$rep.share_{i,t}$: The dependent variable is the two-party vote share of the Republican party in the U.S. Presidential election for county (i) in election year (t). Considering that it is not clear how the third party vote share affects any of the major parties in the United States Presidential election, I have decided to eliminate the third party vote share, as other authors have done in the past[@Eisenberg2004]. Hence, the Republican vote share shown here is the Republican proportion of the two-party vote share. For example, in Abbeville county in South Carolina in 2000 Presidential Election, Republicans obtained 53.1 percent, Democrats obtained 45 percent, and other parties obtained 1.9 percent of the votes. Therefore the value of _rep.share_ for Abbeville in 2000 will be the ratio of Republican share to the total share of Democrats and Republicans combined, i.e. 0.541. Different scholars have used different versions of this variable in their analysis. Most of them use the vote share of the incumbent party however, in this case, the research question aims to explore the effect of county level variables on the Republican party specifically. Hence, the usage of the Republican two-party vote share becomes logical.   
 
 ###Independent Variable:
 
-$unemp\_gro_{i,t}$: The first independent variable, which is also the explanatory economic variable, is the growth in unemployment rate for county (i) between election year (t) and the preceeding year (t-1). For example, Abbeville county has an unemployment rate of 3.8 percent in 2000 and an unemployment rate of 5.7 percent in 1999. Therefore, the value of _unemp\_gro_ for Abbeville for election year 2000 will be (3.8-5.7)/5.7 = -0.33. @Ebeid2006a in their county-level analysis of voting behavior claim that in order to maintain consistency and for the ease of interpretation, unemployment and other economic variables can be operationalized using a percentage change i.e. one-year growth rates, like the one done in this case.
+$unemp\_gro_{i,t}$: The main independent variable, which is also the explanatory economic variable, is the growth in unemployment rate for county (i) between election year (t) and the preceeding year (t-1). For example, Abbeville county has an unemployment rate of 3.8 percent in 2000 and an unemployment rate of 5.7 percent in 1999. Therefore, the value of _unemp\_gro_ for Abbeville for election year 2000 will be (3.8-5.7)/5.7 = -0.33. @Ebeid2006a in their county-level analysis of voting behavior claim that in order to maintain consistency and for the ease of interpretation, unemployment and other economic variables can be operationalized using a percentage change i.e. one-year growth rates, like the one done in this case.
 
 ###Control Variables:
 
-$repshare.lag_{i,t-4}$: The two-party vote share of the Republican party in a county (i) in the previous presidential election (t-4) is used as a political control variable. This variable is expected to measure the party affiliation of a specific county. _cite someone who has used this_ In the United States, many states and counties within them are known to be historically _another term: perennially_ blue or red. What this means is that the voting behavior of counties are often pre-determined based on how they voted in the election before. Not accounting for this variable could cause ommitted variable bias, result in biased estimates for other explanatory variables, and deteriorate the explanatory power of the model by affecting the goodness of fit (i.e. R-squared). The use of this lag-dependent variable does come with some caveats depending on the estimation method and it will be discussed in the analysis section later.   
+$repshare.lag_{i,t-4}$: The two-party vote share of the Republican party in a county (i) in the previous Presidential election (t-4) is used as a political control variable. This variable is expected to measure the party affiliation of a specific county. In the United States, many states and counties within them are known to be historically blue or red. What this means is that the voting behavior of counties are often pre-determined based on how they voted in the election before. Not accounting for this variable could cause ommitted variable bias, resulting in biased estimates for other explanatory variables, and deteriorate the explanatory power of the model by affecting the goodness of fit (i.e. R-squared). The use of this lag-dependent variable does come with some caveats depending on the estimation method and it will be discussed in the analysis section later.   
 
-$Pop\_thou_{i,t}$: The population of a county(i) in the election year(t) is used as a demographic control variable. This variable is introduced to control for the size of the counties. _explain why_
+$Pop\_thou_{i,t}$: The population of a county (i) in the election year (t) is used as a demographic control variable. This variable is introduced to control for the size of the counties. The population range is extremely big with smallest counties having a few hundred people while the largest counties in millions, hence this variable gives the population of the counties in thousands.
 
-$white.percent_{i,t}$: The percentage of white people (both male and female combined) in a county(i) in the election year(t) is used as another demographic control variable. This variable is introduced to control for race. The percentage is calculated by dividing the total number of white people above the age of 18 (since voting age in the United States is 18) in a county by the total population (all ages) of that county. _why white_
+$white.percent_{i,t}$: The percentage of white people (both male and female combined) in a county(i) in the election year(t) is used as another demographic control variable. This variable is introduced to control for race. The percentage is calculated by dividing the total number of white people above the age of 18 (since voting age in the United States is 18) in a county by the total population (all ages) of that county.
 
-$rep\_incumb_t$: A dummy variable for incumbency is introduced as another political control variable. The value of _rep\_incumb_ is 1 for election years that had the Republican party as the incumbent and 0 for election years that had the Democratic party as the incumbent. This variable does not change for counties in a given election year is extremely important in analyzing the incumbent effect discussed in the literature review section above.  
+$rep\_incumb_t$: A dummy variable for incumbency is introduced as another political control variable. The value of _rep\_incumb_ is 1 for election years that had the Republican party as the incumbent and 0 for election years that had the Democratic party as the incumbent. This variable does not change for counties in a given election year and it is extremely important in analyzing the incumbent effect discussed in the literature review section above.  
 
-$rural.percent_i$: The percentage of population living in rural areas of a county is introduced as another demographic control variable. Higher the percentage of people living in rural areas, the more rural a county is considered. This designation is based on the United States Census of 2010 that considers counties with 50 percent or more people living in rural areas as a rural county and less than 50 percent of people living in rural areas as an urban county. This variable is fixed for a given county across all years and does not appear in any Fixed Effect model, unless interacted with other variables.
+$rural.percent_i$: The percentage of population living in rural areas of a county is introduced as another demographic control variable. Higher the percentage of people living in rural areas, the more rural a county is considered. This designation is based on the United States Census of 2010 that considers counties with 50 percent or more people living in rural areas as a rural county and less than 50 percent of people living in rural areas as an urban county. This variable is fixed for a given county across all years and does not appear in any Fixed Effects model, unless interacted with other variables.
 
 ###Estimation Technique:
 
-The regression estimation technique used for the model above is a Fixed Effects Model of estimation (called FE estimation, hereafter). FE estimation is ideal here due to the presence of a Panel Dataset and it has been preferred over Random Effects Model of estimation after performing Hausman test (See Figure _X_ under Appendix). The FE estimation explains the 'within' county variation i.e. it explains the effect of the explanatory variables on the dependent variable for each specific county over a period of time. Time invariant fixed effects, such as the variable _rural.percent_ is not accounted for in the FE estimation, although it may be introduced as an interaction term (which will be explained in the Analysis section below). _some theory behind Fixed Effects_
+The regression estimation technique used for the model above is a Fixed Effects Model of estimation (called FE estimation, hereafter). FE estimation is ideal here due to the presence of a panel dataset and it has been preferred over Random Effects Model of estimation after performing Hausman test (See Figure _X_ under Appendix). The FE estimation explains the 'within' county variation i.e. it explains the effect of the explanatory variables on the dependent variable for each specific county over a period of time. Time invariant fixed effects, such as the variable _rural.percent_ is not accounted for in the FE estimation, although it may be introduced as an interaction term (which will be explained in the Analysis section below). FE estimation is also justified here because we want to look at the effect of each county-specific variable on the vote share for that particular county, understanding that the counties across the United States differ from each other. A county in Texas has different characteristics than a county in California and using a FE estimation, we are able to account for those differences. This follows the framework by Stock and Watson who propose FE estimation to control for omitted variables in panel data when these variables vary across entities but not over time [as cited in @Sartorius2015]. 
 
-##Step II:
-In the second step, I carry out a forecasting exercise by predicting the Republican voteshare for 2016 using the regression equation and coefficient estimates obtained from Step I. Because of the fixed effects model, the coefficient estimates remain the same for all the counties but each county will have a different intercept. The purpose of the forecasting exercise is to analyze how well the model explains the election outcome of 2016. Once the forecasting is done, I plot the predicted voteshare of the Republican party against their actual voteshare in 2016 for all the counties to obtain a residual. The residual is the difference in the votes obtained by the Republican party from what it was predicted to obtain, i.e. the share of Republican party vote share that is not explained by the model in Step I. This demands the creation of another model, which aims to explain the residual and hence the Trump effect, leading us to the second research question. 
+##Step II: Forecasting the Republican vote share for 2016 election
+In the second step, I carry out a forecasting exercise by predicting the Republican two-party vote share for 2016 using the regression equation and coefficient estimates obtained from Step I. Because of the FE estimation, the coefficient estimates remain the same for all the counties but each county will have a different intercept (constant). The purpose of the forecasting exercise is to analyze how well the model explains the election outcome of 2016. Once the forecasting is done, I plot the predicted two-party voteshare of the Republican party against their actual two-party vote share in 2016 for all the counties to obtain a residual. The residual is the difference in the votes obtained by the Republican party from what it was predicted to obtain, i.e. the share of Republican party vote share that is not explained by the model in Step I. This demands the creation of another model, which aims to explain the residual and hence the Trump effect, leading us to the second research question. 
 
-@Lewis-beck2005 writes that forecasters revise their model specification based on trials and that one would be hard pressed to find a model that hadn't been changed at least once. This idea lays the perfect premise for me to introduce some new rival theories concerning 2016 election (which I mention in the Literature review section above), operationalize them, and use them as explanatory variables in my second model. Since there are many possible variables that could be included in the new model, one must be careful in choosing the appropriate ones that are embedded in strong theory and do not have negative consequences on the model itself. I choose the variables keeping that in mind, although I am also tempted to test a few variables despite a lack of strong academic theory behind them, since the election was very recent and the failure of many forecasting models pre-election suggest that sticking to only traditional fundamental variables may not do the job. In that regard, I have followed @Lewis-beck2005's suggestion who assert that,
+@Lewis-beck2005 writes that forecasters revise their model specification based on trials and that one would be hard pressed to find a model that hadn't been changed at least once. This idea lays the perfect premise for me to introduce some new rival theories concerning 2016 election (which I have mentioned in the Literature review section above), operationalize them, and use them as explanatory variables in my second model. Since there are many possible variables that could be included in the new model, one must be careful in choosing the appropriate ones that are embedded in strong theory and do not have negative consequences on the model itself. I choose the variables keeping that in mind, although I am also tempted to test a few variables despite a lack of strong academic theory behind them, since the election was very recent and the failure of many forecasting models pre-election suggest that sticking to only traditional fundamental variables may not do the job. In that regard, I have followed @Lewis-beck2005's suggestion who assert that,
 
 > with respect to model revision, I favor the KISS strategy advocated by Arnold Zellner: Keep It Sophisticatedly Simple (García-Ferrer 1998). That is, judiciously introduce one or two theoretically potent new variables (or new measures of old variables), when the cumulating evidence suggests it. (p. 155)
 
@@ -177,9 +175,9 @@ In the second step, I carry out a forecasting exercise by predicting the Republi
 
 ###Model Specification:
 
-Research Question: Which theories (economic and non-economic) regarding the outcome of 2016 Presidential election, when analyzed at county-level, explain the deviation in the actual voteshare for the Republican party from the predicted voteshare based on a traditional model?
+Research Question: Which theories (economic and non-economic) regarding the outcome of 2016 Presidential election, when analyzed at county-level, explain the deviation in the actual vote share for the Republican party from the predicted vote share based on a traditional model?
 
-Hypothesis: Keeping in mind that Donald Trump's victory was unprecendented and he was touted as a non-regular candidate (i.e. different than a regular Republican), the effects of county-level variables should be different in 2016 election than the previous election. The additional variables that may have had an effect on Donald Trump's victory include the change in number of manufacturing jobs, change in average wage, income inequality, change in labor force participation rate, or level of educational attainment among voters. These variables seem to have some merit considering his campaign slogan "Making America Great Again" and his promises to raise the lives of the poor who had suffered from the wraths of globalization and the neglect from Washington. 
+Hypothesis: Keeping in mind that Donald Trump's victory was unprecendented and he was touted as a non-regular candidate (i.e. different than a regular Republican), the effects of county-level variables should be different in 2016 election than the previous election. The additional variables that may have had an effect on Donald Trump's victory include the change in number of manufacturing jobs, change in average wage, income inequality, change in labor force participation rate, or level of educational attainment among voters. These variables seem to have some merit considering his campaign slogan "Make America Great Again" and his promises to raise the lives of the poor who had suffered from the wraths of globalization and the neglect of Washington. 
 
 ###Research Equation:
 
@@ -191,25 +189,25 @@ $resid$: The dependent variable is the difference in the actual two-party vote s
 
 ###Variables from Rival Theories:
 
-$manu\_share\_gro$: The first independent variable is the change in the ratio of manufacturing jobs to total private non-farm jobs between 2012 and 2015. An ideal measurement would have been to see the change between 2012 and 2016, since both are election years. However, the data for 2016 is not yet available and the usage of 2015 values should not be problematic considering that the explanatory variable is a slow-changing variable. _show using evidence from data_ 
+$manu\_share\_gro$: The first independent variable is the change in manufacturing employment. It is obtained by the difference in the ratio of manufacturing jobs to total private non-farm jobs between 2012 and 2015. An ideal measurement would have been to see the difference between 2012 and 2016, since both are election years. However, the data for 2016 is not yet available and the usage of 2015 values should not be problematic considering that the explanatory variable is a slow-changing variable. 
 
-$av\_wage\_gro$: The second independent variable is the change in average wage between 2012 and 2015, measured in _dollars_. A positive value means that the average wage has increased in the county while a negative represents that it has decreased. 
+$av\_wage\_gro$: The second independent variable is the difference in average wage between 2012 and 2015. A positive value means that the average wage has increased in the county while a negative means that it has decreased. 
 
-$lfpr\_male\_gro$: The third independent variable is the change in labor force participation rate among males between 2012 and 2015. Based on the theory that the demographic group that has been discouraged to participate in the labor force is mostly men, I choose the change in labor force participation rate among men in county during the time frame @Gustavsson2014. A positive value means that more people are getting back in the labor force while a negative value means that more are being discouraged and not participating in the labor force.
+$lfpr\_male\_gro$: The third independent variable is the change in labor force participation rate among males between 2012 and 2015. Based on the theory that the demographic group that has been discouraged to participate in the labor force is mostly men, I choose the change in labor force participation rate among men in a county during the time frame @Gustavsson2014. A positive value means that more people are getting back in the labor force while a negative value means that more are being discouraged and not participating in the labor force.
 
-$gini\_gro$: The fourth variable is the change in gini coefficient for each county between 2012 and 2015. A Gini coefficient is the most widely used measure of income inequality. A gini coefficient of 1 represents maximum inequality and a gini coefficient of 0 represents no inequality. In this case we will look at the change between two years. A positive value indicates more inequality while a negative value indicates less inequality within the county since 2012.   
+$gini\_gro$: The fourth variable is the change in gini coefficient for each county between 2012 and 2015. A gini coefficient is the most widely used measure of income inequality. A gini coefficient of 1 represents maximum inequality and a gini coefficient of 0 represents no inequality. In this case we will look at the difference between these two years. A positive value indicates more inequality while a negative value indicates less inequality within the county since 2012.   
 
-$uneduc$: The percentage of people in a county who are 25 years or older with less than high school degree in 2015 is used as a social/demographic control variable to account for the impact of education (or lack thereof). This variable is calculated by dividing the total number of people above 25 years of age with less than high school degree (i.e. less than 12 years of formal education) by the total population of that county in 2015. _see if the same justification is used elsewhere_ _justify what a Trump voter is expected to be and hence control for that_  _check if it is 25 years and above_
+$uneduc$: The percentage of people in a county who are 25 years or older with less than high school degree in 2015 is used as a social/demographic control variable to account for the impact of education (or lack thereof). This variable is calculated by dividing the total number of people above 25 years of age with less than high school degree (i.e. less than 12 years of formal education) by the total population of that county in 2015.
 
 ###Estimation Technique
 
-The regression estimation technique used for this model is a Ordinary Least Squares Model of estimation (called OLS estimation, hereafter). The OLS estimation is ideal here due to the presence of a cross-sectional dataset with no time-wise variation. The OLS estimation explains the effect of the explanatory variables on the dependent variable for each specific county between 2012 and 2015. Like mentioned earlier, I do not include the same variables already used in equation 1 since this time we are only concerned with identifying the causes of the residual (i.e. explanatory factors additional to what had already been incorporated in the first model). More importantly, I also remove the intercept values for each county since _explain in better words_.
+The regression estimation technique used for this model is a Ordinary Least Squares Model of estimation (called OLS estimation, hereafter). The OLS estimation is ideal here due to the presence of a cross-sectional dataset with no time-wise variation. The OLS estimation explains the average effect of the explanatory variables on the dependent variable for all the counties between 2012 and 2015. Like mentioned earlier, I do not include the same variables already used in the first model in Step I since this time we are only concerned with identifying the causes of the residual (i.e. explanatory factors additional to what had already been incorporated in the first model). More importantly, I also remove the intercept values for each county since _explain in better words_. Regards to the usage of the 2012 values instead of 2014 values, my assumption is based on the idea that voters compare the current economic situation with the one during the same time in the past election. However, I have attached regression output using with independent variable that shows changes between 2014 and 2015 in the Appendix below. _show appendix_ 
 
 ##Data sources and cleaning:
 
-The data necessary to carry out the quantitative analysis in this paper were obtained from multiple sources and rigorously cleaned and merged together using open source software R studio to extract the variables described above. The entire paper is also written on R markdown. The dependent variable was obtained from election data that contained both Republican and Democratic vote share in Presidential elections between 1992 and 2016. The dataset came from Dave Leip's Atlas of U.S. Presidential Elections.[^2] To calculate the two-party vote share, the voteshare for Republican party was divided by the sum of vote shares for Republican and Democratic party. The lag of republican vote share used in the first part of the research was calculated based on the same election dataset. The data on unemployment from 1992 to 2015 was obtained from the Bureau of Labor Statistics (BLS).[^3] To calculate the growth in unemployment rate between two years, the unemployment rate for previous year was subtracted from the unemployment rate of the current year, and then the result was divided by the unemployment rate of the previous year. The data on population for each county from 1992 to 2015 were called from the Bureau of Economic Affairs (BEA) API directly into R studio.[^4] Data used to construct the incumbency dummy was created manually based on common knowledge and merged into the final dataframe. _Put table on Appendix with president's name and years and dummy_ Data on rural population was obtained from the United States Census Bureau.[^5] Demographic data on educational attainment was not available for several years between 1992 and 2012, hence education related variable wasn't included in the model in the first part of the research. However, for the second part of the research, educational attainment data for 2015 was obtained from the United States Census Bureau as well.[^6] The race data that included white population in each county between 1992 to 2015 was obtained from the database of the National Cancer Institute.[^7] The counts of race and education data were converted into percentages by combining them with the population data obtained from BEA. The data on Labor Force Participation rate[^24] and Gini coefficient[^25] for 2012 and 2015 were obtained from the United States Census Bureau. The data on manufacturing jobs, total number of private non-farm jobs, and average wage were called directly from the BEA API.[^26]   
+The data necessary to carry out the quantitative analysis in this paper were obtained from multiple sources and rigorously cleaned and merged together using open source software R studio to extract the variables described above. The entire paper is also written on R markdown and formatted using Latex. The dependent variable was obtained from election data that contained both Republican and Democratic vote share in Presidential elections between 1992 and 2016. The dataset came from Dave Leip's Atlas of U.S. Presidential Elections.[^2] To calculate the two-party vote share, the voteshare for Republican party was divided by the sum of vote shares for Republican and Democratic party. The lag of republican vote share used in the first part of the research was calculated based on the same election dataset. The data on unemployment from 1992 to 2015 was obtained from the Bureau of Labor Statistics (BLS).[^3] To calculate the growth in unemployment rate between two years, the unemployment rate for previous year was subtracted from the unemployment rate of the current year, and then the result was divided by the unemployment rate of the previous year. The data on population for each county from 1992 to 2015 were called from the Bureau of Economic Affairs (BEA) API directly into R studio.[^4] Data used to construct the incumbency dummy was created manually based on common knowledge and merged into the final dataframe (See Appendix to see which years had what incumbency values). _Put table on Appendix with president's name and years and dummy_ Data on rural population was obtained from the United States Census Bureau.[^5] Demographic data on educational attainment was not available for several years between 1992 and 2012, hence education related variable wasn't included in the model in the first part of the research. However, for the second part of the research, educational attainment data for 2015 was obtained from the United States Census Bureau as well.[^6] The race data that included white population in each county between 1992 to 2015 was obtained from the database of the National Cancer Institute.[^7] The counts of race and education data were converted into percentages by combining them with the population data obtained from BEA. The data on Labor Force Participation rate[^24] and Gini coefficient[^25] for 2012, _2014_, and 2015 were obtained from the United States Census Bureau. The data on manufacturing jobs, total number of private non-farm jobs, and average wage were called directly from the BEA API.[^26]   
 
-All the dataframes were merged based on county fips (unique identification for each county assigned by the US Census Bureau). There are a total of 3142 counties (or county-equivalents) in the United States. However, due to inconsistent nomenclature of counties and county-equivalents, and the matching problem it created since many counties have been reshaped over the years, some counties were removed from the dataset. All the 29 boroughs of Alaska were removed from the final dataset due to difficulty in matching them to the county fips across multiple datasets. Maui and Kalawao counties of Hawaaii were merged together into the same county called Maui to make it consistent over multiple datasets. These processes resulted in a total of 3112 counties. The final merged panel dataset, which was used for the first part of the research, hence contained 3112 counties x 6 election years = 18672 observations. For the second part of the paper, the final cross-sectional dataframe consists of 3112 counties. 
+All the dataframes were merged based on county fips (unique identification for each county assigned by the US Census Bureau). There are a total of 3142 counties (or county-equivalents) in the United States. However, due to inconsistent nomenclature of counties and county-equivalents, and the matching problem it created since many counties have been reshaped over the years, some counties were removed from the dataset. All the 29 boroughs of Alaska were removed from the final dataset due to difficulty in matching them to the county fips across multiple datasets. Maui and Kalawao counties of Hawaaii were merged together into the same county called Maui to make it consistent over multiple datasets. These processes resulted in a total of 3112 counties. The final merged panel dataset, which was used for the first part of the research, hence contained 3112 counties x 6 election years = 18672 observations. For the second part of the paper, the final cross-sectional dataframe consists of 3112 counties. _check these numbers_ _mention Virginia_
 
 A list of all the variables and other specific details on them are available in _table X_ under the Appendix section.
 
@@ -217,20 +215,18 @@ A list of all the variables and other specific details on them are available in 
 
 #Result and Analysis:
 
-##First Part: Creating and analyzing a model to explain the Republican two-party vote share between 1992 and 2012 
+##Step I: Understanding U.S. Presidential elections between 1992 to 2012
 
 ###Descriptive Statistics: 
-_FigX_ shows the how the main independent variable, the lag dependent variable and the dependent variable are correlated to one another, and therefore provide some basic understanding on how their causal relationship could turn out to be. We can see that growth in unemployment is negatively, yet not so strongly, correlated (r = -0.042) with the Republican two-party vote share. More importantly the Republican vote share in the previous election is positively, and strongly, correlated (r = 0.887) with the present voteshare. Both of these correlations are in line with the theory established earlier in the paper. The distribution plots of each of these variable show a normal distribution with no noticeable skewness for both the Republican vote share and the lag of Republican vote share. Although, the growth in unemployment shows a right-skew, _we would not want to remove it, as it may remove important counties whose unemployment situation may be pertinent in our analysis._ 
+_FigX_ shows the how the main independent variable, the lag dependent variable and the dependent variable are correlated to one another, and therefore provide some basic understanding on how their causal relationship could turn out to be. We can see that growth in unemployment is negatively, yet not so strongly, correlated (r = -0.042) with the Republican two-party vote share. More importantly the Republican vote share in the previous election is positively, and strongly, correlated (r = 0.887) with the present voteshare. Both of these correlations are in line with the theory established earlier in the paper. The distribution plots of each of these variable show a normal distribution with no noticeable skewness for both the Republican vote share and the lag of Republican vote share. Although, the growth in unemployment shows a right-skew, _can we ignore it?_ 
 
 ```{r, warning = FALSE, message = FALSE}
 print(corplot1, progress = F)
 ```
 
-_FigX_ shows the correlation between the dependent variable with other control variables. Republican two-party voteshare has moderately strong, and positive, correlation with both the percentage of white people living in a county (r = 0.346) and the percentage of people living in rural areas of the county (r = 0.213). We also see a positive correlation, yet not very strong, between rural population and white population (r = 0.16), depicting the situation in the United States where most rural areas are considered to be homogenous while the urban areas more heterogenous. It is important to note that counties with larger population have a negative correlation with Republican vote share(r = -0.201) and also show that these counties are less rural (r = -0.393) and have lower white percentage(r = -0.137). 
+_FigX_ shows the correlation between the dependent variable with other control variables. Republican two-party voteshare has moderately strong, and positive, correlation with both the percentage of white people living in a county (r = 0.346) and the percentage of people living in rural areas of the county (r = 0.213). We also see a positive correlation, yet not very strong, between rural population and white population (r = 0.16), depicting the situation in the United States where most rural areas are considered to be homogenous while the urban areas are more heterogenous. It is important to note that counties with larger population have a negative correlation with Republican vote share (r = -0.201) and also show that these counties are less rural (r = -0.393) and have lower white percentage(r = -0.137). 
 
-The distribution plot shows an extreme right skewness with population due to the presence of some extremely populous county like the Los Angeles county in California that has a population of more than 9 million. _how to correct_ _remove_ or _log_ or _categorical variable_
-Similarly, the plot of rural_percent shows _a weird shape_ _why explain_ _changing them into categorical will take away the fixed effects_
-
+The distribution plot shows an extreme right skewness with population due to the presence of some extremely populous county like the Los Angeles county in California that has a population of more than 9 million. _We correct for this by taking a natural log of the population_. Similarly, the plot of rural_percent shows _a weird shape_ _why explain_. 
 
 ```{r warning = FALSE, message = FALSE}
 print(corplot2, progress = F)
@@ -240,15 +236,15 @@ The descriptive summary table (see _figX_ under Appendix) gives a complete overv
 
 ###Regression Output and Results:
 
-_FigX_ shows the regression output with Fixed Effects estimate, showing the relationship between unemployment growth and other political and demographic controls for US Presidential elections between 1992 and 2012. 
+_FigX_ shows the regression output with Fixed Effects estimate, showing the relationship between unemployment growth and other political and demographic controls for U.S. Presidential elections between 1992 and 2012. 
 
 ```{r, results='asis', warning=FALSE, message=FALSE}
-stargazer::stargazer(f1, f2, test1, test2, type = 'latex', digits = 2, header = FALSE,   
-                     title = 'Fixed Effects Estimate Model', font.size = 'normalsize',
-                     omit.stat = "f")
+stargazer::stargazer(f1, test1, f102, test102, type = 'latex', digits = 2, header = FALSE,   
+                     title = 'Fixed Effects Estimate to Explain Republican two-party vote share(1992-2012)', 
+                     font.size ='small', column.sep.width = "1pt")
 ```
 
-Due to the inclusion of a lag dependent variable _repshare.lag_, an Arellano-Bond test is conducted to account for nickell bias. Therefore, the estimates in the fourth column, with corrected standard errors, and with all relevant control variables, are used for interpretation. Growth in unemployment has a negative effect on Republican two-party vote share high statistical significance. One percent growth in unemployment rate between the year preceeding the election and the election year will result in a fall of Republican two-party vote share by 0.02 percentage points. This result is in line with the issue-priority theory, which says that higher unemployment benefits the Democratic party. It is important to note that the effect of  the growth in unemployment is obtained by controlling for the Republican vote share from previous election which shows an extremely high effect on the current vote share with high statistical significance. The estimates also show that, while an increase in the percentage of white people in a county increases the Republican vote share, the effect is even bigger if we look at rural white population. 
+Due to the inclusion of a lag dependent variable _repshare.lag_, an Arellano-Bond test is conducted to account for nickell bias _cite_. Therefore, the estimates in the fourth column, with corrected standard errors, and with all relevant control variables, are used for interpretation. Growth in unemployment has a negative effect on Republican two-party vote share high statistical significance. One percent growth in unemployment rate between the year preceeding the election and the election year will result in a fall of Republican two-party vote share by 0.02 percentage points. This result is in line with the issue-priority theory, which says that higher unemployment benefits the Democratic party. It is important to note that the effect of the growth in unemployment is obtained by controlling for the Republican vote share from previous election which shows an extremely high effect on the current vote share with high statistical significance. The estimates also show that an increase in the percentage of white people in a county increases the Republican vote share, and the effect is even stronger if we look at rural white population. 
 
 ```{r, eval = FALSE}
 interplot(m = f2, var1 = "white.percent", var2 = "rural_percent") +
@@ -259,8 +255,7 @@ interplot(m = f2, var1 = "white.percent", var2 = "rural_percent") +
 
 ```
 
-
-_explain marginal effect_ Validating Norpoth's cost of ruling theory, the incumbency factor shows that if the incumbent is a Republican, then the Republican voteshare goes down, suggesting that voters do not like to keep the same party in power for many terms _source_. Moreover, the effect of unemployment growth on the Republican vote share is even higher, meaning the negative impact of unemployment growth is exacerbated, when the Republican party is incumbent. This result is in line with the theory that voters punish the incumbent for difficult economic condition. 
+Validating @Norpoth2010's cost of ruling theory, the incumbency factor shows that if the incumbent is a Republican, then the Republican voteshare goes down, suggesting that voters do not like to keep the same party in power for many terms. Moreover, the effect of unemployment growth on the Republican vote share is even higher, meaning the negative impact of unemployment growth is exacerbated, when the Republican party is incumbent. This result is in line with the theory that voters punish the incumbent for difficult economic condition. _explain marginal effect_ 
 
 ```{r, eval = FALSE}
 interplot(m = f2, var1 = "unemp_gro", var2 = "rep_incumb") +
@@ -271,26 +266,11 @@ interplot(m = f2, var1 = "unemp_gro", var2 = "rep_incumb") +
 
 ```
 
-In this case, they do so, even though they believe that the Republican party is less suited to solve the issue of unemployment. _explain marginal effect_ This model explains the "within variation" for each county in the United States and therefore excludes any time-invariant effects. Since, rurality is a time-invariant variable, we interact it with _white.percent_ to capture it's marginal effect. The model explains 46 percent of the variation in the Republican voteshare over the period of 1992 and 2012, which is a substantial result considering the plethora of factors that play a role in determining voting behavior.
+This model explains the "within variation" for each county in the United States and therefore excludes any time-invariant effects. Since, rurality is a time-invariant variable, we interact it with _white.percent_ to capture it's marginal effect. _explain marginal effect_ The model explains 46 percent of the variation in the Republican voteshare over the period of 1992 and 2012, which is a substantial result considering the plethora of factors that play a role in determining voting behavior.
 
-##Second Part: Using the model to make a forecast for 2016 Presidential Election
+##Step II: Forecasting the Republican vote share for 2016 election
 
-From the model above, we have unique coefficient estimates for each variable and a unique intercept for each county. By substituting the values of these variables for 2015 in the equation, we can forecast the republican two-party vote share for each county in the 2016 election. The graph below shows the accuracy of the forecast as we compare the predicted Republican vote share with actual vote share obtained during the election. _explain how far the model is_ The counties that fall on the 45-degree line represent the ones where the model was able to accurately predict the actual voteshare. As we can see, there are many counties (above and below the 45 degree line), where there are residuals, i.e. differences in the predicted and actual vote share. 
-
-The graph shows that there were higher number counties where our model underpredicted the Republican vote share than overpredicted. The red dots show the counties that had voted Republican in the 2012 election. As we can see, in 2016, almost all of these counties stayed Republican. However, interestingly many counties that voted Democratic in the 2012 election turned Republican in 2016 (these are the blue dots outside of the dashed lines). 
-
-The table below shows the performance of the forecast. 
-_insert table_
-
-The table below shows the states where the previously Democratic counties turned Republican and their voteshare was underpredicted by our model:
-
-```{r}
-table2_b2rh
-```
-
-The table shows the states where the counties stayed Republican and their voteshare was underpredicted by our model:
-
-In the Democratic counties, where the Republican voteshare is below 50 percent, the actual voteshare was much less than what our model predicted to be. However, in the Republican counties, the actual voteshare is much higher than what our model predicted showing a big cluster of counties above the 45 degree line. What caused the Republican-leaning counties to vote significantly higher for Donald Trump and what led the Democratic -leaning counties to vote lower for him than what the traditional model would expect to is a question that needs more exploration. In order to understand this difference (residual), we will need to test various rival hypothesis with the aim of explaining the effect that Donald Trump had that other traditional generic Republicans didn't have in the past.   
+From the model above in Step I, we have unique coefficient estimates for each variable and a unique intercept for each county. By substituting the values of these variables for 2015(see above under Methodology on why we use 2015 instead of 2016 values) in the equation, we can forecast the Republican two-party vote share for each county in the 2016 election. The graph below shows the accuracy of the forecast as we compare the predicted Republican two-party vote share with their actual two-party vote share obtained during the election.  
 
 ```{r}
 p2_merged_df7 %>%
@@ -301,15 +281,48 @@ ggplot() +
   geom_segment(x = 0, y = 0.5, xend = 0.5, yend = 0.5, linetype = 2) +
   geom_segment(x = 0.5, y = 0, xend = 0.5, yend = 0.5, linetype = 2) +
   labs(x = "Predicted Republican Voteshare", y = "Actual Republican Voteshare",
-       title = "Residuals from 2016 US Presidential Elections Forecasting",
-       caption = "Source: Dave Liep, US Election Atlas") +
-  scale_colour_manual(values = c("steelblue", "red")) +
+       title = "Residuals from 2016 US Presidential Elections Forecasting") +
+       scale_colour_manual(values = c("steelblue", "red")) +
   theme_classic() +
   theme(
     legend.position = "none"
   )
 ```
 
+The counties that fall on the 45-degree line represent the ones where the model was able to accurately predict the actual vote share. As we can see, there are many counties (above and below the 45 degree line), where there are residuals, i.e. differences in the predicted and actual vote share. _explain how far the model is_
+
+The graph shows that there are higher number counties where our model underpredicted the Republican vote share than overpredicted. The red dots represent the counties that had voted Republican in the 2012 election. As we can see, in 2016, almost all of these counties stayed Republican. However, interestingly many counties that voted Democrat in the 2012 election turned Republican in 2016 (these are the blue dots outside of the dashed lines). 
+
+The table below shows the performance of the forecast. 
+_insert table_ _rmse_
+
+The table below shows the states where the previously Democratic counties turned Republican and their voteshare was underpredicted by our model: _in nice format_
+
+```{r}
+table2_b2rh
+```
+221 counties changed from Democrat to Republican between 2012 and 2016. Out of them, 152 counties were underpredicted by our model.
+
+The table below shows the states where the counties stayed Republican and their voteshare was underpredicted by our model:
+_in nice format_
+```{r}
+table3_r2rh
+```
+Out of the 2361 counties that stayed Republican, the model underpredicted the Republican two-party voteshare for 1378 of them.
+
+In the Democratic counties, where the Republican voteshare is below 50 percent, the actual voteshare was much less than what our model predicted to be. However, in the Republican counties, the actual voteshare is much higher than what our model predicted showing a big cluster of counties above the 45 degree line. What caused the Republican-leaning counties to vote significantly higher for Donald Trump and what led the Democratic -leaning counties to vote lower for him than what the traditional model would expect to is a question that needs more exploration. In order to understand this difference (residual), we will need to test various rival hypothesis with the aim of explaining the effect that Donald Trump had that other traditional generic Republicans didn't have in the past.   
+
+\pagebreak
+
+```{r}
+map1
+
+```
+
+```{r}
+map2
+
+```
 
 ##Third Part: Creating and analyzing a model to explain the residual obtained from the forecasting exercise i.e. "Trump effect"
 
@@ -322,16 +335,6 @@ print(corplot3, progress = F)
 ```
 
 _US situation in these variables_ 
-
-```{r}
-map1
-
-```
-
-```{r}
-map2
-
-```
 
 ###Regression Output and Results:
 
@@ -369,6 +372,22 @@ _Put the hand made table from the Lit. review note book_
 \pagebreak
 
 #Appendix:
+
+```{r results='asis', warning=FALSE, message=FALSE}
+summary_df1 <- merged_df5 %>%
+  select(rep.share, repshare.lag, rep_incumb, unemp_gro, rural_percent, white.percent, Pop)
+
+stargazer::stargazer(summary_df1, summary = TRUE, type = 'latex',digits = 2, header = FALSE, title = "Step I Variables: Summary Statistics", font.size = 'normalsize')
+
+summary_df2 <- p2_merged_df8 %>%
+  select(resid, rep.share, repshare.lag, pred_repshare, is.rep.2012, is.rep.2016, pop, unemp_gro, manu_share_gro, lfpr_male_gro, av_wage_gro, gini_gro, uneduc)
+
+stargazer::stargazer(summary_df2, summary = TRUE, type = 'latex',digits = 2, header = FALSE, title = "Step III Variables: Summary Statistics", font.size = 'normalsize')
+
+```
+
+
+
 
 (Test results of all the tests, graphs, tables, plots, etc. that don't go in the main body of the paper.)
 

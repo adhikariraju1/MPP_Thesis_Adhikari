@@ -31,7 +31,8 @@ source("heat-map.R")
 #Part I:
 #Correlation Plots for Part I:
 descrp_p1 <- merged_df4 %>%
-  select(rep.share, repshare.lag, unemp_gro, Pop_thou, white.percent, rep_incumb, rural_percent)
+  select(rep.share, repshare.lag, unemp_gro, Pop_thou, white.percent, rep_incumb, rural_percent, log.Pop_thou, log.rural_percent, 
+         log.unemp_gro, log.white.percent)
 
 corplot1 <- descrp_p1 %>%
   select(rep.share, repshare.lag, unemp_gro) %>%
@@ -42,9 +43,8 @@ corplot2 <- descrp_p1 %>%
   ggpairs(lower = list("continuous" = "smooth"))
 
 
-#We see that Los Angeles county is skewing the normal distribution of Population. So we filter it out.
-merged_df5 <- merged_df4 %>%
-  filter(Pop_thou <= 7500)
+
+merged_df5 <- merged_df4 
 
 #Regression Models:
 f1 <- plm(rep.share ~ unemp_gro + repshare.lag, merged_df5, model = 'within')
@@ -55,6 +55,19 @@ f2 <- plm(rep.share ~ unemp_gro + repshare.lag + Pop_thou + white.percent + as.f
 #Regression after Arellano-Bond:
 test1 <- coeftest(f1, vcovHC(f1, method = "arellano"))
 test2 <- coeftest(f2, vcovHC(f2, method = "arellano"))
+
+
+f101 <- plm(rep.share ~ unemp_gro + repshare.lag, merged_df5, model = 'within')
+f102 <- plm(rep.share ~ unemp_gro + repshare.lag +log(Pop) + white.percent + as.factor(rep_incumb)
+          + unemp_gro:as.factor(rep_incumb) + rural_percent
+          + white.percent:rural_percent, merged_df5, model = 'within')
+
+test102 <- coeftest(f102, vcovHC(f102, method = "arellano"))
+
+stargazer::stargazer(f1, test1, f102, test102, type = 'html', digits = 2, header = FALSE,   
+                     title = 'Fixed Effects Estimate to Explain Republican two-party vote share(1992-2012)', font.size = 'normalsize',
+                     out = 'tester.htm')
+
 
 #Marginal effects plots
 
@@ -164,15 +177,6 @@ p2_merged_df8_rust <- p2_merged_df8 %>%
          | state == "MI" | state == "IL" | state == "IA" | state == "WI")
 
 
-m24 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc, p2_merged_df8)
-
-#For swing states:
-m25 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc, p2_merged_df8_swing)
-
-#For rust belt states:
-m26 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc, p2_merged_df8_rust)
-
-
 
 #New Model with Share of Manufacturing Jobs and Average Wage and LFPR:
 
@@ -197,6 +201,15 @@ map2 <- maps_df %>% filter(state != "HI") %>% county.heatmap("flip") +
 #table(flipped_counties$state) #shows the number of counties in each state that flipped.
 #Higest are: IA 33, MI 12, MN 19, NY 20, WI 23
 
+
+m24 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc, p2_merged_df8)
+
+#For swing states:
+m25 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc, p2_merged_df8_swing)
+
+#For rust belt states:
+m26 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc, p2_merged_df8_rust)
+      
 
 
 
