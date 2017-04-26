@@ -31,15 +31,14 @@ source("heat-map.R")
 #Part I:
 #Correlation Plots for Part I:
 descrp_p1 <- merged_df4 %>%
-  select(rep.share, repshare.lag, unemp_gro, Pop_thou, white.percent, rep_incumb, rural_percent, log.Pop_thou, log.rural_percent, 
-         log.unemp_gro, log.white.percent)
+  select(rep.share, repshare.lag, unemp_gro, log.Pop, white.percent, rep_incumb, rural_percent)
 
 corplot1 <- descrp_p1 %>%
   select(rep.share, repshare.lag, unemp_gro) %>%
   ggpairs(lower = list("continuous" = "smooth"))
 
 corplot2 <- descrp_p1 %>%
-  select(rep.share, Pop_thou, white.percent, rural_percent) %>%
+  select(rep.share, log.Pop, white.percent, rural_percent) %>%
   ggpairs(lower = list("continuous" = "smooth"))
 
 
@@ -48,31 +47,25 @@ merged_df5 <- merged_df4
 
 #Regression Models:
 f1 <- plm(rep.share ~ unemp_gro + repshare.lag, merged_df5, model = 'within')
-f2 <- plm(rep.share ~ unemp_gro + repshare.lag + Pop_thou + white.percent + as.factor(rep_incumb)
+f2 <- plm(rep.share ~ unemp_gro + repshare.lag + log(Pop) + white.percent + as.factor(rep_incumb)
           + unemp_gro:as.factor(rep_incumb) + rural_percent
           + white.percent:rural_percent, merged_df5, model = 'within')
+f3 <- plm(rep.share ~ unemp_gro + repshare.lag + log(Pop) + white.percent + as.factor(rep_incumb)
+          + unemp_gro:as.factor(rep_incumb) + rural_percent
+          + white.percent:rural_percent + year, merged_df5, model = 'within')
+
+f2random <- plm(rep.share ~ unemp_gro + repshare.lag + log(Pop) + white.percent + as.factor(rep_incumb)
+                  + unemp_gro:as.factor(rep_incumb) + rural_percent
+                  + white.percent:rural_percent, merged_df5, model = 'random')
 
 #Regression after Arellano-Bond:
 test1 <- coeftest(f1, vcovHC(f1, method = "arellano"))
 test2 <- coeftest(f2, vcovHC(f2, method = "arellano"))
-
-
-f101 <- plm(rep.share ~ unemp_gro + repshare.lag, merged_df5, model = 'within')
-f102 <- plm(rep.share ~ unemp_gro + repshare.lag +log(Pop) + white.percent + as.factor(rep_incumb)
-          + unemp_gro:as.factor(rep_incumb) + rural_percent
-          + white.percent:rural_percent, merged_df5, model = 'within')
-
-test102 <- coeftest(f102, vcovHC(f102, method = "arellano"))
-
-stargazer::stargazer(f1, test1, f102, test102, type = 'html', digits = 2, header = FALSE,   
-                     title = 'Fixed Effects Estimate to Explain Republican two-party vote share(1992-2012)', font.size = 'normalsize',
-                     out = 'tester.htm')
-
-stargazer::stargazer(p2_merged_df8, summary = TRUE, type = 'html',digits = 2, header = FALSE, title = "Step III Variables: Summary Statistics", font.size = 'normalsize', out ="summary2.htm")
+test3 <- coeftest(f3, vcovHC(f3, method = "arellano"))
 
 
 #Marginal effects plots
-
+#Can"t be done.
 
 
 #**************************************************************************************************************************
@@ -81,17 +74,17 @@ stargazer::stargazer(p2_merged_df8, summary = TRUE, type = 'html',digits = 2, he
 p2_merged_df7 <- p2_merged_df7 %>%
   mutate(rep_incumb = 0)
 
-tidy(f2)
-str(fixef(f2))
-intercept <- data.frame(county.fips = names(fixef(f2)),
-           fixef = as.vector(fixef(f2)))
+tidy(f3)
+str(fixef(f3))
+intercept <- data.frame(county.fips = names(fixef(f3)),
+           fixef = as.vector(fixef(f3)))
 
 p2_merged_df7 <- merge(p2_merged_df7, intercept)
 
 p2_merged_df7 <- p2_merged_df7 %>%
-  mutate(pred_repshare = fixef - unemp_gro*0.0247103253 + repshare.lag*0.7276273733 + pop_thou*0.0001052426 
-         + white.percent*0.1558135764 - rep_incumb* 0.0404342633 - unemp_gro*rep_incumb*0.0367096008 + 
-           white.percent*rural_percent*0.0057858007)
+  mutate(pred_repshare = fixef - unemp_gro*0.010424064 + repshare.lag*0.667388497 + log(pop)*0.013094576 
+         + white.percent*0.438572256 - rep_incumb* 0.091746860 - unemp_gro*rep_incumb*0.003444465 - 
+           white.percent*rural_percent*0.003856760)
 
 #png("Plot.png", width = 1800, height = 1800,
     #res = 300)
@@ -102,10 +95,8 @@ ggplot() +
   geom_abline(slope = 1, intercept = 0) +
   geom_segment(x = 0, y = 0.5, xend = 0.5, yend = 0.5, linetype = 2) +
   geom_segment(x = 0.5, y = 0, xend = 0.5, yend = 0.5, linetype = 2) +
-  labs(x = "Predicted Republican Voteshare", y = "Actual Republican Voteshare",
-       title = "Residuals from 2016 US Presidential Elections Forecasting",
-       caption = "Source: Dave Liep, US Election Atlas") +
-  scale_colour_manual(values = c("steelblue", "red")) +
+  labs(x = "Predicted Republican Voteshare", y = "Actual Republican Voteshare") +
+       scale_colour_manual(values = c("steelblue", "red")) +
   theme_classic() +
   theme(
     legend.position = "none"
@@ -121,38 +112,41 @@ p2_merged_df8 <- p2_merged_df7 %>%
 
 p2_merged_df8$resid %>% abs() %>% mean(na.rm = T)
 
+###################################################################
 bluetored <- p2_merged_df8 %>%
   filter(is.rep.2012 == 0) %>%
   filter(rep.share > 0.50)
   
-count(bluetored)
-#221 counties changed from blue to red form 2012 to 2016.
-table1_b2r <- table(bluetored$state)
-table1_b2r
+table1_b2r <- table(bluetored$state) %>%
+  as.data.frame() %>%
+  rename(State = Var1, `Counties D to R` = Freq)
 
-#################################################################33
 bluetoredandhigher <- bluetored %>%
   filter(resid > 0)
 
-count(bluetoredandhigher)
-#Out of them 152 of them were underpredicted by the forecasting model. 
+table1_b2rh <- table(bluetoredandhigher$state) %>%
+  as.data.frame() %>%
+  rename(State = Var1, `Counties Underpredicted` = Freq)
 
-table2_b2rh <- table(bluetoredandhigher$state)
-table2_b2rh
-
+table100 <- merge(table1_b2r, table1_b2rh)
 
 #
 redtored <- p2_merged_df8 %>%
   filter(is.rep.2012 == 1) %>%
-  filter(rep.share > 0.50) %>%
+  filter(rep.share > 0.50)
+
+table1_r2r <- table(redtored$state) %>%
+  as.data.frame() %>%
+  rename(State = Var1, `Counties R to R` = Freq)
+
+redtoredhigher <- redtored %>%
   filter(resid > 0)
 
-count(redtored)
-#1378 out of 2361 Republican counties where our model underpredicted.
+table1_r2rh <- table(redtored$state) %>%
+  as.data.frame() %>%
+  rename(State = Var1, `Counties underpredicted` = Freq)
 
-table3_r2rh <- table(redtored$state)
-table3_r2rh
-
+table200 <- merge(table1_r2r, table1_r2rh)
 ##################################################################################################################
 
 
@@ -187,25 +181,25 @@ p2_merged_df8_rust <- p2_merged_df8 %>%
 
 maps_df <- p2_merged_df8 %>%
   mutate(rep.share.change = rep.share - repshare.lag)
+
+map_theme <-   theme(
+  legend.position = "none",
+  panel.grid = element_blank(),
+  axis.title = element_blank(),
+  axis.text = element_blank()
+)
   
 map1 <- maps_df %>% filter(state != "HI") %>% county.heatmap("rep.share.change") + 
   scale_fill_gradient2(low = "#085BB2", high = "#FF2312", mid = "#4DAFFF", midpoint = -0.02) +
-  labs(title = "Change in voteshare for Republican party 2012 to 2016")
+  map_theme
 
 map2 <- maps_df %>% filter(state != "HI") %>% county.heatmap("flip") + 
   scale_fill_gradient2(low = "#085BB2", high = "#FF2312", mid = "#4DAFFF", midpoint = 0.5) +
-  labs(title = "Counties that flipped from Democrat to Republican 2012 to 2016")
+  map_theme
 
-
-map3 <- maps_df %>% filter(state != "HI") %>% county.heatmap("uneduc") + 
+map3 <- maps_df %>% filter(state != "HI") %>% county.heatmap("resid") + 
   scale_fill_viridis(option = "A", discrete = FALSE) +
-  theme_minimal() +
-  labs(title = "Percentage of Population above 25 with less than High School Education")
-
-map4 <- maps_df %>% filter(state != "HI") %>% county.heatmap("resid") + 
-  scale_fill_viridis(option = "A", discrete = FALSE) +
-  theme_minimal() +
-  labs(title = "Residual")
+  map_theme
 
 #List the counties that flipped and put it in a table (all the names) for descriptive statistics:
 #flipped_counties <- descrip_df2 %>%
@@ -226,5 +220,6 @@ m26 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro +
 
 
 
-################################# FINAL REGRESSIONS ######################################################
+################################# Appendix ######################################################
+
 
