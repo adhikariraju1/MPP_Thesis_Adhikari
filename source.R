@@ -129,7 +129,7 @@ table1_b2rh <- table(bluetoredandhigher$state) %>%
   as.data.frame() %>%
   rename(State = Var1, `Counties Underpredicted` = Freq)
 
-table100 <- merge(table1_b2r, table1_b2rh)
+table100 <- merge(table1_b2r, table1_b2rh, all = TRUE)
 
 #
 redtored <- p2_merged_df8 %>%
@@ -143,11 +143,11 @@ table1_r2r <- table(redtored$state) %>%
 redtoredhigher <- redtored %>%
   filter(resid > 0)
 
-table1_r2rh <- table(redtored$state) %>%
+table1_r2rh <- table(redtoredhigher$state) %>%
   as.data.frame() %>%
   rename(State = Var1, `Counties underpredicted` = Freq)
 
-table200 <- merge(table1_r2r, table1_r2rh)
+table200 <- merge(table1_r2r, table1_r2rh, all =TRUE)
 ##################################################################################################################
 
 
@@ -199,7 +199,7 @@ map2 <- maps_df %>% filter(state != "HI") %>% county.heatmap("flip") +
   map_theme
 
 map3 <- maps_df %>% filter(state != "HI") %>% county.heatmap("resid") + 
-  scale_fill_viridis(option = "D", discrete = FALSE) +
+  scale_fill_viridis(option = "A", discrete = FALSE) +
   map_theme
 
 map4 <- maps_df %>% filter(state != "HI") %>% county.heatmap("rep.share.change") + 

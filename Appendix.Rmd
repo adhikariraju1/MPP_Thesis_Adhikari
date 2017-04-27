@@ -1,0 +1,51 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, error = FALSE, 
+                      fig.pos = 'h', fig.align = 'center', fig.width = 6, fig.height = 3)
+knitr::opts_knit$set(root.dir = "C:/RajuPC/MPP Final Thesis/WorkingDirectory")
+```
+
+
+```{r workingdir, results="hide"}
+source("source.R")
+```
+
+\setcounter{page}{40}
+
+#Appendix:
+
+```{r, results='asis', warning=FALSE, message=FALSE}
+president <- rio::import("presidents_incumbents.csv") %>%
+  select(-`Republican Incumbency`)
+  
+stargazer::stargazer(president, summary = FALSE, type = "latex", header = FALSE, title = "Incumbents and Winners in the U.S. election (1992-2016)")
+```
+
+```{r results='asis', warning=FALSE, message=FALSE}
+summary_df1 <- merged_df5 %>%
+  select(rep.share, repshare.lag, rep_incumb, unemp_gro, rural_percent, white.percent, Pop)
+
+stargazer::stargazer(summary_df1, summary = TRUE, type = 'latex',digits = 2, header = FALSE, title = "Step I Variables: Summary Statistics", font.size = 'normalsize')
+
+summary_df2 <- p2_merged_df8 %>%
+  select(resid, rep.share, repshare.lag, pred_repshare, is.rep.2012, is.rep.2016, pop, unemp_gro, manu_share_gro, lfpr_male_gro, av_wage_gro, gini_gro, uneduc)
+
+stargazer::stargazer(summary_df2, summary = TRUE, type = 'latex',digits = 2, header = FALSE, title = "Step III Variables: Summary Statistics", font.size = 'normalsize')
+
+```
+
+\pagebreak
+
+```{r, results ='asis', warning=FALSE, message=FALSE, fig.cap="Hausman Test Result"}
+phtest(f2, f2random)
+```
+
+```{r, results ='asis', warning = FALSE, message = FALSE, fig.cap="Testing Time-fixed effects"}
+plmtest(f2, c("time"), type=("bp"))
+```
+
