@@ -5,8 +5,9 @@
 
 #Loading all the necessary packages
 packages <- c("bea.R", "acs", "haven", "httr", "blsAPI", "rjson", "readxl", "broom", "jsonlite",
-              "stringr", "rJava", "xlsx", "qdap", "data.table", "plm", "rio", "Zelig", "stargazer", 
-              "lmtest", "GGally", "viridis", "ggmap", "sjPlot", "sjmisc", "ggplot2", "knitr", "tidyr", "magrittr", "plyr", "dplyr")
+              "stringr", "rJava", "xlsx", "qdap", "data.table", "plm", "rio", "stargazer", 
+              "lmtest", "GGally", "viridis", "ggmap", "sjPlot", "sjmisc", "ggplot2", "knitr", "tidyr", 
+              "magrittr", "plyr", "dplyr", "gridExtra", "grid")
 load <- lapply(packages, require, character.only = T)
 
 #Setting the working directory
@@ -198,7 +199,7 @@ map2 <- maps_df %>% filter(state != "HI") %>% county.heatmap("flip") +
   map_theme
 
 map3 <- maps_df %>% filter(state != "HI") %>% county.heatmap("resid") + 
-  scale_fill_viridis(option = "A", discrete = FALSE) +
+  scale_fill_viridis(option = "D", discrete = FALSE) +
   map_theme
 
 map4 <- maps_df %>% filter(state != "HI") %>% county.heatmap("rep.share.change") + 

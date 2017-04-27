@@ -1,32 +1,73 @@
 ---
-title: 'What happened on November 8, 2016 ?: A Study of County-level Effects on Republican
-  Vote Share at United States Presidential Elections'
-author: "Raju Adhikari"
-date: "April 27, 2017"
+fontsize: 12
+geometry: margin=3cm
+
+link-citations: yes
+citecolor: blue
+linkcolor: red
+csl: apa.csl
+
+bibliography: references.bib
+classoption: twoside
+
 output:
   pdf_document:
     citation_package: natbib
-    toc: yes
-  word_document:
-    toc: yes
-fontsize: 12
-geometry: margin=3cm
-header-includes:
-- \usepackage{setspace}
-- \setstretch{1.5}
-link-citations: yes
-csl: apa.csl
-bibliography: references.bib
+    includes:
+      in_header: header.tex
 ---
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-knitr::opts_knit$set(root.dir = "C:/RajuPC/MPP Final Thesis/WorkingDirectory")
+\pagebreak
 
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, error = FALSE, 
+                      fig.pos = 'h', fig.align = 'center', fig.width = 6, fig.height = 3)
+knitr::opts_knit$set(root.dir = "C:/RajuPC/MPP Final Thesis/WorkingDirectory")
+```
+
+```{r workingdir, results="hide"}
 source("source.R")
 ```
 
-\pagebreak
+<!-- Title page styling -->
+\pagenumbering{roman}
+\thispagestyle{empty}
+\begin{centering}
+
+\vspace{4 cm}
+
+\Huge
+
+{\bf What Happened on November 8, 2016? \\ \Large A County-level Study of U.S. Presidential Elections}
+
+\vspace{1 cm}
+\line(1, 0){250}
+\vspace{2 cm} 
+
+\Large
+Raju Adhikari 
+
+\normalsize
+Master of Public Policy
+
+Class of 2017
+
+\vspace{2 cm}
+
+Completed under the advisement of \href{https://www.hertie-school.org/en/research/faculty-and-researchers/profile/person/kayser/}{Prof. Mark Kayser, PhD}
+
+April 2017
+
+\vspace{3 cm}
+
+\normalsize
+\includegraphics[width=.23  \textwidth]{logo.png}
+
+\end{centering}
+
+\clearpage
+\newpage
+\setcounter{page}{1}
 
 #Acknowledgement:
 
@@ -38,33 +79,31 @@ I would also like to thank all my collegeues at the Hertie School, for sharing t
 
 Last, but not the least, I would like to thank my dog Mori for her unconditional love and stress-relieving presence, without which neither the time in Berlin nor the thesis writing process would have been possible.   
 
-\pagebreak
+\newpage
 
 #Executive Summary:
 
+\newpage
+<!-- \% Table of Contents Styling -->
+\thispagestyle{empty}
+\tableofcontents
+\clearpage
 \pagebreak
 
-_"The economy, as an issue, is one of consensus. All voters want a good economy, no voters want a bad economy. No distribution of opinion occurs. Everyone values prosperity. When they see prosperity, they vote for the ruling party, otherwise not."_  
-- @Lewis-Beck2011
+\pagenumbering{arabic}
 
 #Introduction:
+
+> The economy, as an issue, is one of consensus. All voters want a good economy, no voters want a bad economy. No distribution of opinion occurs. Everyone values prosperity. When they see prosperity, they vote for the ruling party, otherwise not.
+
+> @Lewis-Beck2011
 
 Around the weeks and months surrounding the United States Presidential election of 2016, social media platforms were on fire, where people from all social, economic, and academic background were berating each other for supporting or not supporting certain candidates. Academics predicted the outcome based on their historical knowledge of elections and voting behavior, pollsters used randomized surveys simulated thousands of times to predict the correct victor with highest confidence and lowest range or variability, and media outlets showered people with news -real and fake- to turn this into the most exciting reality show of all times. Having lived in the South of the United States, in a historically red state for many years, and having been surrounded by some of the friendliest people who came from the Republican side of the American political spectrum, I was left questioning about the characteristics of Republican voters that the world portrayed after the election. This was my biggest motivation for this paper, more than the outcome of the election itself or its implications. In order to understand this better, I decided to analyze the 2016 elections from the perspective of Republican vote share and tried to draw comparisons with the Republican vote share in past elections compared to the recent one.
 
 To better understand voting behavior in American political scenario, I narrowed my focus to county-level social, economic, and demographic factors and connected them to Republican support. In the first part of this thesis, I analyze the effect of county-level factors on Republican two-party vote share. Following the framework of economic voting, while controlling for political factors such as previous election year vote share and incumbency, and demographic factors like white population and rurality, I use Fixed Effects estimation to analyze the effects of unemployment rate change on Republican vote share for elections between 1992 and 2012. The purpose of this analysis is not just to see the effects of these variables but also to create a sound statistical model that can be used to understand the 2016 election. With that purpose, in the second part of this thesis, I use the equation obtained from first part to predict Republican support for 2016 election. While, the process of forecasting an election that already happened may seem uncharacteristic of election forecasting pratice, there are some benefits to it. I will use the forecasting result to measure the difference in the actual vote share and the predicted vote share and use it to assess if the Republican candidate in 2016 fits the definition of a generic Republican candidate as outlined by the previous model. In the third part of the thesis, I will create and analyze a model that tests several rival theories surrounding the outcome of 2016 election and test their statistical significance in explaining the difference (i.e. the residual) obtained from the forecasting exercise. At the end, the goal is to go back to the original question of what affects a a Republican vote and how it is similar or different in 2016 from the years before. 
 
-
-_**give basic intro**_
-
-_**point out the two main questions of research**_
-Two main questions:
-We start by analyzing the question from a party-perspective and then move to a specific candidate, in this case being Donald Trump....  
-- Do county-level economic conditions influence presidential election results in the US? - effect on specific party vote share.    
-- Did county-level economic conditions play a role in the victory for the Republican party in 2016 elections (i.e. the victory of Donald Trump) and what can they say about Trump- specific effects (Does this show that Trump was a generic Republican or not)?    
-
-_**outline section-by-section details**_  
-
-\pagebreak
+_and what can they say about Trump- specific effects (Does this show that Trump was a generic Republican or not)?_    
+_section by section overview_
 
 #Literature Review:
 
@@ -78,7 +117,7 @@ The proponents of economic voting agree and disagree with each other on a few to
 
 > \(1) to determine which politicians, if any, are held responsible by the electorate for changes in general economic conditions; (2) to identify which general economic conditions influence the electorate's voting; and (3) to establish the time period that the electorate uses to assess economic policies. (p. 1) 
 
-The first two questions asked by Abrams set the stage to determine which indicator captures the election result (dependent variable) and which economic variables explain it (independent variables). To answer the first question regarding the basis for measuring the election result, one may choose to look at the total vote share of the incumbent or the total vote share of a specific party or the two-party vote share of a specific party. The idea of choosing the total vote share of the incumbent is embedded in one of the assumptions of the economic voting theory that claims that voters reward or punish the incumbent party or its candidates. Tuftes's "election-as-a-referendum-on-the-government" idea has been used to incorporate incumbency in forecasting models to predict U.S. Presidential elections [as cited in @Lewis-beck2005, p. 150]. Moreover, @Norpoth2010's "cost of ruling" designation to incumbency showcases the effects that incumbency can have when it comes to German elections. They both use incumbent vote share as a dependent variable, and attribute this to the party's vote share, without elaborating if the resuts would be different if the candidate is incumbent as well. While most studies place candidates and parties under the same umbrella, @Eisenberg2004 separate the two entities and claim that voters do not hold incumbent candidates "additionally"" accountable even though they hold incumbent parties responsible. In doing so, they refute previous claims that economic voting is more significant for incumbent candidates than for incumbent parties with new candidates[@Eisenberg2004]. Another way of measuring the election result is by looking into a specific party than the incumbent party. The rationale behind this approach is to understand if voters "always" assign their economic vote for or against the incumbent or if they do so based on a specific party, regardless of the incumbency. This happens under issue-priority theory, where voters relate certain economic policies with certain parties and vote for the party that is concerned with solving that issue even if the country is not performing so well under that party in that particular issue [@Kim2003]. In this paper, we will follow Kim's theory in analyzing if voters in the United States take certain economic indicators into account when voting for the Republican party. We, will nevertheless, keep incumbency as a dummy control variable to check if it has any conditional effect. Meaning, while voters may vote based on certain policy issues, the effect of their examination of the policy on the vote share may be dependent on whether the party is an incumbent or not. The purpose of the paper is to see from the perspective of not just a voter but a Republican voter.
+The first two questions asked by Abrams set the stage to determine which indicator captures the election result (dependent variable) and which economic variables explain it (independent variables). To answer the first question regarding the basis for measuring the election result, one may choose to look at the total vote share of the incumbent or the total vote share of a specific party or the two-party vote share of a specific party. The idea of choosing the total vote share of the incumbent is embedded in one of the assumptions of the economic voting theory that claims that voters reward or punish the incumbent party or its candidates. Tuftes's "election-as-a-referendum-on-the-government" idea has been used to incorporate incumbency in forecasting models to predict U.S. Presidential elections [as cited in @Lewis-beck2005, p. 150]. Moreover, @Norpoth2010's "cost of ruling" designation to incumbency showcases the effects that incumbency can have when it comes to German elections. They both use incumbent vote share as a dependent variable, and attribute this to the party's vote share, without elaborating if the resuts would be different if the candidate is incumbent as well. While most studies place candidates and parties under the same umbrella, @Eisenberg2004 separate the two entities and claim that voters do not hold incumbent candidates "additionally"" accountable even though they hold incumbent parties responsible. In doing so, they refute previous claims that economic voting is more significant for incumbent candidates than for incumbent parties with new candidates [@Eisenberg2004]. Another way of measuring the election result is by looking into a specific party than the incumbent party. The rationale behind this approach is to understand if voters "always" assign their economic vote for or against the incumbent or if they do so based on a specific party, regardless of the incumbency. This happens under issue-priority theory, where voters relate certain economic policies with certain parties and vote for the party that is concerned with solving that issue even if the country is not performing so well under that party in that particular issue [@Kim2003]. In this paper, we will follow Kim's theory in analyzing if voters in the United States take certain economic indicators into account when voting for the Republican party. We, will nevertheless, keep incumbency as a dummy control variable to check if it has any conditional effect. Meaning, while voters may vote based on certain policy issues, the effect of their examination of the policy on the vote share may be dependent on whether the party is an incumbent or not. The purpose of the paper is to see from the perspective of not just a voter but a Republican voter.
 
 The second question by Abrams is already touched upon above by listing a plethora of explanatory economic variables mentioned by various authors as indicative of election outcome. While all of them have their merits, depending on the nature of analysis, unemployment is the one that stick out specifically in the context of this paper. @Wright2012, while describing the theory of issue-ownership, claims that the most central problem that voters keep in mind to make their election decisions is whether they, their families, friends, and neighbors have jobs or not. Unemployment is also a variable that is more relatable among voters who may find it difficult to assess the performance of the government based on other complex economic indicators. Similarly, seeing the rise of globalization all over the world and its impact on the economy, @Jensen2016 claim that trade contains information that growth and employment do not explain and hence include macro-economic indicator such as U.S. trade balance as an explanatory variable for national-level voting.
 
@@ -95,13 +134,14 @@ The voteshare of an incumbent presidential candidate in a state is regressed aga
 The electoral college phenomenon that exists in the United States and the effects of gerrymandering in allowing various counties to exert a bigger weight on the outcome of the Presidential election also suggest that studying elections from county level perspective can shed light on many questions that have been answered unsatisfactorily in the past with a general national level analysis. @Kim2003 go a step further in their analysis of the effect of spatial patterns in American politics by suggesting that increasing concentrations of geographical support for the parties will mean more ideological polarization and more demographic distinction between them. Their analysis seems nothing less than prophetic in the aftermath of the 2016 Presidential election that saw an extremely polarized and divided America fall into the spatial crevaces of electoral college system. @Jensen2016 also use U.S. county level measures of economic indicator, such as employment, in order to assess the effect of trade on presidential voting. A study by @Wright2012 uses county-level employment data to claim that Democratic vote share at gubernatorial and presidential elections is directly proportional to unemployment rate regardless of the incumbency. All these studies provide a perfect premise for this paper as it aims to understand the effects of the regional economic condition on election outcomes in the past and more specifically on the recent presidential election of 2016. This paper also follows the framework by @Eisenberg2004 who claim to present "the first county-level analysis of economic voting in presidential elections." The difference in this paper, however, is that I aim to first analyze the effect of county-level economic conditions on presidential election results from the past (1992 to 2012) and then carry a separate analysis for the 2016 presidential election to explain the residual that is not covered by the first analysis. This type of county-level analysis will first test my hypothesis with the assumption that the Republican candidate is a generic Republican and secondly test if Trump is a generic Republican based on how the 2016 result fits into the model from previous years. 
 
 ##Political and Demographic Controls:
+
 While the first aim of the paper is to analyze the impact of economic voting on Republican voteshare, controlling for other political and demographic factors is extremely important in order to find the accurate estimation of the effect. Elections are not one dimensional phenomenon and voting behavior is influenced by a multitude of factors. In the United States, one of the important factors that stands out is partisanship driven by party identification [@Campbell1960]. States are known for their identity as red, blue, or swing. And the political identity of majority of voters in those states usually stays the same over time. To analyze what affects Republican vote share in a blue parish in Louisiana (parish is the equivalent of county in Louisiana) without taking into account the party identification or partisanship indicator of that county will be erroneous. In surveys, individual voters are asked about their party preferences, but we do not have the luxury to assign these preferences to a whole county. Therefore, in this paper, the previous vote share of the Republican party is used as a measuring yardstick of the party identification of each specific county. Based on the previous voting numbers of a county, we can get an idea about the actual preference of the majority of voters in that county or atleast understand what percent of people in a county voted a certain way and what that means. The purpose of this paper is not to verify or repudiate the party identification theory but to simply control for it in order to achieve the best estimates of the effect of economic indicator. Previous vote share for the incumbent party is introduced as an independent variable by @Abrams1980 in his model. @Glaeser2006 debunks the myth that America's political geography has been more stable than in the past by claiming that it has always been quite stable as suggested by the high correlation between the current and lagged vote share of the major parties. In one example, @Kayser2011 claim that in the event of strong partisan effects (i.e. when voters are strongly tied to a particular party), the effect of the government's performance (i.e. its economic performance) has little effect on vote shares.
 
 Although, this paper will analyze economic voting from the persepective of the Republican party and not from the perspective of an incumbent party, it is extremely important to control for incumbency effect. Many political scientists have agreed to the idea of analyzing the economic vote through the perspective of an incumbent. The main idea behind this is that voters assess the performance of the incumbent party or candidate and use their vote as a means to determine either to reelect them or not. Key's retrospective model uses bounded rationality theory to claim that voters use their vote as either a reward or a punishment depending on how the incumbent government performed [as cited in @Kim2003]. In economic voting, incumbents are given utmost importance because people often relate economic performance with the incumbent party or candidate. Hence, if the economy is doing well, it is believed to help the incumbent party or candidate and if it is doing bad it is believed to hurt them. With an incumbent dummy we can control for the effect of the incumbency on the voteshare of a specific party. Moreover, at a county-level analysis, where most variables are at county-level, the incumbency variable serves as a representative of the national effect on the county, since the incumbent candidate or party is the same all over the nation for all counties.
 
 Demographic controls are also an important aspect of economic voting model, as they are known to significantly impact the vote share of a party at presidential elections. Including them into the model will reduce the possibility of omitted variable bias and gives more precise estimations. Race, age, education, gender are some of the main demographic variables often used by authors. Republican voters are often characterized as white and following @Campbell1960's "group interests" dimension of party ID, one can hypothesize that counties with majority whites vote Republican, making it a strong control variable. Counties with population that has fewer years of formal education can also be controlled for the understanding of the republican vote share. Gender, although being a strong control variable at national level analysis, doesn't fit a county level analysis very well. In a county level analysis, the role of gender on voteshare is difficult to measure since most counties will have around the same number of men and women and it is diffifcult to assess the effect the one gender on the vote share unless an individual survey-type analysis is done. Rurality of a county is an important control that is indicative of a plethora of characteristics about the voters. Rural voters are usually considered to be poor, uneducated, and more conservative due to the lack of dynamism and exposure that voters in urban areas experience. The effect of religion and the perception about immigration can also be different in rural and urban areas. When doing a subnational level analysis, this measure of rurality captures a lot of voting characteristics of a county, which this paper aims to explore. @Galbraith2008 in his state-level analysis claims that a high proportion of people living in urban areas, and higher minority population are associated with a greater Democratic vote.  
 
-##Some theories for 2016 United States presidential election outcome:
+##Some rival theories regarding 2016 U.S. Presidential election outcome:
 
 The United States presidential election of 2016 has stood out for many reasons- the most significant of them being the failure of scientific forecasts and political pundits to accurately predict the winner. With years of research, theories, and models at their disposal, how did they fail to get it right is a question which still hasn't been convincingly answered even months after the election. This paper does not claim to answer it either, but does aim to incorporate some new voting theories that have been floating around and see if and how they might have played a role. There are a multitude of rival theories on what might have influenced the 2016 election: economy, racism, sexism, Russian influence, anti-elite message from a supposedly non-political candidate, social media's impact- be it via fake news or late-swing generating tweets from influencing people, resentment from Bernie Sanders' supporters, shaming of the Republican voters by liberal elites, third-party effects, gerrymandering, and the list goes on and on. Considering the limitation on the scope of this paper, which focuses on county-level analysis and hence requires county-level data to do so, I will touch upon only a few of these theories and test them using a statistical model. Through elimination of one or two of these theories via a scientific analysis at a subnational level, we could get one step closer to finding out what may have actually happened.
 
@@ -109,21 +149,19 @@ The first theory that I aim to test is what I will call the "employment theory"[
 
 ![Unemployment and Labor Force Participation Rate in the United States](picture.png)
 
-Source: [@Bullard2014]
+> Source: [@Bullard2014]
 
-The second theory that I aim to test for the 2016 election result is what I will call the "wage theory".[^16] @Jensen2016 use average pay of the workers during the election year as an important regressor for the incumbent vote share. More importantly they include it in their county-level analysis. Voters are expected to reward the incumbent in the event of higher average wage. Following up on the same idea, I aim to include the change in average pay between the 2016 and the 2012 election. The change seems more logical than the absolute value as it can capture the difference in economic condition between two election years and hence help us explain the change in Republican vote share. The fact that wages for the poor have stagnated for many years could explain the frustration among voters and hence its expression through their votes.[^17] Grossman and Rossi-Hansberg, for instance, claim that in addition to the loss of many jobs that occurs due to offshoring, it also suppresses wages of certain low-skilled sectors in a large economy like the United States [as cited in @Margalit2011]. @Charles2013 also study the effect of local wages on voter turnout and analyze if they hold any effect on elections at diferent level in the United States.  
+The second theory that I aim to test for the 2016 election result is what I will call the "wage theory".[^16] @Jensen2016 use average pay of the workers during the election year as an important regressor for the incumbent vote share. More importantly they include it in their county-level analysis. Voters are expected to reward the incumbent in the event of higher average wage. Following up on the same idea, I aim to include the change in average pay between the 2016 and the 2012 election. The change seems more logical than the absolute value as it can capture the difference in economic condition between two election years and hence help us explain the change in Republican vote share. The fact that wages for the poor have stagnated for many years could explain the frustration among voters and hence its expression through their votes [@Long2016]. Grossman and Rossi-Hansberg, for instance, claim that in addition to the loss of many jobs that occurs due to offshoring, it also suppresses wages of certain low-skilled sectors in a large economy like the United States [as cited in @Margalit2011]. @Charles2013 also study the effect of local wages on voter turnout and analyze if they hold any effect on elections at diferent level in the United States.  
 
-The third theory is the "inequality theory,"[^27] which can help understand if the growing inequality in the US has any explanatory power when it comes to voting behavior. Afterall, Bernie Sanders' whole campaign was based on reducing the inequality in the U.S. and expanding the middle class, and it was able to garner immense support among young voters and Democratic states with majority white population. A report by World Economic Forum has also attributed the victory of Donald Trump and Brexit outcome to rising inequality.[^18] Schneider-Petsinger (2016) [^19] claimed that inequality would be the largest concern among voters in the 2016 election and that 52 percent of Americans underline the gap between the rich and the poor being a very big problem. Darvas and Efstathiou carry out a scientific analysis showing income inequality had a positive and statistically significant effect on Trump's victory in the election, meaning that more unequal states were more likely to vote for him.[^20] Their analysis and results provided with the necessary motivation to test the findings at a county level. @Mughan2002 note growing inequality as one of the important factors to look into when assessing voting behavior in the United States. Moreover, @Partridge1998 study the causes behind income inequality in different regions in the United States and connect them, albiet superficially, to voting behavior and policy implications. Their studies motivate the inclusion of this variable into my model. 
+The third theory is the "inequality theory,"[^27] which can help understand if the growing inequality in the US has any explanatory power when it comes to voting behavior. Afterall, Bernie Sanders' whole campaign was based on reducing the inequality in the U.S. and expanding the middle class, and it was able to garner immense support among young voters and Democratic states with majority white population. A report by World Economic Forum has also attributed the victory of Donald Trump and Brexit outcome to rising inequality [@Rodionova2017]. @Schneider-Petsinger2016 claimed that inequality would be the largest concern among voters in the 2016 election and that 52 percent of Americans underline the gap between the rich and the poor being a very big problem. @Efstathiou2016 carry out a scientific analysis showing income inequality had a positive and statistically significant effect on Trump's victory in the election, meaning that more unequal states were more likely to vote for him. Their analysis and results provided with the necessary motivation to test the findings at a county level. @Mughan2002 note growing inequality as one of the important factors to look into when assessing voting behavior in the United States. Moreover, @Partridge1998 study the causes behind income inequality in different regions in the United States and connect them, albiet superficially, to voting behavior and policy implications. Their studies motivate the inclusion of this variable into my model. 
 
-The fourth and one of the most important theories is non-economic in nature. I call this the "education theory"[^21] and it claims that the election outcome was influenced by difference in education level among the voters. The education theory also runs parallel to the idea that people who were less educated were more vulnerable to fake news, false economic reports, closed to diversity, and non-scientific claims made during the campaign. Assessing that relationship would take another project in itself as it would involve analyzing whether voters vote rationally or not and how much of that rationality or "correctness of vote" is depended on their education level. However, the point of this paper is not to do so. Nate Silver, one of the well-known political pundits and forecasting guru, claimed that it was in fact education and not economy that predicted who would vote for Trump.[^22] Hendrickson and Galston suppose that educational attainment can have influences on both the economic conditions and cultural positions of the voters, making it a uniquely important explanatory variable in itself.[^23] Caplan explains that congressional districts with higher educational achievements would support economic arguments such as free trade and comparative advantage [as cited in @Georgia2004]. @McGill2016 also underlines that concentration of college degrees in a county is a strong indicator to whether the county would back Republican or not and goes further to claim that education mattered more than economy or race during the recent Presidential election. @Knuckey2015, @Kriner2012, @Franklin1983, and almost all of the authors who study economic voting have introduced educational attainment as a control in their model to explain voting behavior, hence setting the tone for its inclusion in my model. 
+The fourth and one of the most important theories is non-economic in nature. I call this the "education theory"[^21] and it claims that the election outcome was influenced by difference in education level among the voters. The education theory also runs parallel to the idea that people who were less educated were more vulnerable to fake news, false economic reports, closed to diversity, and non-scientific claims made during the campaign. Assessing that relationship would take another project in itself as it would involve analyzing whether voters vote rationally or not and how much of that rationality or "correctness of vote" is depended on their education level. However, the point of this paper is not to do so. Nate Silver, one of the well-known political pundits and forecasting guru, claimed that it was in fact education and not economy that predicted who would vote for Trump [@Silver2016]. @Hendrickson2016 suppose that educational attainment can have influences on both the economic conditions and cultural positions of the voters, making it a uniquely important explanatory variable in itself. Caplan explains that congressional districts with higher educational achievements would support economic arguments such as free trade and comparative advantage [as cited in @Georgia2004]. @McGill2016 also underlines that concentration of college degrees in a county is a strong indicator to whether the county would back Republican or not and goes further to claim that education mattered more than economy or race during the recent Presidential election. @Knuckey2015, @Kriner2012, @Franklin1983, and almost all of the authors who study economic voting have introduced educational attainment as a control in their model to explain voting behavior, hence setting the tone for its inclusion in my model. 
 
 ##Timeframe, technique, and other peculiarities:
 
 Going back to the third question posed by @Abrams1980, it is important to understand which time period do voters have in mind when they assess the economic indicators to make decisions on their vote. Many others have answered this question by testing economic voting theory with available economic data at that specific year. With the growing influence of media on voters and information available to people instantly at their palms, one could make two contrasting claims- first, people utilize their ability to easily extract information and therefore build up on their knowledge about the economy over time, and second, people are influenced by the last minute information thrown at them and base their voting decisions on events happening around the election data. @Ebeid2006a claim that relevant academic literature operationalize real per capita income (RPCI) as a one-year growth rate, and unemployment as an absolute level or first difference when constructing economic voting models. What this means is that voters compare the economic condition of the election year to that of the previous year. @Eisenberg2004 carry out a scientific examination of each of the four years in a presidential term against vote share and conclude that the most recent year explains a vast majority of the impact of economic performance. A lot of this also depends on the availability of the data. While more recent academic papers have been able to utilize the plethora of data available via various government and private agencies to carry out in-depth analyses, past papers lack such privilege. Another factor that is worth noting is that due to the growing influence of partisan media on voters, there is a possibility that voters may not even base their preference based on actual economic performance but rather on their perception or forced perception of the economy. @DellaVigna2007 studied the effect of media bias on voting and detected the presence of Fox News Effect- that Republicans gained 0.4 to 0.7 percentage points in the towns that broadcast Fox News. Candidates on both sides use the media to put strong emphasis on campaigns, advertisements, conventions, debates, controversies, all with the hope of generating a late swing in their favor. This suggests that the absolute or relative, or actual or perceived, economic effects can shape a voter's behavior much nearer to the election date. However, this is a debated topic because @Gelman1993 claim that voters cast their votes based on their "enlightened preference." They assert that although voters have incomplete information, their knowledge does get expanded over time leading up to the election day, and, throughout this period they inform themselves with the true values of the fundamental variables and their appropriate weights [@Gelman1993]. While analyzing whether people vote correctly, @Lau1997 place "correct" voting as a middle ground between individual choice and social choice and therefore define it as the individual choice made under conditions of full information. They also conclude, through their analysis of U.S. presidential elections, that most of time citizens do vote correctly. Combining Gelman's analysis with Lau and Redlawsk's gives a premise for this paper to analyze the U.S. Presidential elections through the angle of economic voting.
 
 The types of techniques that authors use when modeling economic voting depends on many factors such as the range of the data, the variables of interest, and the research question. When analyzing cross-sectional data, pooled ordinary least squares measures are used but if the data is panel (cross sections over different time periods), one can choose between pooled ordinary least squared method, fixed effects or random effects method, depending on the specification. This paper combines three ideas- the first idea is of looking at past elections from 1992 to 2012 to see how county-level economic indicators affect Republican vote share. The use of the appropriate estimation method is explained in the methodology section. The second idea is to make a forecasting for 2016 Presidential election based on the regression estimation obtained from the first analysis of panel data. The election forecasting technique carried here is based on the fudamentals model that uses statistical estimation method and utilizes economic and sociopolitical data based on actual voting theories [@JeromeBruno2011]. The third idea is of looking at 2016 Presidential election specifically to see how much this election varies from the first model. Using the residual of the predicted and actual voteshare for 2016, I will perform another regression analysis on this residual (difference in actual and predicted vote share) with economic and other non-economic theories described in the section above. This paper is unique in its approach of combining the estimation models with a forecasting model and again coming back to the estimation of the residual with a clear research agenda of comparing Donald Trump's voteshare with voteshare of past Republican candidates, i.e. the Trump effect. 
-
-\pagebreak
 
 #Methodology:
 
@@ -135,8 +173,6 @@ _Diagram_
 ##Step I:Understanding U.S. Presidential elections between 1992 to 2012
 
 ###Model Specification:
-  
-_research question should be mentioned in the intro as well already._
 
 Research Question: What is the effect of county-level unemployment rate on the two-party vote share of the Republican party in the Presidential election between 1992 to 2012?
 
@@ -150,7 +186,7 @@ rep.share_{i,t} = \alpha + \beta_1 (unemp\_gro_{i,t}) + \beta_3 (controls) + \ep
 
 ###Dependent Variable:
 
-$rep.share_{i,t}$: The dependent variable is the two-party vote share of the Republican party in the U.S. Presidential election for county (i) in election year (t). Considering that it is not clear how the third party vote share affects any of the major parties in the United States Presidential election, I have decided to eliminate the third party vote share, as other authors have done in the past[@Eisenberg2004]. Hence, the Republican vote share shown here is the Republican proportion of the two-party vote share. For example, in Abbeville county in South Carolina in 2000 Presidential Election, Republicans obtained 53.1 percent, Democrats obtained 45 percent, and other parties obtained 1.9 percent of the votes. Therefore the value of _rep.share_ for Abbeville in 2000 will be the ratio of Republican share to the total share of Democrats and Republicans combined, i.e. 0.541. Different scholars have used different versions of this variable in their analysis. Most of them use the vote share of the incumbent party however, in this case, the research question aims to explore the effect of county level variables on the Republican party specifically. Hence, the usage of the Republican two-party vote share becomes logical.   
+$rep.share_{i,t}$: The dependent variable is the two-party vote share of the Republican party in the U.S. Presidential election for county (i) in election year (t). Considering that it is not clear how the third party vote share affects any of the major parties in the United States Presidential election, I have decided to eliminate the third party vote share, as other authors have done in the past [@Eisenberg2004]. Hence, the Republican vote share shown here is the Republican proportion of the two-party vote share. For example, in Abbeville county in South Carolina in 2000 Presidential Election, Republicans obtained 53.1 percent, Democrats obtained 45 percent, and other parties obtained 1.9 percent of the votes. Therefore the value of _rep.share_ for Abbeville in 2000 will be the ratio of Republican share to the total share of Democrats and Republicans combined, i.e. 0.541. Different scholars have used different versions of this variable in their analysis. Most of them use the vote share of the incumbent party however, in this case, the research question aims to explore the effect of county level variables on the Republican party specifically. Hence, the usage of the Republican two-party vote share becomes logical.   
 
 ###Independent Variable:
 
@@ -160,7 +196,7 @@ $unemp\_gro_{i,t}$: The main independent variable, which is also the explanatory
 
 $repshare.lag_{i,t-4}$: The two-party vote share of the Republican party in a county (i) in the previous Presidential election (t-4) is used as a political control variable. This variable is expected to measure the party affiliation of a specific county. In the United States, many states and counties within them are known to be historically blue or red. What this means is that the voting behavior of counties are often pre-determined based on how they voted in the election before. Not accounting for this variable could cause ommitted variable bias, resulting in biased estimates for other explanatory variables, and deteriorate the explanatory power of the model by affecting the goodness of fit (i.e. R-squared). The use of this lag-dependent variable does come with some caveats depending on the estimation method and it will be discussed in the analysis section later.   
 
-$Pop\_thou_{i,t}$: The population of a county (i) in the election year (t) is used as a demographic control variable. This variable is introduced to control for the size of the counties. The population range is extremely big with smallest counties having a few hundred people while the largest counties in millions, hence this variable gives the population of the counties in thousands.
+$log(Pop_{i,t})$: The population of a county (i) in the election year (t) is used as a demographic control variable. This variable is introduced to control for the size of the counties. The population variable is highly skewed due to the presence of some extremely populous counties, hence a natural log of this variable is taken to account for the skewness.
 
 $white.percent_{i,t}$: The percentage of white people (both male and female combined) in a county(i) in the election year(t) is used as another demographic control variable. This variable is introduced to control for race. The percentage is calculated by dividing the total number of white people above the age of 18 (since voting age in the United States is 18) in a county by the total population (all ages) of that county.
 
@@ -218,28 +254,28 @@ The regression estimation technique used for this model is a Ordinary Least Squa
 
 The data necessary to carry out the quantitative analysis in this paper were obtained from multiple sources and rigorously cleaned and merged together using open source software R studio to extract the variables described above. The entire paper is also written on R markdown and formatted using Latex. The dependent variable was obtained from election data that contained both Republican and Democratic vote share in Presidential elections between 1992 and 2016. The dataset came from Dave Leip's Atlas of U.S. Presidential Elections.[^2] To calculate the two-party vote share, the voteshare for Republican party was divided by the sum of vote shares for Republican and Democratic party. The lag of republican vote share used in the first part of the research was calculated based on the same election dataset. The data on unemployment from 1992 to 2015 was obtained from the Bureau of Labor Statistics (BLS).[^3] To calculate the growth in unemployment rate between two years, the unemployment rate for previous year was subtracted from the unemployment rate of the current year, and then the result was divided by the unemployment rate of the previous year. The data on population for each county from 1992 to 2015 were called from the Bureau of Economic Affairs (BEA) API directly into R studio.[^4] Data used to construct the incumbency dummy was created manually based on common knowledge and merged into the final dataframe (See Appendix _table_ to see which years had what incumbency values). Data on rural population was obtained from the United States Census Bureau.[^5] Demographic data on educational attainment was not available for several years between 1992 and 2012, hence education related variable wasn't included in the model in the first part of the research. However, for the second part of the research, educational attainment data for 2015 was obtained from the United States Census Bureau as well.[^6] The race data that included white population in each county between 1992 to 2015 was obtained from the database of the National Cancer Institute.[^7] The counts of race and education data were converted into percentages by combining them with the population data obtained from BEA. The data on Labor Force Participation rate[^24] and Gini coefficient[^25] for 2012, _2014_, and 2015 were obtained from the United States Census Bureau. The data on manufacturing jobs, total number of private non-farm jobs, and average wage were called directly from the BEA API.[^26]   
 
-All the dataframes were merged based on county fips (unique identification for each county assigned by the US Census Bureau). There are a total of 3142 counties (or county-equivalents) in the United States. However, due to inconsistent nomenclature of counties and county-equivalents, and the matching problem it created since many counties have been reshaped over the years, some counties were removed from the dataset. All the 29 boroughs of Alaska were removed from the final dataset due to difficulty in matching them to the county fips across multiple datasets. Maui and Kalawao counties of Hawaaii were merged together into the same county called Maui to make it consistent over multiple datasets. These processes resulted in a total of 3112 counties. The final merged panel dataset, which was used for the first part of the research, hence contained 3112 counties x 6 election years = 18672 observations. For the second part of the paper, the final cross-sectional dataframe consists of 3112 counties. _check these numbers_ 
-
-\pagebreak
+All the dataframes were merged based on county fips (unique identification for each county assigned by the US Census Bureau). There are a total of 3142 counties (or county-equivalents) in the United States. However, due to inconsistent nomenclature of counties and county-equivalents, and the matching problem it created since many counties have been reshaped over the years, some counties were removed from the dataset. All the 29 boroughs of Alaska were removed from the final dataset due to difficulty in matching them to the county fips across multiple datasets. Maui and Kalawao counties of Hawaaii were merged together into the same county called Maui to make it consistent over multiple datasets. These processes resulted in a total of 3112 counties. The final merged panel dataset, which was used for the first part of the research, hence contained 3112 counties x 6 election years = 18672 observations. For the second part of the paper, the final cross-sectional dataframe consists of 3112 counties. _check_ 
 
 #Result and Analysis:
 
 ##Step I: Understanding U.S. Presidential elections between 1992 to 2012
 
 ###Descriptive Statistics: 
+
 _FigX_ shows the how the main independent variable, the lag dependent variable and the dependent variable are correlated to one another, and therefore provide some basic understanding on how their causal relationship could turn out to be. We can see that growth in unemployment is negatively, yet not so strongly, correlated (r = -0.042) with the Republican two-party vote share. More importantly the Republican vote share in the previous election is positively, and strongly, correlated (r = 0.887) with the present voteshare. Both of these correlations are in line with the theory established earlier in the paper. The distribution plots of each of these variable show a normal distribution with no noticeable skewness for both the Republican vote share and the lag of Republican vote share. Although, the growth in unemployment shows a right-skew, _explain_
 
 ```{r, warning = FALSE, message = FALSE, fig.cap= "Correlation Matrix for Main Independent Variables in Step I"}
 print(corplot1, progress = F)
 ```
 
-_FigX_ shows the correlation between the dependent variable with other control variables. Republican two-party voteshare has moderately strong, and positive, correlation with both the percentage of white people living in a county (r = 0.346) and the percentage of people living in rural areas of the county (r = 0.213). We also see a positive correlation, yet not very strong, between rural population and white population (r = 0.16), depicting the situation in the United States where most rural areas are considered to be homogenous while the urban areas are more heterogenous. It is important to note that counties with larger population have a negative correlation with Republican vote share (r = -0.311) and also show that these counties are less rural (r = -0.778) and have lower white percentage(r = -0.19). 
-
-Initially, the distribution plot showed an extreme right skewness with population due to the presence of some extremely populous county like the Los Angeles county in California that has a population of more than 9 million. We correct for this by taking a natural log of the population. Similarly, the plot of rural_percent shows a unique phenomenon for the United States. It shows that there are approximately same number of counties in United States at levels of rurality. Meaning, the number of counties that are highly urban (when _rural\_percent_ is at 0) is similar to the number of counties that are moderately urban (when _rural\_percent_ is at 50). But once the rurality reaches to around 80 percent or above, there is a sharp increase in the number of counties. This shows that the extremely-rural counties are disproportionately high in number than counties at any other rurality level. If this somehow influences the way people are voting in the U.S. is an interesting question to explore.    
 
 ```{r warning = FALSE, message = FALSE, fig.cap = "Correlation Matrix of Control Variables in Step I "}
 print(corplot2, progress = F)
 ```
+
+_FigX_ shows the correlation between the dependent variable with other control variables. Republican two-party voteshare has moderately strong, and positive, correlation with both the percentage of white people living in a county (r = 0.346) and the percentage of people living in rural areas of the county (r = 0.213). We also see a positive correlation, yet not very strong, between rural population and white population (r = 0.16), depicting the situation in the United States where most rural areas are considered to be homogenous while the urban areas are more heterogenous. It is important to note that counties with larger population have a negative correlation with Republican vote share (r = -0.311) and also show that these counties are less rural (r = -0.778) and have lower white percentage(r = -0.19). 
+
+Initially, the distribution plot showed an extreme right skewness with population due to the presence of some extremely populous county like the Los Angeles county in California that has a population of more than 9 million. We correct for this by taking a natural log of the population. Similarly, the plot of rural_percent shows a unique phenomenon for the United States. It shows that there are approximately same number of counties in United States at levels of rurality. Meaning, the number of counties that are highly urban (when _rural\_percent_ is at 0) is similar to the number of counties that are moderately urban (when _rural\_percent_ is at 50). But once the rurality reaches to around 80 percent or above, there is a sharp increase in the number of counties. This shows that the extremely-rural counties are disproportionately high in number than counties at any other rurality level. If this somehow influences the way people are voting in the U.S. is an interesting question to explore.    
 
 The descriptive summary table (see _figX_ under Appendix) gives a complete overview of the central tendency and the variation of all the variables.  
 
@@ -288,20 +324,31 @@ The counties that fall on the 45-degree line represent the ones where the model 
 
 The graph shows that there are higher number counties where our model underpredicted the Republican vote share than overpredicted. The red dots represent the counties that had voted Republican in the 2012 election. As we can see, in 2016, almost all of these counties stayed Republican. However, interestingly many counties that voted Democrat in the 2012 election turned Republican in 2016 (these are the blue dots outside of the dashed lines).
 
-_TableX_ shows the states where the previously Democratic counties turned Republican and in how many of those counties our model made an underpredication of the Republican vote share. We can see that 221 counties changed from Democrat to Republican between 2012 and 2016. Out of them, the Republican vote share for 212 counties were underpredicted by our model.  
+_TableX_ shows the states where the previously Democratic counties turned Republican and in how many of those counties our model made an underpredication of the Republican vote share. We can see that 221 counties changed from Democrat to Republican between 2012 and 2016. Out of them, the Republican vote share for 212 counties were underpredicted by our model. _TableX_ shows the states where the counties stayed Republican between 2012 and 2016 and in how many of those counties our model made an underprediction of the Republican vote share. We can see that 2361 counties stayed Republican between 2012 and 2016. Out of them, the Republican vote share of 1945 counties were underpredicted by our model.
 
+\pagebreak
+ 
 ```{r, results='asis', warning=FALSE, message=FALSE}
 stargazer::stargazer(table100, type = "latex", summary = FALSE, header = FALSE, title = "Number of counties that turned Republican from Democrat between 2012 and 2016 and were underpredicted")
 ```
 
-_TableX_ shows the states where the counties stayed Republican between 2012 and 2016 and in how many of those counties our model made an underprediction of the Republican vote share. We can see that 2361 counties stayed Republican between 2012 and 2016. Out of them, the Republican vote share of 1945 counties were underpredicted by our model.
+\pagebreak
 
 ```{r, results='asis', warning=FALSE, message=FALSE}
 stargazer::stargazer(table200, summary = FALSE, type = "latex", header = FALSE, title = "Number of counties that stayed Republican between 2012 and 2016 and were underpredicted")   
 ```
 
-In a nutshell, what that means is that we underpredicted the Republican vote share in most of the counties that were won by Donald Trump in 2016. This may show that the forecast was a failure. However, if we look at the _maps_ below, we find an interesting observation that speaks volumes on the success of the forecasting model.
+\pagebreak
 
+In a nutshell, what that means is that we underpredicted the Republican vote share in most of the counties that were won by Donald Trump in 2016. This may show that the forecast was a failure. However, if we look at the _maps_ below, we find an interesting observation that speaks volumes on the success of the forecasting model. _Map X_ shows... _Map Y_ shows... 
+
+The inference that we can draw from just the observation of these maps is that Donald Trump was not a generic Republican. The model would have performed well for a generic republican running atop the ballot, but we see a systemic difference in the way _Region Name_ voted and how our model predicted the vote share there to be. 
+
+_The maps below show a systemic difference in Region Name._ _also how the forecast was great at predicting 2012 for 2016
+
+What caused the Republican-leaning counties to vote significantly higher for Donald Trump and what led the Democratic -leaning counties to switch to Republican is a question that needs more exploration and this forecasting exercise provides the perfect premise to do so. In order to understand this difference (residual), we will need to test various rival hypothesis with the aim of explaining the effect that Donald Trump had that other generic Republicans didn't have in the past.
+
+\pagebreak
 ```{r, fig.cap = "Change in voteshare for Republican party 2012 to 2016"}
 map3 #accentuate the color to focus on common area
 ```
@@ -309,17 +356,7 @@ map3 #accentuate the color to focus on common area
 ```{r, fig.cap = "Residual from the forecasting of 2016 election"}
 map4 #accentuate the color to focus on common area
 ```
-
 \pagebreak
-
-_Map X_ shows
-_Map Y_ shows
-
-The inference that we can draw from just the observation of these maps is that Donald Trump was not a generic Republican. The model would have performed well for a generic republican running atop the ballot, but we see a systemic difference in the way _Region Name_ voted and how our model predicted the vote share there to be. 
-
-_The maps below show a systemic difference in Region Name._
-
-What caused the Republican-leaning counties to vote significantly higher for Donald Trump and what led the Democratic -leaning counties to switch to Republican is a question that needs more exploration and this forecasting exercise provides the perfect premise to do so. In order to understand this difference (residual), we will need to test various rival hypothesis with the aim of explaining the effect that Donald Trump had that other generic Republicans didn't have in the past.   
 
 ##Step III: Understanding the election of 2016
 
@@ -331,7 +368,7 @@ The 2016 Presidential election took everyone by surprise and to explain it has b
 print(corplot3, progress = F)
 ```
 
-_US situation in these variables_ 
+\pagebreak
 
 ###Regression Output and Results:
 
@@ -351,10 +388,7 @@ The third theory regarding inequality is also significant when analyzing the cou
 
 The theory that holds true unanimously, in overall analysis of all counties in the US, and also in more focused analysis of swing states and rust-belt states is the "education theory." The higher the number of people in a county with less than high school degree, the bigger their effect in the rise of the Republican vote share in this year's election. A one percent increase in the number of uneducated people shows almost a one-third percentage point increase in the vote share for the Republican party. In counties of rust belt states, the effect is even more with 1 percent increase in uneducated people increasing the resiudal by almost one percentage point.     
 
-
 _Put the hand made table from the Lit. review note book_
-
-\pagebreak
 
 #Conclusion:
 
@@ -393,8 +427,6 @@ phtest(f2, f2random)
 plmtest(f2, c("time"), type=("bp"))
 ```
 
-
-
 \pagebreak
 
 [^2]: Dave Leip's Election Data is obtained from a third party, i.e. Çilek Agaci's github repository (Link: https://github.com/cilekagaci/us-presidential-county-1960-2016). The repository data is matched and confirmed with the data on Dave Leip's website. His dataset is often used by researchers in academia to carry out analysis involving US election results both at national and subnational level.
@@ -409,11 +441,11 @@ plmtest(f2, c("time"), type=("bp"))
 
 [^7]: The data on race is obtained from National Cancer Institute's "U.S. Population Data" dataset, which was made based on the Census Bureau estimates. (Link: https://seer.cancer.gov/popdata/download.html).
 
-[^14]: The nomenclature is given by the author for easiness to refer to the theory again throughout the paper. This does not mean that the author claims to have proposed the theory. The theory already exists and hence it is discussed in the Literature Review section in the first place.
+[^14]: The nomenclature is given by the author for easiness to refer to the theory again throughout the paper. This does not mean that the author claims to have proposed the theory. The ideas mentioned under this theory already exist and hence they are discussed under the Literature Review section in the first place.
 
 [^15]: Definition obtained from the Bureau of Labor Statistics page: https://www.bls.gov/bls/cps_fact_sheets/lfp_mock.htm.
 
-[^16]:The nomenclature is given by the author for easiness to refer to the theory again throughout the paper. This does not mean that the author claims to have proposed the theory. The theory already exists and hence it is discussed in the Literature Review section in the first place.
+[^16]:The nomenclature is given by the author for easiness to refer to the theory again throughout the paper. This does not mean that the author claims to have proposed the theory. The ideas mentioned under this theory already exist and hence they are discussed under the Literature Review section in the first place.
 
 [^17]: Source: http://money.cnn.com/2016/12/22/news/economy/us-inequality-worse/ 
 
@@ -423,7 +455,7 @@ plmtest(f2, c("time"), type=("bp"))
 
 [^20]: Source: http://bruegel.org/2016/11/income-inequality-boosted-trump-vote/
 
-[^21]: The nomenclature is given by the author for easiness to refer to the theory again throughout the paper. This does not mean that the author claims to have proposed the theory. The theory already exists and hence it is discussed in the Literature Review section in the first place.
+[^21]: The nomenclature is given by the author for easiness to refer to the theory again throughout the paper. This does not mean that the author claims to have proposed the theory. The ideas mentioned under this theory already exist and hence they are discussed under the Literature Review section in the first place.
 
 [^22]: Source: http://fivethirtyeight.com/features/education-not-income-predicted-who-would-vote-for-trump/
 
@@ -435,7 +467,7 @@ plmtest(f2, c("time"), type=("bp"))
 
 [^26]: The data on manufacturing jobs for each county is obtained from the Bureau of Economic Affairs' API call for "RegionalIncome dataset, table CA25N, Linecode 500." The data on total private non-farm employment for each county is obtained from the same API call for "RegionalIncome dataset, table CA25N, Linecode 90." The data on average wage was obtained from "RegionalIncome dataset, table CA30, Linecode 290." (Link: https://www.bea.gov/API/signup/index.cfm).
 
-[^27]: The nomenclature is given by the author for easiness to refer to the theory again throughout the paper. This does not mean that the author claims to have proposed the theory. The theory already exists and hence it is discussed in the Literature Review section in the first place.
+[^27]: The nomenclature is given by the author for easiness to refer to the theory again throughout the paper. This does not mean that the author claims to have proposed the theory. The ideas mentioned under this theory already exist and hence they are discussed under the Literature Review section in the first place.
 
 \pagebreak
 
