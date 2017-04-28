@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9.6100 64-bit) (preloaded format=pdflatex 2016.12.15)  28 APR 2017 00:52
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9.6100 64-bit) (preloaded format=pdflatex 2016.12.15)  28 APR 2017 04:07
 entering extended mode
 **./Thesis.tex
 (Thesis.tex
@@ -1019,16 +1019,16 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 
 ] [2] [3] [4] [5] [6] [7] [8]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 631.
+(Font)              <8> on input line 672.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 631.
-[9] <picture.png, id=361, 960.58875pt x 398.99063pt>
+(Font)              <6> on input line 672.
+[9] <picture.png, id=360, 960.58875pt x 398.99063pt>
 File: picture.png Graphic file (type png)
 <use picture.png>
-Package pdftex.def Info: picture.png used on input line 684.
+Package pdftex.def Info: picture.png used on input line 725.
 (pdftex.def)             Requested size: 443.57645pt x 184.24413pt.
 [10 <./picture.png>] [11] [12] [13] [14] [15] [16] [17]
-Overfull \hbox (25.36247pt too wide) detected at line 1063
+Overfull \hbox (25.36247pt too wide) detected at line 1104
 []\OML/lmm/m/it/10 resid \OT1/lmr/m/n/10 = \OML/lmm/m/it/10  \OT1/lmr/m/n/10 +
  \OML/lmm/m/it/10 []\OT1/lmr/m/n/10 (\OML/lmm/m/it/10 manu[]share[]gro\OT1/lmr
 /m/n/10 ) + \OML/lmm/m/it/10 []\OT1/lmr/m/n/10 (\OML/lmm/m/it/10 av[]wage[]gro
@@ -1039,18 +1039,18 @@ t/10 gini[]gro\OT1/lmr/m/n/10 ) + \OML/lmm/m/it/10 []\OT1/lmr/m/n/10 (\OML/lmm
  []
 
 [18] [19] [20] [21]
-<Thesis_files/figure-latex/unnamed-chunk-1-1.pdf, id=571, 433.62pt x 216.81pt>
+<Thesis_files/figure-latex/unnamed-chunk-1-1.pdf, id=570, 433.62pt x 216.81pt>
 File: Thesis_files/figure-latex/unnamed-chunk-1-1.pdf Graphic file (type pdf)
 <use Thesis_files/figure-latex/unnamed-chunk-1-1.pdf>
 Package pdftex.def Info: Thesis_files/figure-latex/unnamed-chunk-1-1.pdf used o
-n input line 1273.
+n input line 1314.
 (pdftex.def)             Requested size: 433.63878pt x 216.81938pt.
 
-<Thesis_files/figure-latex/unnamed-chunk-2-1.pdf, id=572, 433.62pt x 216.81pt>
+<Thesis_files/figure-latex/unnamed-chunk-2-1.pdf, id=571, 433.62pt x 216.81pt>
 File: Thesis_files/figure-latex/unnamed-chunk-2-1.pdf Graphic file (type pdf)
 <use Thesis_files/figure-latex/unnamed-chunk-2-1.pdf>
 Package pdftex.def Info: Thesis_files/figure-latex/unnamed-chunk-2-1.pdf used o
-n input line 1282.
+n input line 1323.
 (pdftex.def)             Requested size: 433.63878pt x 216.81938pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -1058,38 +1058,38 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 [22 <./Thesis_files/figure-latex/unnamed-chunk-1-1.pdf>] [23 <./Thesis_files/fi
 gure-latex/unnamed-chunk-2-1.pdf>]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 1334.
+(Font)              <9> on input line 1375.
 [24] [25]
-<Thesis_files/figure-latex/unnamed-chunk-4-1.pdf, id=615, 433.62pt x 216.81pt>
+<Thesis_files/figure-latex/unnamed-chunk-4-1.pdf, id=614, 433.62pt x 216.81pt>
 File: Thesis_files/figure-latex/unnamed-chunk-4-1.pdf Graphic file (type pdf)
 <use Thesis_files/figure-latex/unnamed-chunk-4-1.pdf>
 Package pdftex.def Info: Thesis_files/figure-latex/unnamed-chunk-4-1.pdf used o
-n input line 1429.
+n input line 1470.
 (pdftex.def)             Requested size: 433.63878pt x 216.81938pt.
 [26 <./Thesis_files/figure-latex/unnamed-chunk-4-1.pdf>] [27] [28] [29] [30]
-<Thesis_files/figure-latex/unnamed-chunk-7-1.pdf, id=649, 433.62pt x 216.81pt>
+<Thesis_files/figure-latex/unnamed-chunk-7-1.pdf, id=648, 433.62pt x 216.81pt>
 File: Thesis_files/figure-latex/unnamed-chunk-7-1.pdf Graphic file (type pdf)
 <use Thesis_files/figure-latex/unnamed-chunk-7-1.pdf>
 Package pdftex.def Info: Thesis_files/figure-latex/unnamed-chunk-7-1.pdf used o
-n input line 1592.
+n input line 1633.
 (pdftex.def)             Requested size: 433.63878pt x 216.81938pt.
 
-<Thesis_files/figure-latex/unnamed-chunk-8-1.pdf, id=650, 433.62pt x 216.81pt>
+<Thesis_files/figure-latex/unnamed-chunk-8-1.pdf, id=649, 433.62pt x 216.81pt>
 File: Thesis_files/figure-latex/unnamed-chunk-8-1.pdf Graphic file (type pdf)
 <use Thesis_files/figure-latex/unnamed-chunk-8-1.pdf>
 Package pdftex.def Info: Thesis_files/figure-latex/unnamed-chunk-8-1.pdf used o
-n input line 1601.
+n input line 1642.
 (pdftex.def)             Requested size: 433.63878pt x 216.81938pt.
 [31 <./Thesis_files/figure-latex/unnamed-chunk-7-1.pdf> <./Thesis_files/figure-
 latex/unnamed-chunk-8-1.pdf>]
-<Thesis_files/figure-latex/unnamed-chunk-9-1.pdf, id=663, 433.62pt x 216.81pt>
+<Thesis_files/figure-latex/unnamed-chunk-9-1.pdf, id=662, 433.62pt x 216.81pt>
 File: Thesis_files/figure-latex/unnamed-chunk-9-1.pdf Graphic file (type pdf)
 <use Thesis_files/figure-latex/unnamed-chunk-9-1.pdf>
 Package pdftex.def Info: Thesis_files/figure-latex/unnamed-chunk-9-1.pdf used o
-n input line 1636.
+n input line 1677.
 (pdftex.def)             Requested size: 433.63878pt x 216.81938pt.
 [32 <./Thesis_files/figure-latex/unnamed-chunk-9-1.pdf>]
-Overfull \hbox (2.49158pt too wide) in paragraph at lines 1660--1692
+Overfull \hbox (2.49158pt too wide) in paragraph at lines 1701--1733
  [][] 
  []
 
@@ -1118,26 +1118,26 @@ Underfull \hbox (badness 10000) in paragraph at lines 235--240
  []
 
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1812.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1853.
 [39]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1812.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1853.
 (Thesis.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1812.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1812.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1853.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1853.
 
 Package rerunfilecheck Info: File `Thesis.out' has not changed.
 (rerunfilecheck)             Checksum: 5C617CF7182352960F234B6FD8D6CCC7;7415.
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1812.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1853.
  ) 
 Here is how much of TeX's memory you used:
- 13724 strings out of 493333
- 197740 string characters out of 3139193
- 313543 words of memory out of 3000000
+ 13722 strings out of 493333
+ 197716 string characters out of 3139193
+ 313515 words of memory out of 3000000
  16732 multiletter control sequences out of 15000+200000
- 84115 words of font info for 145 fonts, out of 3000000 for 9000
+ 83985 words of font info for 144 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  37i,12n,43p,490b,493s stack positions out of 5000i,500n,10000p,200000b,50000s
 pdfTeX warning (dest): name{Hfootnote.14} has been referenced but does not ex
@@ -1199,9 +1199,9 @@ e1/public/lm/lmri10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/lm/lmri
  Files/MiKTeX 2.9/fonts/type1/public/lm/lmsy6.pfb><C:/Program Files/MiKTeX 2.9/
 fonts/type1/public/lm/lmsy7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public
 /lm/lmsy9.pfb>
-Output written on Thesis.pdf (44 pages, 12590588 bytes).
+Output written on Thesis.pdf (44 pages, 12593580 bytes).
 PDF statistics:
- 819 PDF objects out of 1000 (max. 8388607)
+ 818 PDF objects out of 1000 (max. 8388607)
  146 named destinations out of 1000 (max. 500000)
  18745 words of extra memory for PDF output out of 20736 (max. 10000000)
 
