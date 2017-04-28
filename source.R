@@ -227,4 +227,45 @@ m26 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro +
 
 ################################# Appendix ######################################################
 
+anal_df <- rio::import("2014anal.csv")
 
+
+anal_df <- anal_df %>%
+  mutate(rep_incumb = 0)
+
+anal_df <- merge(anal_df, intercept)
+
+anal_df <- anal_df %>%
+  mutate(pred_repshare = fixef - unemp_gro*0.010424064 + repshare.lag*0.667388497 + log(pop)*0.013094576 
+         + white.percent*0.438572256 - rep_incumb* 0.091746860 - unemp_gro*rep_incumb*0.003444465 - 
+           white.percent*rural_percent*0.003856760)
+
+anal_df1 <- anal_df %>%
+  mutate(resid = rep.share - pred_repshare)
+
+anal_swing <- anal_df1 %>%
+  filter(state == "CO" | state == "FL" | state == "IA" 
+         | state == "NC" | state == "NH" | state == "OH" | state == "PA" 
+         | state == "VA" | state == "NV" | state == "WI")
+
+anal_rust <- anal_df1 %>%
+  filter(state == "NY" | state == "PA" | state == "WV" | state == "OH" | state == "IN"
+         | state == "MI" | state == "IL" | state == "IA" | state == "WI")
+
+m100 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc, anal_df1)
+
+#For swing states:
+m101 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc, anal_swing)
+
+#For rust belt states:
+m102 <- lm(resid ~ -1 + manu_share_gro + av_wage_gro + lfpr_male_gro + gini_gro + uneduc, anal_rust)
+
+###########################Appendix#########################################################3333
+
+swingtable <- table(p2_merged_df8_swing$state) %>%
+  as.data.frame() %>%
+  rename(State = Var1, `Number of counties` = Freq)
+
+rusttable <- table(p2_merged_df8_rust$state) %>%
+  as.data.frame() %>%
+  rename(State = Var1, `Number of counties` = Freq)

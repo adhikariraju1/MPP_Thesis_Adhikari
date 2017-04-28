@@ -15,7 +15,7 @@ knitr::opts_knit$set(root.dir = "C:/RajuPC/MPP Final Thesis/WorkingDirectory")
 source("source.R")
 ```
 
-\setcounter{page}{40}
+\setcounter{page}{37}
 
 #Appendix:
 
@@ -40,12 +40,49 @@ stargazer::stargazer(summary_df2, summary = TRUE, type = 'latex',digits = 2, hea
 ```
 
 \pagebreak
+ 
+```{r, results='asis', warning=FALSE, message=FALSE}
+stargazer::stargazer(table100, type = "latex", summary = FALSE, header = FALSE, title = "Number of counties that turned Republican from Democrat between 2012 and 2016 and were underpredicted")
+```
+
+\pagebreak
+
+```{r, results='asis', warning=FALSE, message=FALSE}
+stargazer::stargazer(table200, summary = FALSE, type = "latex", header = FALSE, title = "Number of counties that stayed Republican between 2012 and 2016 and were underpredicted")   
+```
+
+\pagebreak
+
+##Alternate analysis for Step III:
+
+###Testing Rival Theories for 2016 using the difference in 2015 economic vaiables against 2014 economic variables
+
+```{r, results='asis', warning=FALSE, message=FALSE}
+stargazer::stargazer(m100, m101, m102, type = 'latex', digits = 2, header = FALSE,   
+                     title = 'Testing Rival Theories for 2016 Residuals using OLS Estimate', font.size = 'normalsize',
+                     dep.var.caption = "", column.labels = c("All counties", "Swing-state counties", "Rust-belt counties"), model.names = F)
+```
+
+\pagebreak
+
+```{r, results='asis', warning=FALSE, message=FALSE}
+stargazer::stargazer(swingtable, summary = FALSE, type = "latex", header = FALSE, title = "Swing States and their Counties")  
+```
+Source: https://en.wikipedia.org/wiki/Swing_state
+
+```{r, results='asis', warning=FALSE, message=FALSE}
+stargazer::stargazer(rusttable, summary = FALSE, type = "latex", header = FALSE, title = "Rust-belt States and their Counties")  
+```
+Source: https://en.wikipedia.org/wiki/Rust_Belt
+
+##Hausman Test for Step I:
 
 ```{r, results ='asis', warning=FALSE, message=FALSE, fig.cap="Hausman Test Result"}
 phtest(f2, f2random)
 ```
 
+##Time-Fixed Effects Test for Step I:
+
 ```{r, results ='asis', warning = FALSE, message = FALSE, fig.cap="Testing Time-fixed effects"}
 plmtest(f2, c("time"), type=("bp"))
 ```
-
