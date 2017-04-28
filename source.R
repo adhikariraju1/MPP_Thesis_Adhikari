@@ -199,11 +199,13 @@ map2 <- maps_df %>% filter(state != "HI") %>% county.heatmap("flip") +
   map_theme
 
 map3 <- maps_df %>% filter(state != "HI") %>% county.heatmap("resid") + 
-  scale_fill_viridis(option = "A", discrete = FALSE) +
+  scale_fill_viridis(option = "A", discrete = FALSE, direction = -1) + 
+  labs(caption="Darker shade implies higher residual") +
   map_theme
 
 map4 <- maps_df %>% filter(state != "HI") %>% county.heatmap("rep.share.change") + 
   scale_fill_viridis(option = "A", discrete = FALSE) +
+  labs(caption="Lighter shade implies higher Republican vote share in 2016") +
   map_theme
 
 #List the counties that flipped and put it in a table (all the names) for descriptive statistics:
